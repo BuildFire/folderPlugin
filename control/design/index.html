@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html ng-app="folderPlugin">
+<head lang="en">
+	<!-- CSS -->
+    <link href="../../../../styles/helper.css" rel="stylesheet">
+    <link href="../../../../styles/siteIcons.css" rel="stylesheet">
+    
+	<!-- JS -->
+    <script src="../../../../scripts/buildfire.js"></script>
+    <script src="../../../../scripts/angular/angular.min.js"></script>
+
+    <meta charset="UTF-8">
+</head>
+<body ng-controller="folderPluginCtrl">
+	
+	<div class="item row clearfix">
+		<div class="labels col-md-3 padding-right-zero pull-left">
+			<span>Layout Style</span>
+		</div>
+		<div class="main col-md-9 pull-right">
+			<div class="screens clearfix">
+				<div class="screen layouticon pull-left">
+					<a class="border-grey border-radius-three default-background-hover text-center">
+						<span class="add-icon hidden">+</span>
+						<img src="http://www.placehold.it/31x33">
+					</a>
+				</div>
+				<div class="screen layoutgrid pull-right margin-left-zero border-grey border-radius-three">
+					<a class="layouticon border-grey border-radius-three default-background-hover text-center">
+						<span class="add-icon hidden">+</span>
+						<img src="http://www.placehold.it/53x63">
+					</a>
+					<a class="layouticon border-grey border-radius-three default-background-hover text-center">
+						<span class="add-icon hidden">+</span>
+						<img src="http://www.placehold.it/33x11">
+					</a>
+					<a class="layouticon border-grey border-radius-three default-background-hover text-center">
+						<span class="add-icon hidden">+</span>
+						<img src="http://www.placehold.it/133x63">
+					</a>
+					<a class="layouticon border-grey border-radius-three default-background-hover text-center">
+						<span class="add-icon hidden">+</span>
+						<img src="http://www.placehold.it/53x131">
+					</a>
+					<a class="layouticon border-grey border-radius-three default-background-hover text-center">
+						<span class="add-icon hidden">+</span>
+						<img src="http://www.placehold.it/53x24">
+					</a>
+					<a class="layouticon border-grey border-radius-three default-background-hover text-center">
+						<span class="add-icon hidden">+</span>
+						<img src="http://www.placehold.it/33x63">
+					</a>
+					<a class="layouticon border-grey border-radius-three default-background-hover text-center">
+						<span class="add-icon hidden">+</span>
+						<img src="http://www.placehold.it/13x32">
+					</a>
+					<a class="layouticon border-grey border-radius-three default-background-hover text-center">
+						<span class="add-icon hidden">+</span>
+						<img src="http://www.placehold.it/33x44">
+					</a>
+					<a class="layouticon border-grey border-radius-three default-background-hover text-center">
+						<span class="add-icon hidden">+</span>
+						<img src="http://www.placehold.it/25x50">
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<hr>
+	<div class="item clearfix screens row">
+		<div class="labels col-md-3 padding-right-zero pull-left">
+			<span>Background Images</span>
+		</div>
+		<div class="main col-md-9 pull-right">
+			<div class="screens flexalign clearfix">
+				<div class="screen mostdevices pull-left text-center">										
+					<a class="border-grey border-radius-three default-background-hover" onclick="alert('Open Media Library');">
+						<span class="add-icon hidden">+</span>
+						<img src="http://www.placehold.it/133x231">
+					</a>
+					<span class="icon btn-delete-icon btn-danger transition-third" onclick="window.openDialog('remove.html', null, 'sm', null)"></span>
+					<label>Most Devices</label>
+					<label class="secondary">640x920</label>
+				</div>
+				<div class="screen iphone pull-left text-center">
+					<a class="border-grey border-radius-three default-background-hover" onclick="alert('Open Media Library');">
+						<span class="add-icon">+</span>											
+					</a>
+					<span class="icon btn-delete-icon btn-danger transition-third" onclick="window.openDialog('remove.html', null, 'sm', null)"></span>
+					<label>iPhone 5/6/6+</label>
+					<label class="secondary">750x1294</label>
+				</div>
+				<div class="screen ipads pull-left text-center">
+					<a class="border-grey border-radius-three default-background-hover" onclick="alert('Open Media Library');">
+						<span class="add-icon">+</span>											
+					</a>
+					<span class="icon btn-delete-icon btn-danger transition-third" onclick="window.openDialog('remove.html', null, 'sm', null)"></span>
+					<label>iPads</label>
+					<label class="secondary">1536x2048</label>
+				</div>
+				<div class="screen tablets pull-left text-center">
+					<a class="border-grey border-radius-three default-background-hover" onclick="alert('Open Media Library');">
+						<span class="add-icon hidden">+</span>
+						<img src="http://www.placehold.it/333x631">
+					</a>
+					<span class="icon btn-delete-icon btn-danger transition-third" onclick="window.openDialog('remove.html', null, 'sm', null)"></span>
+					<label>Tablets</label>
+					<label class="secondary">1600x2560</label>
+				</div>
+			</div>
+			<p class="info margin-top-thirty margin-bottom-zero">* Images must be uploaded in PNG format. Size must not exceed 2MB.</p>
+		</div>
+	</div>
+	
+<script>
+    var folderPluginApp = angular.module('folderPlugin');
+
+    folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
+
+
+    }]);
+    
+</script>
+</body>
+</html>
