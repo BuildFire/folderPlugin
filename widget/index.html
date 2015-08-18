@@ -1,112 +1,169 @@
-<!DOCTYPE html>
-<html lang="en" ng-app="buildfire" >
-<head>
+﻿<!DOCTYPE html>
+<html ng-app="folderPlugin">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Text widget</title>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="../../../../styles/bootstrap.css">
-    <link rel="stylesheet" href="../../../../styles/siteIcons.css">
-    <link rel="stylesheet" href="../../../../styles/appStyle.css">
-    <link rel="stylesheet" href="../../../../styles/helper.css">
-    
-	<!-- jQuery & Owl Carousel -->
-	<script src="../../../../scripts/jquery/jquery-1.11.2.min.js"></script>    
-	<script src="../../../../scripts/owlCarousel/owlCarousel.js"></script>
-    <link rel="stylesheet" href="../../../../scripts/owlCarousel/owlCarousel.css">
+    <link href="../../../scripts/owlCarousel/owlCarousel.css" rel="stylesheet" />
 
-    <!-- Meta -->
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../../../scripts/angular/angular.min.js"></script>
+    <script src="../../../scripts/jquery/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="../../../scripts/buildfire.js"></script>
+    <script type="text/javascript" src="../../../scripts/owlCarousel/owlCarousel.js"></script>
+    <script src="../../../scripts/buildfire/components/carousel/carousel.js"></script>
+
 </head>
-<script type="text/javascript" charset="utf-8">
-	$(function(){
-		var slides = $('.plugin-slider .plugin-slide').length;
-		
-		// Slider needs at least 2 slides or you'll get an error.
-		if(slides > 1){
-			$('.plugin-slider').owlCarousel({
-				loop:true,
-				nav:false,
-				items:1
-			});	
-		}
-	})
-</script>
-<div class="holder padding-zero">
-	<div class="media-center-plugin layout3">
-		<div class="media-center-banner clearfix border-bottom-grey">
-			<div class="plugin-slider text-center">
-				<div class="plugin-slide">
-					<img src="http://www.placehold.it/1280x720.jpg">
-				</div>
-				<div class="plugin-slide">
-					<img src="http://www.placehold.it/1280x720.jpg">
-				</div>
-				<div class="plugin-slide">
-					<img src="http://www.placehold.it/1280x720.jpg">
-				</div>
-			</div>
-		</div>
-		<div class="text-left padded padding-bottom-zero clearfix">
-			<p>This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor.</p</p>
-		</div>
-		<div class="">
-			<div class="list-layout">
-				<div class="list-item">
-					<div class="list-item-media text-left overflow-hidden">
-						<div class="list-media-holder square-icon pull-left play-btn">
-							<img src="http://www.placehold.it/80x80">
-						</div>
-						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
-							<p class="ellipsis margin-zero text-primary margin-top-twenty"><a class="text-primary">This is a title This is a title This is a title</a></p>
-						</div>
-					</div>
-				</div>
-				<div class="list-item">
-					<div class="list-item-media text-left overflow-hidden">
-						<div class="list-media-holder square-icon pull-left play-btn">
-							<img src="http://www.placehold.it/80x80">
-						</div>
-						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
-							<p class="ellipsis margin-zero text-primary margin-top-twenty"><a class="text-primary">This is a title</a></p>
-						</div>
-					</div>
-				</div>
-				<div class="list-item">
-					<div class="list-item-media text-left overflow-hidden">
-						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
-							<p class="ellipsis margin-zero text-primary margin-top-twenty"><a class="text-primary">This is a title</a></p>
-						</div>
-					</div>
-				</div>
-				<div class="list-item">
-					<div class="list-item-media text-left overflow-hidden">
-						<div class="list-media-holder square-icon pull-left play-btn">
-							<img src="http://www.placehold.it/80x80">
-						</div>
-						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
-							<p class="ellipsis margin-zero text-primary margin-top-twenty"><a class="text-primary">This is a title</a></p>
-						</div>
-					</div>
-				</div>
-				<div class="list-item">
-					<div class="list-item-media text-left overflow-hidden">
-						<div class="list-media-holder square-icon pull-left play-btn">
-							<img src="http://www.placehold.it/80x80">
-						</div>
-						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
-							<p class="ellipsis margin-zero text-primary margin-top-twenty"><a class="text-primary">This is a title</a></p>
-						</div>
-					</div>
-				</div>
-				<div class="list-item">
-					<div class="list-item-media text-left overflow-hidden">
-						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
-							<p class="ellipsis margin-zero text-primary margin-top-twenty"><a class="text-primary">This is a title</a></p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+<body ng-controller="folderPluginCtrl" ng-cloak>
+    <style>
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+
+            .overlay.background {
+                position: fixed;
+            }
+    </style>
+    <div class="overlay background" ng-if="data.design.backgroundImage && deviceWidth != 0 && deviceHeight != 0">
+        <img ng-src="{{ cropImage(data.design.backgroundImage, {width: deviceWidth, height: deviceHeight}) }}"
+             style="-webkit-filter: blur({{data.design.backgroundBlur}}px);
+             -moz-filter blur({{data.design.backgroundblur}}px);
+             -o-filter blur({{data.design.backgroundblur}}px);
+             -ms-filter blur({{data.design.backgroundblur}}px);
+             filter blur({{data.design.backgroundblur}}px);">
+    </div>
+    <div class="overlay">
+        <div id="carousel"></div>
+        <div ng-bind-html="data.content.text" class="container" style="padding-top: 10px"></div>
+        <div ng-if="data.design.pluginsLayout && data.content.plugins.length > 0">
+            <div ng-include="layoutUrl"></div>
+        </div>
+    </div>
+    <script>
+        var folderPluginApp = angular.module('folderPlugin', []);
+
+        folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce', function ($scope, $sce) {
+            var view = null;
+            // here we have a problem it always loading layout 1 because of these init values
+
+            function initDeviceSize(callback) {
+                $scope.deviceHeight = window.innerHeight;
+                $scope.deviceWidth = window.innerWidth;
+                $scope.sliderHeight = Math.ceil(9 * $scope.deviceWidth / 16);
+                if (callback) {
+                    if ($scope.deviceWidth == 0 || $scope.deviceHeight == 0) {
+                        setTimeout(function () {
+                            initDeviceSize(callback);
+                        }, 500);
+                    } else {
+                        callback();
+                        if (!$scope.$$phase && !$scope.$root.$$phase) {
+                            $scope.$apply();
+                        }
+                    }
+                }
+            }
+
+            /*
+             * bind data to the scope
+             * */
+            function bind(data) {
+                $scope.data = null;
+                $scope.data = data;
+                if (data && data.content && data.content.text) {
+                    $scope.data.content.text = $sce.trustAsHtml(data.content.text);
+                }
+
+                if ($scope.data.content && $scope.data.content.carouselImages) {
+                    initDeviceSize(function () {
+                        if (!view) {
+                            view = new buildfire.components.carousel.view("#carousel", $scope.data.content.carouselImages);
+                        } else {
+                            view.loadItems($scope.data.content.carouselImages);
+                        }
+                    });
+                }
+
+                $scope.layoutUrl = 'templates/layout' + $scope.data.design.pluginsLayout + '.html';
+
+                if (!$scope.$$phase && !$scope.$root.$$phase) {
+                    $scope.$apply();
+                }
+            }
+
+            /*
+             * Go pull saved data
+             * */
+            function loadData() {
+                buildfire.datastore.get(function (err, result) {
+                    if (result) {
+                        bind(result.data);
+                    } else {
+                        $scope.data = {
+                            content: {
+                                carouselImages: [],
+                                plugins: []
+                            },
+                            design: {
+                                backgroundImage: null,
+                                pluginsLayout: 1,
+                                backgroundblur: 0
+                            }
+                        };
+                    }
+                });
+            }
+
+            loadData();
+
+            /**
+             * when a refresh is triggered get reload data
+             */
+            buildfire.datastore.onRefresh(loadData);
+
+            buildfire.datastore.onUpdate(function (e) {
+                loadData();
+            });
+
+            $scope.cropImage = function (url, settings) {
+                var options = {};
+                if (!url) {
+                    return "";
+                }
+                else {
+                    if (settings.height) {
+                        options.height = settings.height;
+                    }
+                    if (settings.width) {
+                        options.width = settings.width;
+                    }
+                    return buildfire.imageLib.cropImage(url, options);
+                }
+            };
+
+            $scope.resizeImage = function (url, settings) {
+                var options = {};
+                if (!url) {
+                    return "";
+                }
+                else {
+                    if (settings.height) {
+                        options.height = settings.height;
+                    }
+                    if (settings.width) {
+                        options.width = settings.width;
+                    }
+                    return buildfire.imageLib.resizeImage(url, options);
+                }
+            };
+
+            $scope.navigateToPlugin = function (plugin) {
+                buildfire.navigation.navigateTo(plugin.pluginTypeId, plugin.instanceId, plugin.title);
+            }
+        }]);
+    </script>
+</body>
+
 </html>
