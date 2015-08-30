@@ -1,125 +1,176 @@
-<!DOCTYPE html>
-<html ng-app="folderPlugin">
+﻿<!DOCTYPE html>
+<html ng-app="folderPluginDesign">
 <head lang="en">
-	<!-- CSS -->
+    <meta charset="UTF-8">
+
+    <!-- CSS -->
     <link href="../../../../styles/helper.css" rel="stylesheet">
     <link href="../../../../styles/siteIcons.css" rel="stylesheet">
-    
-	<!-- JS -->
+
+    <!-- JS -->
     <script src="../../../../scripts/buildfire.js"></script>
     <script src="../../../../scripts/angular/angular.min.js"></script>
 
-    <meta charset="UTF-8">
 </head>
 <body ng-controller="folderPluginCtrl">
-	
-	<div class="item row clearfix">
-		<div class="labels col-md-3 padding-right-zero pull-left">
-			<span>Layout Style</span>
-		</div>
-		<div class="main col-md-9 pull-right">
-			<div class="screens clearfix">
-				<div class="screen layouticon pull-left">
-					<a class="border-radius-three default-background-hover text-center">
-						<span class="add-icon hidden">+</span>
-						<img src="http://www.placehold.it/31x33">
-					</a>
-				</div>
-				<div class="screen layoutgrid pull-right margin-left-zero border-grey border-radius-three">
-					<a class="layouticon border-radius-three default-background-hover text-center">
-						<span class="add-icon hidden">+</span>
-						<img src="http://www.placehold.it/53x63">
-					</a>
-					<a class="layouticon border-radius-three default-background-hover text-center">
-						<span class="add-icon hidden">+</span>
-						<img src="http://www.placehold.it/33x11">
-					</a>
-					<a class="layouticon border-radius-three default-background-hover text-center">
-						<span class="add-icon hidden">+</span>
-						<img src="http://www.placehold.it/133x63">
-					</a>
-					<a class="layouticon border-radius-three default-background-hover text-center">
-						<span class="add-icon hidden">+</span>
-						<img src="http://www.placehold.it/53x131">
-					</a>
-					<a class="layouticon border-radius-three default-background-hover text-center">
-						<span class="add-icon hidden">+</span>
-						<img src="http://www.placehold.it/53x24">
-					</a>
-					<a class="layouticon border-radius-three default-background-hover text-center">
-						<span class="add-icon hidden">+</span>
-						<img src="http://www.placehold.it/33x63">
-					</a>
-					<a class="layouticon border-radius-three default-background-hover text-center">
-						<span class="add-icon hidden">+</span>
-						<img src="http://www.placehold.it/13x32">
-					</a>
-					<a class="layouticon border-radius-three default-background-hover text-center">
-						<span class="add-icon hidden">+</span>
-						<img src="http://www.placehold.it/33x44">
-					</a>
-					<a class="layouticon border-radius-three default-background-hover text-center">
-						<span class="add-icon hidden">+</span>
-						<img src="http://www.placehold.it/25x50">
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<hr>
-	<div class="item clearfix screens row">
-		<div class="labels col-md-3 padding-right-zero pull-left">
-			<span>Background Images</span>
-		</div>
-		<div class="main col-md-9 pull-right">
-			<div class="screens flexalign clearfix">
-				<div class="screen mostdevices pull-left text-center">										
-					<a class="border-radius-three default-background-hover" onclick="alert('Open Media Library');">
-						<span class="add-icon hidden">+</span>
-						<img src="http://www.placehold.it/133x231">
-					</a>
-					<span class="icon btn-delete-icon btn-danger transition-third" onclick="window.openDialog('remove.html', null, 'sm', null)"></span>
-					<label>Most Devices</label>
-					<label class="secondary">640x920</label>
-				</div>
-				<div class="screen iphone pull-left text-center">
-					<a class="border-radius-three default-background-hover" onclick="alert('Open Media Library');">
-						<span class="add-icon">+</span>											
-					</a>
-					<span class="icon btn-delete-icon btn-danger transition-third" onclick="window.openDialog('remove.html', null, 'sm', null)"></span>
-					<label>iPhone 5/6/6+</label>
-					<label class="secondary">750x1294</label>
-				</div>
-				<div class="screen ipads pull-left text-center">
-					<a class="border-radius-three default-background-hover" onclick="alert('Open Media Library');">
-						<span class="add-icon">+</span>											
-					</a>
-					<span class="icon btn-delete-icon btn-danger transition-third" onclick="window.openDialog('remove.html', null, 'sm', null)"></span>
-					<label>iPads</label>
-					<label class="secondary">1536x2048</label>
-				</div>
-				<div class="screen tablets pull-left text-center">
-					<a class="border-radius-three default-background-hover" onclick="alert('Open Media Library');">
-						<span class="add-icon hidden">+</span>
-						<img src="http://www.placehold.it/333x631">
-					</a>
-					<span class="icon btn-delete-icon btn-danger transition-third" onclick="window.openDialog('remove.html', null, 'sm', null)"></span>
-					<label>Tablets</label>
-					<label class="secondary">1600x2560</label>
-				</div>
-			</div>
-			<p class="info margin-top-thirty margin-bottom-zero">* Images must be uploaded in PNG format. Size must not exceed 2MB.</p>
-		</div>
-	</div>
-	
-<script>
-    var folderPluginApp = angular.module('folderPlugin');
-
-    folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
+    <div ng-form="frmMain">
 
 
-    }]);
-    
-</script>
+        <div class="item row margin-bottom-twenty clearfix">
+            <div class="labels col-md-3 padding-right-zero pull-left">
+                <span>Layout Style</span>
+            </div>
+            <div class="main col-md-9 pull-right">
+                <div class="screens clearfix">
+                    <div class="screen layouticon pull-left">
+                        <a class="border-radius-three default-background-hover text-center">
+                            <span class="add-icon hidden">+</span>
+                            <img ng-src="{{ availableLayouts[data.design.pluginsLayout - 1].thumbnail }}">
+                        </a>
+                    </div>
+                    <div class="screen layoutgrid pull-right margin-left-zero border-grey border-radius-three">
+                        <a class="layouticon border-radius-three default-background-hover text-center" ng-repeat="layout in availableLayouts" ng-click="changeLayout($index)">
+                            <span class="add-icon hidden">+</span>
+                            <img ng-src="{{ layout.thumbnail }}">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="item clearfix row">
+            <div class="labels col-md-3 padding-right-zero pull-left">
+                <span>Background Image</span>
+            </div>
+            <div class="main col-md-9 pull-right">
+                <div class="screens clearfix">
+                    <div class="screen text-center layouticon pull-left">
+                        <a class="border-grey border-radius-three default-background-hover" ng-click="changeBackground()">
+                            <span class="add-icon">+</span>
+                            <img ng-src="{{ resizeImage(data.design.backgroundImage) }}" alt="Background Image" ng-show="data.design.backgroundImage" />
+                        </a>
+                        <label class="secondary">750x1334</label>
+                        <span class="icon btn-icon btn-delete-icon btn-danger transition-third" ng-click="deleteBackground()"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="item clearfix row">
+            <div class="labels col-md-3 padding-right-zero pull-left" ng-show="data.design.backgroundImage">
+                <span>Blur Background</span>
+            </div>
+            <div class="main col-md-9 pull-right" ng-show="data.design.backgroundImage">
+                <div class="screens clearfix">
+                    <input id="slider1" type="range" min="0" max="8" step="1" ng-model="data.design.backgroundBlur" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var folderPluginApp = angular.module('folderPluginDesign', []);
+
+        folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
+            $scope.availableLayouts = [
+                {
+                    template: "layout1.html",
+                    thumbnail: "http://www.placehold.it/33x11"
+                },
+                {
+                    template: "layout2.html",
+                    thumbnail: "http://www.placehold.it/53x63"
+                }
+            ];
+
+            /*
+            * Go pull any previously saved data
+            * */
+            buildfire.datastore.get(function (err, result) {
+                if (result) {
+                    $scope.data = result.data;
+                    $scope.id = result.id;
+                    $scope.$digest();
+
+                } else {
+                    $scope.data = {
+                        content: {
+                            carouselImages: [],
+                            plugins: []
+                        },
+                        design: {
+                            backgroundImage: null,
+                            pluginsLayout: 1,
+                            backgroundblur: 0
+                        }
+                    };
+
+                }
+                /*
+                 * watch for changes in data and trigger the saveData function on change
+                 * */
+                $scope.$watch('data', saveData, true);
+            });
+
+            /*
+             * Call the datastore to save the data object
+             * */
+            var saveData = function (newObj) {
+                if (newObj == undefined) return;
+                if ($scope.frmMain.$invalid) {
+                    console.warn('invalid data, details will not be saved');
+                    return;
+                }
+
+                buildfire.datastore.save(newObj, function (err, result) {
+                    if (err || !result) {
+                        console.error('Error saving the widget details: ', err);
+                    }
+                    else {
+                        console.info('Widget details saved');
+                    }
+                });
+            };
+
+
+            /*
+            * Open a dailog to change the background image
+            * */
+            $scope.changeBackground = function () {
+                buildfire.imageLib.showDialog({ showIcons: false, multiSelection: false }, function (error, result) {
+                    if (result && result.selectedFiles && result.selectedFiles.length > 0) {
+                        if (!$scope.data.design) {
+                            $scope.data.design = {};
+                        }
+                        $scope.data.design.backgroundImage = result.selectedFiles[0];
+                        if (!$scope.$$phase && !$scope.$root.$$phase) {
+                            $scope.$apply();
+                        }
+                    }
+                });
+            };
+
+            /*
+            * Get background image thumbnail
+            * */
+            $scope.resizeImage = function (url) {
+                if (!url) {
+                    return "";
+                }
+                else {
+                    return buildfire.imageLib.resizeImage(url, { width: 88 });
+                }
+            };
+
+            /*
+            * Delete the background and back to the default white background
+            * */
+            $scope.deleteBackground = function () {
+                $scope.data.design.backgroundImage = "";
+            };
+
+            $scope.changeLayout = function (layoutId) {
+                $scope.data.design.pluginsLayout = layoutId + 1;
+            };
+        }]);
+    </script>
 </body>
 </html>

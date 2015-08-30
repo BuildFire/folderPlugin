@@ -1,112 +1,18 @@
-<!DOCTYPE html>
-<html lang="en" ng-app="buildfire" >
-<head>
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="../../../../styles/bootstrap.css">
-    <link rel="stylesheet" href="../../../../styles/siteIcons.css">
-    <link rel="stylesheet" href="../../../../styles/appStyle.css">
-    <link rel="stylesheet" href="../../../../styles/helper.css">
-    
-	<!-- jQuery & Owl Carousel -->
-	<script src="../../../../scripts/jquery/jquery-1.11.2.min.js"></script>    
-	<script src="../../../../scripts/owlCarousel/owlCarousel.js"></script>
-    <link rel="stylesheet" href="../../../../scripts/owlCarousel/owlCarousel.css">
-
-    <!-- Meta -->
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<script type="text/javascript" charset="utf-8">
-	$(function(){
-		var slides = $('.plugin-slider .plugin-slide').length;
-		
-		// Slider needs at least 2 slides or you'll get an error.
-		if(slides > 1){
-			$('.plugin-slider').owlCarousel({
-				loop:true,
-				nav:false,
-				items:1
-			});	
-		}
-	})
-</script>
-<div class="holder padding-zero">
-	<div class="media-center-plugin layout3">
-		<div class="media-center-banner clearfix border-bottom-grey">
-			<div class="plugin-slider text-center">
-				<div class="plugin-slide">
-					<img src="http://www.placehold.it/1280x720.jpg">
-				</div>
-				<div class="plugin-slide">
-					<img src="http://www.placehold.it/1280x720.jpg">
-				</div>
-				<div class="plugin-slide">
-					<img src="http://www.placehold.it/1280x720.jpg">
-				</div>
-			</div>
-		</div>
-		<div class="text-left padded padding-bottom-zero clearfix">
-			<p>This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor.</p</p>
-		</div>
-		<div class="">
-			<div class="list-layout">
-				<div class="list-item">
-					<div class="list-item-media text-left overflow-hidden">
-						<div class="list-media-holder pull-left">
-							<img src="http://www.placehold.it/80x80">
-						</div>
-						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
-							<p class="ellipsis margin-zero text-primary margin-top-fifteen"><a class="text-primary">This is a title This is a title This is a title</a></p>
-						</div>
-					</div>
-				</div>
-				<div class="list-item">
-					<div class="list-item-media text-left overflow-hidden">
-						<div class="list-media-holder pull-left">
-							<img src="http://www.placehold.it/80x80">
-						</div>
-						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
-							<p class="ellipsis margin-zero text-primary margin-top-fifteen"><a class="text-primary">This is a title</a></p>
-						</div>
-					</div>
-				</div>
-				<div class="list-item">
-					<div class="list-item-media text-left overflow-hidden">
-						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
-							<p class="ellipsis margin-zero text-primary margin-top-fifteen"><a class="text-primary">This is a title</a></p>
-						</div>
-					</div>
-				</div>
-				<div class="list-item">
-					<div class="list-item-media text-left overflow-hidden">
-						<div class="list-media-holder pull-left">
-							<img src="http://www.placehold.it/80x80">
-						</div>
-						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
-							<p class="ellipsis margin-zero text-primary margin-top-fifteen"><a class="text-primary">This is a title</a></p>
-						</div>
-					</div>
-				</div>
-				<div class="list-item">
-					<div class="list-item-media text-left overflow-hidden">
-						<div class="list-media-holder pull-left">
-							<img src="http://www.placehold.it/80x80">
-						</div>
-						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
-							<p class="ellipsis margin-zero text-primary margin-top-fifteen"><a class="text-primary">This is a title</a></p>
-						</div>
-					</div>
-				</div>
-				<div class="list-item">
-					<div class="list-item-media text-left overflow-hidden">
-						<div class="list-item-copy text-left padding-left-ten padding-right-ten">
-							<p class="ellipsis margin-zero text-primary margin-top-fifteen"><a class="text-primary">This is a title</a></p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+﻿<div class="holder padding-zero">
+    <div class="media-center-plugin layout3">
+        <div class="list-layout">
+            <div class="list-item" ng-repeat="plugin in data.content.plugins">
+                <div class="list-item-media text-left overflow-hidden">
+                    <div class="list-media-holder pull-left" ng-if="plugin.iconUrl">
+                        <img ng-src="{{ resizeImage(plugin.iconUrl, {width: 110, height: 60}) }}">
+                    </div>
+                    <div class="list-item-copy text-left padding-left-ten padding-right-ten">
+                        <p class="ellipsis margin-zero text-primary margin-top-fifteen">
+                            <a class="text-primary">{{ plugin.title }}</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-</html>
