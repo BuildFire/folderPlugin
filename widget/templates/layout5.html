@@ -1,0 +1,18 @@
+﻿<div class="padded padding-top-zero">
+    <div class="list-layout">
+        <div ng-repeat="pluginRow in data._buildfire.plugins.result" class="row">
+            <div class="list-item col-xs-6 padding-zero has-info-bar pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
+                <div class="list-item-media text-center">
+                    <div class="list-media-holder">
+                        <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/200x200', {width: 200, height: 200}) }}">
+                    </div>
+                    <div class="info-bar bg-primary">
+                        <p class="margin-bottom-zero col-md-12 ellipsis">
+                            {{ plugin.title }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
