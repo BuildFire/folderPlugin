@@ -36,7 +36,7 @@
              filter blur({{data.design.backgroundblur}}px);">
     </div>
 
-    <div class="holder padding-zero">
+    <div class="overlay holder padding-zero">
         <div class="folder-plugin list-layout">
             <div class="plugin-banner clearfix border-bottom-grey">
                 <div id="carousel" class="plugin-slider text-center"></div>
@@ -125,7 +125,7 @@
              * */
             function loadData() {
                 buildfire.datastore.getWithDynamicData(function (err, result) {
-                    if (result) {
+                    if (result && result.data && !angular.equals({}, result.data)) {
                         bind(result.data);
                     } else {
                         $scope.data = {

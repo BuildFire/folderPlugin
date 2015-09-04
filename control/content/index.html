@@ -53,15 +53,15 @@
             /*
              * Go pull any previously saved data
              * */
-            buildfire.datastore.getWithDynamicData(function (err, result) {
-                if (result) {
+            buildfire.datastore.get(function (err, result) {
+                if (result && result.data && !angular.equals({}, result.data)) {
                     $scope.data = result.data;
                     $scope.id = result.id;
                     if ($scope.data.content && $scope.data.content.carouselImages) {
                         editor.loadItems($scope.data.content.carouselImages);
                     }
 
-                    if ($scope.data._buildfire.plugins.result) {
+                    if ($scope.data._buildfire && $scope.data._buildfire.plugins && $scope.data._buildfire.plugins.result) {
                         plugins.loadItems($scope.data._buildfire.plugins.result);
                     }
 

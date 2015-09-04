@@ -84,7 +84,7 @@
             * Go pull any previously saved data
             * */
             buildfire.datastore.getWithDynamicData(function (err, result) {
-                if (result) {
+                if (result && result.data && !angular.equals({}, result.data)) {
                     $scope.data = result.data;
                     $scope.id = result.id;
                     $scope.$digest();
