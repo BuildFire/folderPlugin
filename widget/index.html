@@ -5,6 +5,7 @@
     <title>Text widget</title>
 
     <link href="../../../scripts/owlCarousel/owlCarousel.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../../styles/helper.css">
 
     <script src="../../../scripts/angular/angular.min.js"></script>
     <script src="../../../scripts/jquery/jquery-1.11.2.min.js"></script>
@@ -34,11 +35,14 @@
              -ms-filter blur({{data.design.backgroundblur}}px);
              filter blur({{data.design.backgroundblur}}px);">
     </div>
-    <div class="overlay">
-        <div id="carousel"></div>
-        <div ng-bind-html="data.content.text" class="container" style="padding-top: 10px"></div>
-        <div ng-if="data.design.pluginsLayout && data.content.plugins.length > 0">
-            <div ng-include="layoutUrl"></div>
+
+    <div class="overlay holder padding-zero">
+        <div class="folder-plugin list-layout">
+            <div class="plugin-banner clearfix border-bottom-grey">
+                <div id="carousel" class="plugin-slider text-center"></div>
+            </div>
+            <div class="text-left padded padding-bottom-zero clearfix folder-plugin-text" ng-bind-html="data.content.text"></div>
+            <div ng-include="layoutUrl" ng-if="data.design.pluginsLayout && data._buildfire.plugins.result.length > 0"></div>
         </div>
     </div>
     <script>
@@ -72,8 +76,31 @@
             function bind(data) {
                 $scope.data = null;
                 $scope.data = data;
+                if ($scope.data.design.pluginsLayout == 5 || $scope.data.design.pluginsLayout == 6) {
+                    var temp = [];
+                    var currentItem = 0;
+                    for (var i = 0; i < data._buildfire.plugins.result.length; i++) {
+                        if (i % 2 == 0) {
+                            temp[currentItem] = [];
+                            temp[currentItem].push(data._buildfire.plugins.result[i]);
+                        } else {
+                            temp[currentItem].push(data._buildfire.plugins.result[i]);
+
+                            currentItem++;
+                        }
+
+
+                    }
+
+                    $scope.data._buildfire.plugins.result = temp;
+                }
+
                 if (data && data.content && data.content.text) {
-                    $scope.data.content.text = $sce.trustAsHtml(data.content.text);
+                    if (data.content.text.replace(/<.+?>/g, "") == "") {
+                        $scope.data.content.text = "";
+                    } else {
+                        $scope.data.content.text = $sce.trustAsHtml(data.content.text);
+                    }
                 }
 
                 if ($scope.data.content && $scope.data.content.carouselImages) {
@@ -97,14 +124,21 @@
              * Go pull saved data
              * */
             function loadData() {
-                buildfire.datastore.get(function (err, result) {
-                    if (result) {
+                buildfire.datastore.getWithDynamicData(function (err, result) {
+                    if (result && result.data && !angular.equals({}, result.data)) {
                         bind(result.data);
                     } else {
                         $scope.data = {
+                            _buildfire: {
+                                plugins: {
+                                    dataType: "pluginInstance",
+                                    data: [],
+                                    result: []
+                                }
+                            },
                             content: {
                                 carouselImages: [],
-                                plugins: []
+                                text: ""
                             },
                             design: {
                                 backgroundImage: null,

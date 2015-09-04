@@ -54,17 +54,16 @@
              * Go pull any previously saved data
              * */
             buildfire.datastore.get(function (err, result) {
-                if (result) {
+                if (result && result.data && !angular.equals({}, result.data)) {
                     $scope.data = result.data;
                     $scope.id = result.id;
-                    if ($scope.data.content) {
-                        if ($scope.data.content.carouselImages)
-                            editor.loadItems($scope.data.content.carouselImages);
-
-                        if ($scope.data.content.plugins)
-                            plugins.loadItems($scope.data.content.plugins);
+                    if ($scope.data.content && $scope.data.content.carouselImages) {
+                        editor.loadItems($scope.data.content.carouselImages);
                     }
 
+                    if ($scope.data._buildfire && $scope.data._buildfire.plugins && $scope.data._buildfire.plugins.result) {
+                        plugins.loadItems($scope.data._buildfire.plugins.result);
+                    }
 
                     if (!$scope.$$phase && !$scope.$root.$$phase) {
                         $scope.$apply();
@@ -72,9 +71,15 @@
                     if (tmrDelay) clearTimeout(tmrDelay);
                 } else {
                     $scope.data = {
+                        _buildfire: {
+                            "plugins": {
+                                "dataType": "pluginInstance",
+                                "data": []
+                            }
+                        },
                         content: {
                             carouselImages: [],
-                            plugins: []
+                            text: ""
                         },
                         design: {
                             backgroundImage: null,
@@ -83,8 +88,8 @@
                         }
                     };
 
-                    editor.loadItems($scope.data.content.carouselImages);
-                    plugins.loadItems($scope.data.content.plugins);
+                    editor.loadItems([]);
+                    plugins.loadItems([]);
                 }
                 /*
                  * watch for changes in data and trigger the saveDataWithDelay function on change
@@ -123,13 +128,27 @@
                 }, 500);
             };
 
+            var getPluginsIds = function (plugins) {
+                var pluginsIds = [];
+                for (var i = 0; i < plugins.length; i++) {
+                    pluginsIds.push(plugins[i].instanceId);
+                }
+                return pluginsIds;
+            }
+
             // this method will be called when a new item added to the list
             editor.onAddItems = editor.onDeleteItem = editor.onItemChange = editor.onOrderChange = function () {
                 $scope.data.content.carouselImages = editor.items;
                 saveData($scope.data);
             };
+
             plugins.onAddItems = plugins.onDeleteItem = plugins.onOrderChange = function () {
-                $scope.data.content.plugins = plugins.items;
+                $scope.data._buildfire = {
+                    "plugins": { // can be any valid name
+                        "dataType": "pluginInstance",
+                        "data": getPluginsIds(plugins.items) // saved criteria or parameters
+                    }
+                };
                 saveData($scope.data);
             };
         }]);
