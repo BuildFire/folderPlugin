@@ -24,13 +24,11 @@
                 <div class="screens clearfix">
                     <div class="screen layouticon pull-left">
                         <a class="border-radius-three default-background-hover text-center">
-                            <span class="add-icon hidden">+</span>
-                            <img ng-src="{{ availableLayouts[data.design.pluginsLayout - 1] }}">
+                            <img ng-src="{{ availableLayouts[data.design.selectedLayout - 1] }}">
                         </a>
                     </div>
                     <div class="screen layoutgrid pull-right margin-left-zero border-grey border-radius-three">
                         <a class="layouticon border-radius-three default-background-hover text-center" ng-repeat="layout in availableLayouts" ng-click="changeLayout($index)">
-                            <span class="add-icon hidden">+</span>
                             <img ng-src="{{ layout }}">
                         </a>
                     </div>
@@ -87,7 +85,27 @@
                 if (result && result.data && !angular.equals({}, result.data)) {
                     $scope.data = result.data;
                     $scope.id = result.id;
-                    $scope.$digest();
+
+                    if (!$scope.data._buildfire) {
+                        $scope.data._buildfire = {
+                            plugins: {
+                                dataType: "pluginInstance",
+                                data: []
+                            }
+                        };
+                    }
+
+                    if (!$scope.data.design) {
+                        $scope.data.design = {
+                            backgroundImage: null,
+                            selectedLayout: 1,
+                            backgroundblur: 0
+                        };
+                    }
+
+                    if (!$scope.$$phase && !$scope.$root.$$phase) {
+                        $scope.$apply();
+                    }
 
                 } else {
                     $scope.data = {
@@ -103,7 +121,7 @@
                         },
                         design: {
                             backgroundImage: null,
-                            pluginsLayout: 1,
+                            selectedLayout: 1,
                             backgroundblur: 0
                         }
                     };
@@ -117,8 +135,11 @@
             /*
              * Call the datastore to save the data object
              * */
-            var saveData = function (newObj) {
+            var saveData = function (newObj, oldObj) {
                 if (newObj == undefined) return;
+                if (newObj == oldObj)
+                    return;
+
                 if ($scope.frmMain.$invalid) {
                     console.warn('invalid data, details will not be saved');
                     return;
@@ -133,7 +154,6 @@
                     }
                 });
             };
-
 
             /*
             * Open a dailog to change the background image
@@ -172,7 +192,19 @@
             };
 
             $scope.changeLayout = function (layoutId) {
-                $scope.data.design.pluginsLayout = layoutId + 1;
+                setTimeout(function () {
+                    if (!$scope.data.design) {
+                        $scope.data.design = {};
+                    }
+                    var newLayout = layoutId + 1;
+                    if (newLayout != $scope.data.design.selectedLayout) {
+                        $scope.data.design.selectedLayout = newLayout;
+                        if (!$scope.$$phase && !$scope.$root.$$phase) {
+                            $scope.$apply();
+                        }
+                    }
+
+                }, 500);
             };
         }]);
     </script>
