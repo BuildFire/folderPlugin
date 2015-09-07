@@ -113,7 +113,7 @@
                 /*
                  * watch for changes in data and trigger the saveDataWithDelay function on change
                  * */
-                $scope.$watch('data', saveDataWithDelay, true);
+                $scope.$watch('data', saveDataWithDelay, true);                
             });
 
             /*
@@ -141,8 +141,6 @@
              * */
             var tmrDelay = null;
             var saveDataWithDelay = function (newObj, oldObj) {
-                if (newObj == oldObj)
-                    return;
                 if (tmrDelay) clearTimeout(tmrDelay);
                 tmrDelay = setTimeout(function () {
                     saveData(newObj);

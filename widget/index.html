@@ -25,6 +25,11 @@
 
             .overlay.background {
                 position: fixed;
+                height: 100%;
+            }
+
+            .overlay.background img {
+                height: 100%;
             }
     </style>
     <div class="overlay background" ng-if="data.design.backgroundImage && deviceWidth != 0 && deviceHeight != 0">
@@ -93,7 +98,6 @@
              * bind data to the scope
              * */
             function bind(data) {
-                $scope.data = null;
                 $scope.data = data;
 
                 if (!$scope.data._buildfire) {
