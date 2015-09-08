@@ -46,7 +46,7 @@
         var folderPluginApp = angular.module('folderPlugin', ['ui.tinymce']);
 
         folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
-            /// create a new instance of the buildfire carousel editor
+            // create a new instance of the buildfire carousel editor
             var editor = new buildfire.components.carousel.editor("#carousel");
             var plugins = new buildfire.components.pluginInstance.sortableList("#plugins", []);
 
@@ -65,16 +65,35 @@
                         plugins.loadItems($scope.data._buildfire.plugins.result);
                     }
 
+                    if (!$scope.data._buildfire) {
+                        $scope.data._buildfire = {
+                            plugins: {
+                                dataType: "pluginInstance",
+                                data: []
+                            }
+                        };
+                    }
+
+                    if (!$scope.data.design) {
+                        $scope.data.design = {
+                            backgroundImage: null,
+                            selectedLayout: 1,
+                            backgroundblur: 0
+                        };
+                    }
+
+
                     if (!$scope.$$phase && !$scope.$root.$$phase) {
                         $scope.$apply();
                     }
                     if (tmrDelay) clearTimeout(tmrDelay);
                 } else {
+
                     $scope.data = {
                         _buildfire: {
-                            "plugins": {
-                                "dataType": "pluginInstance",
-                                "data": []
+                            plugins: {
+                                dataType: "pluginInstance",
+                                data: []
                             }
                         },
                         content: {
@@ -83,7 +102,7 @@
                         },
                         design: {
                             backgroundImage: null,
-                            pluginsLayout: 1,
+                            selectedLayout: 1,
                             backgroundblur: 0
                         }
                     };
@@ -94,7 +113,7 @@
                 /*
                  * watch for changes in data and trigger the saveDataWithDelay function on change
                  * */
-                $scope.$watch('data', saveDataWithDelay, true);
+                $scope.$watch('data', saveDataWithDelay, true);                
             });
 
             /*
@@ -155,4 +174,3 @@
     </script>
 </body>
 </html>
-

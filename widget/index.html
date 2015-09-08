@@ -25,6 +25,11 @@
 
             .overlay.background {
                 position: fixed;
+                height: 100%;
+            }
+
+            .overlay.background img {
+                height: 100%;
             }
     </style>
     <div class="overlay background" ng-if="data.design.backgroundImage && deviceWidth != 0 && deviceHeight != 0">
@@ -42,13 +47,32 @@
                 <div id="carousel" class="plugin-slider text-center"></div>
             </div>
             <div class="text-left padded padding-bottom-zero clearfix folder-plugin-text" ng-bind-html="data.content.text"></div>
-            <div ng-include="layoutUrl" ng-if="data.design.pluginsLayout && data._buildfire.plugins.result.length > 0"></div>
+            <div ng-include="layoutUrl" ng-if="data.design.selectedLayout && data._buildfire.plugins.result.length > 0"></div>
         </div>
     </div>
     <script>
         var folderPluginApp = angular.module('folderPlugin', []);
 
         folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce', function ($scope, $sce) {
+
+            $scope.data = {
+                _buildfire: {
+                    plugins: {
+                        dataType: "pluginInstance",
+                        data: []
+                    }
+                },
+                content: {
+                    carouselImages: [],
+                    text: ""
+                },
+                design: {
+                    backgroundImage: null,
+                    selectedLayout: 1,
+                    backgroundblur: 0
+                }
+            };
+
             var view = null;
             // here we have a problem it always loading layout 1 because of these init values
 
@@ -74,9 +98,26 @@
              * bind data to the scope
              * */
             function bind(data) {
-                $scope.data = null;
                 $scope.data = data;
-                if ($scope.data.design.pluginsLayout == 5 || $scope.data.design.pluginsLayout == 6) {
+
+                if (!$scope.data._buildfire) {
+                    $scope.data._buildfire = {
+                        plugins: {
+                            dataType: "pluginInstance",
+                            data: []
+                        }
+                    };
+                }
+
+                if (!$scope.data.design) {
+                    $scope.data.design = {
+                        backgroundImage: null,
+                        selectedLayout: 1,
+                        backgroundblur: 0
+                    };
+                }
+
+                if ($scope.data.design.selectedLayout == 5 || $scope.data.design.selectedLayout == 6) {
                     var temp = [];
                     var currentItem = 0;
                     for (var i = 0; i < data._buildfire.plugins.result.length; i++) {
@@ -113,7 +154,7 @@
                     });
                 }
 
-                $scope.layoutUrl = 'templates/layout' + $scope.data.design.pluginsLayout + '.html';
+                $scope.layoutUrl = 'templates/layout' + $scope.data.design.selectedLayout + '.html';
 
                 if (!$scope.$$phase && !$scope.$root.$$phase) {
                     $scope.$apply();
@@ -142,7 +183,7 @@
                             },
                             design: {
                                 backgroundImage: null,
-                                pluginsLayout: 1,
+                                selectedLayout: 1,
                                 backgroundblur: 0
                             }
                         };
