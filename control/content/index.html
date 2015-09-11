@@ -2,7 +2,7 @@
 <html ng-app="folderPlugin">
 <head lang="en">
     <meta charset="UTF-8">
-
+    <title>content</title>
     <!-- CSS -->
     <link href="../../../../styles/helper.css" rel="stylesheet">
     <link href="../../../../styles/siteIcons.css" rel="stylesheet">
@@ -50,6 +50,30 @@
             var editor = new buildfire.components.carousel.editor("#carousel");
             var plugins = new buildfire.components.pluginInstance.sortableList("#plugins", []);
 
+            var getPluginDetails = function (pluginsInfo, pluginIds) {
+                var returnPlugins = [];
+                var tempPlugin = null;
+                for (var id = 0; id < pluginIds.length; id++) {
+                    for (var i = 0; i < pluginsInfo.length; i++) {
+                        tempPlugin = {};
+                        if (pluginIds[id] == pluginsInfo[i].id) {
+                            tempPlugin.instanceId = pluginsInfo[i].id;
+                            if (pluginsInfo[i].data) {
+                                tempPlugin.iconUrl = pluginsInfo[i].data.iconUrl;
+                                tempPlugin.title = pluginsInfo[i].data.title;
+                                tempPlugin.pluginTypeId = pluginsInfo[i].data.pluginTypeId;
+                            } else {
+                                tempPlugin.iconUrl = "";
+                                tempPlugin.title = "[No title]";
+                            }
+                            returnPlugins.push(tempPlugin);
+                        }
+                        tempPlugin = null;
+                    }
+                }
+                return returnPlugins;
+            };
+
             /*
              * Go pull any previously saved data
              * */
@@ -62,7 +86,8 @@
                     }
 
                     if ($scope.data._buildfire && $scope.data._buildfire.plugins && $scope.data._buildfire.plugins.result) {
-                        plugins.loadItems($scope.data._buildfire.plugins.result);
+                        var pluginsData = getPluginDetails($scope.data._buildfire.plugins.result, $scope.data._buildfire.plugins.data);
+                        plugins.loadItems(pluginsData);
                     }
 
                     if (!$scope.data._buildfire) {
@@ -113,7 +138,7 @@
                 /*
                  * watch for changes in data and trigger the saveDataWithDelay function on change
                  * */
-                $scope.$watch('data', saveDataWithDelay, true);                
+                $scope.$watch('data', saveDataWithDelay, true);
             });
 
             /*
@@ -161,11 +186,43 @@
                 saveData($scope.data);
             };
 
-            plugins.onAddItems = plugins.onDeleteItem = plugins.onOrderChange = function () {
+            plugins.onAddItems = function () {
+                var scopeItems = $scope.data._buildfire.plugins.data;
+                var itemIds = getPluginsIds(plugins.items);
+                for (var i = 0; i < itemIds.length; i++) {
+                    if (scopeItems.indexOf(itemIds[i]) == -1) {
+                        scopeItems.push(itemIds[i]);
+                    }
+                }
+                saveData($scope.data);
+            };
+
+            plugins.onDeleteItem = function (item, index) {
+                $scope.data._buildfire.plugins.data.splice(index, 1);
+                saveData($scope.data);
+            };
+
+            plugins.onOrderChange = function (item, oldIndex, newIndex) {
+                var items = $scope.data._buildfire.plugins.data;
+
+                var tmp = items[oldIndex];
+
+                if (oldIndex < newIndex) {
+                    for (var i = oldIndex + 1; i <= newIndex; i++) {
+                        items[i - 1] = items[i];
+                    }
+                } else {
+                    for (var i = oldIndex - 1; i >= newIndex; i--) {
+                        items[i + 1] = items[i];
+                    }
+                }
+
+                items[newIndex] = tmp;
+
                 $scope.data._buildfire = {
                     "plugins": { // can be any valid name
                         "dataType": "pluginInstance",
-                        "data": getPluginsIds(plugins.items) // saved criteria or parameters
+                        "data": items // saved criteria or parameters
                     }
                 };
                 saveData($scope.data);
