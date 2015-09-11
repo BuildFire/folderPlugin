@@ -2,7 +2,7 @@
 <html ng-app="folderPlugin">
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Text widget</title>
+    <title>widget</title>
 
     <link href="../../../scripts/owlCarousel/owlCarousel.css" rel="stylesheet" />
     <link rel="stylesheet" href="../../../styles/helper.css">
@@ -55,26 +55,50 @@
 
         folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce', function ($scope, $sce) {
 
-            $scope.data = {
-                _buildfire: {
-                    plugins: {
-                        dataType: "pluginInstance",
-                        data: []
-                    }
-                },
-                content: {
-                    carouselImages: [],
-                    text: ""
-                },
-                design: {
-                    backgroundImage: null,
-                    selectedLayout: 1,
-                    backgroundblur: 0
-                }
-            };
+            //$scope.data = {
+            //    _buildfire: {
+            //        plugins: {
+            //            dataType: "pluginInstance",
+            //            data: []
+            //        }
+            //    },
+            //    content: {
+            //        carouselImages: [],
+            //        text: ""
+            //    },
+            //    design: {
+            //        backgroundImage: null,
+            //        selectedLayout: 1,
+            //        backgroundblur: 0
+            //    }
+            //};
 
             var view = null;
             // here we have a problem it always loading layout 1 because of these init values
+
+            var getPluginDetails = function (pluginsInfo, pluginIds) {
+                var returnPlugins = [];
+                var tempPlugin = null;
+                for (var id = 0; id < pluginIds.length; id++) {
+                    for (var i = 0; i < pluginsInfo.length; i++) {
+                        tempPlugin = {};
+                        if (pluginIds[id] == pluginsInfo[i].id) {
+                            tempPlugin.instanceId = pluginsInfo[i].id;
+                            if (pluginsInfo[i].data) {
+                                tempPlugin.iconUrl = pluginsInfo[i].data.iconUrl;
+                                tempPlugin.title = pluginsInfo[i].data.title;
+                                tempPlugin.pluginTypeId = pluginsInfo[i].data.pluginTypeId;
+                            } else {
+                                tempPlugin.iconUrl = "";
+                                tempPlugin.title = "[No title]";
+                            }
+                            returnPlugins.push(tempPlugin);
+                        }
+                        tempPlugin = null;
+                    }
+                }
+                return returnPlugins;
+            };
 
             function initDeviceSize(callback) {
                 $scope.deviceHeight = window.innerHeight;
@@ -104,7 +128,8 @@
                     $scope.data._buildfire = {
                         plugins: {
                             dataType: "pluginInstance",
-                            data: []
+                            data: [],
+                            result: []
                         }
                     };
                 }
@@ -116,6 +141,8 @@
                         backgroundblur: 0
                     };
                 }
+
+                $scope.data._buildfire.plugins.result = getPluginDetails($scope.data._buildfire.plugins.result, $scope.data._buildfire.plugins.data);
 
                 if ($scope.data.design.selectedLayout == 5 || $scope.data.design.selectedLayout == 6) {
                     var temp = [];

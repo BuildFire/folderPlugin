@@ -2,7 +2,7 @@
 <html ng-app="folderPluginDesign">
 <head lang="en">
     <meta charset="UTF-8">
-
+    <title>design</title>
     <!-- CSS -->
     <link href="../../../../styles/helper.css" rel="stylesheet">
     <link href="../../../../styles/siteIcons.css" rel="stylesheet">
@@ -14,8 +14,6 @@
 </head>
 <body ng-controller="folderPluginCtrl">
     <div ng-form="frmMain">
-
-
         <div class="item row margin-bottom-twenty clearfix">
             <div class="labels col-md-3 padding-right-zero pull-left">
                 <span>Layout Style</span>
@@ -36,7 +34,7 @@
             </div>
         </div>
 
-        <div class="item clearfix row">
+        <div class="item clearfix row margin-bottom-twenty">
             <div class="labels col-md-3 padding-right-zero pull-left">
                 <span>Background Image</span>
             </div>
@@ -60,7 +58,7 @@
             </div>
             <div class="main col-md-9 pull-right">
                 <div class="screens clearfix">
-                    <input id="slider1" type="range" min="0" max="8" step="1" ng-model="data.design.backgroundBlur" />
+                    <input id="slider1" type="range" min="0" max="8" step="1" value="0" ng-model="data.design.backgroundBlur" />
                 </div>
             </div>
         </div>
@@ -78,6 +76,7 @@
                 "./layouts/layout6.png"
             ];
 
+            console.log("here")
             /*
             * Go pull any previously saved data
             * */
@@ -103,10 +102,6 @@
                         };
                     }
 
-                    if (!$scope.$$phase && !$scope.$root.$$phase) {
-                        $scope.$apply();
-                    }
-
                 } else {
                     $scope.data = {
                         _buildfire: {
@@ -126,6 +121,11 @@
                         }
                     };
                 }
+
+                if (!$scope.$$phase && !$scope.$root.$$phase) {
+                    $scope.$apply();
+                }
+
                 /*
                  * watch for changes in data and trigger the saveData function on change
                  * */
@@ -159,6 +159,7 @@
             * Open a dailog to change the background image
             * */
             $scope.changeBackground = function () {
+                console.log("ddd")
                 buildfire.imageLib.showDialog({ showIcons: false, multiSelection: false }, function (error, result) {
                     if (result && result.selectedFiles && result.selectedFiles.length > 0) {
                         if (!$scope.data.design) {

@@ -1,8 +1,8 @@
 {
    "author":"Ahmad Al-Hmoud",
    "pluginName":"Folder",
-   "pluginDescription":"A plugin to show carousel with text and plugins list",
-   "supportEmail":"[Your support Email]",
+   "pluginDescription":"A plugin to show carousel, text and plugins list",
+   "supportEmail":"support@buildfire.com",
    "control":{
       "content":{
          "enabled":true
