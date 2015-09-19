@@ -17,10 +17,12 @@
     <script src="../../../../scripts/jquery/jquery-1.11.2.min.js"></script>
     <script src="../../../../scripts/sortable.min.js"></script>
     <script src="../../../../scripts/buildfire/components/carousel/carousel.js"></script>
+
+    <script src="../../../../scripts/buildfire/components/notifications/notifications.js"></script>
     <script src="../../../../scripts/buildfire/components/pluginInstance/sortableList.js"></script>
 
 </head>
-<body ng-controller="folderPluginCtrl" id="textApp">
+<body ng-controller="folderPluginCtrl" ng-cloak>
     <div ng-form="frmMain">
 
         <div id="carousel"></div>
@@ -87,7 +89,12 @@
 
                     if ($scope.data._buildfire && $scope.data._buildfire.plugins && $scope.data._buildfire.plugins.result) {
                         var pluginsData = getPluginDetails($scope.data._buildfire.plugins.result, $scope.data._buildfire.plugins.data);
-                        plugins.loadItems(pluginsData);
+                        if ($scope.data.content && $scope.data.content.loadAllPlugins) {
+
+                            plugins.loadAllItems();
+                        } else {
+                            plugins.loadItems(pluginsData);
+                        }
                     }
 
                     if (!$scope.data._buildfire) {
@@ -123,7 +130,8 @@
                         },
                         content: {
                             carouselImages: [],
-                            text: ""
+                            text: "",
+                            loadAllPlugins: false
                         },
                         design: {
                             backgroundImage: null,
@@ -198,7 +206,12 @@
             };
 
             plugins.onDeleteItem = function (item, index) {
-                $scope.data._buildfire.plugins.data.splice(index, 1);
+                if (plugins.items.length == 0) {
+                    $scope.data._buildfire.plugins.data = [];
+                } else {
+                    $scope.data._buildfire.plugins.data.splice(index, 1);
+                }
+
                 saveData($scope.data);
             };
 
@@ -227,7 +240,24 @@
                 };
                 saveData($scope.data);
             };
+
+            plugins.onLoadAll = function (items) {
+                $scope.data.content.loadAllPlugins = true;
+                $scope.data._buildfire = {
+                    "plugins": { // can be any valid name
+                        "dataType": "pluginInstance",
+                        "data": [] // saved criteria or parameters
+                    }
+                };
+                saveData($scope.data);
+            };
+
+            plugins.onUnloadAll = function (items) {
+                $scope.data.content.loadAllPlugins = false;
+                saveData($scope.data);
+            };
         }]);
     </script>
 </body>
+
 </html>

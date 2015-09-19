@@ -12,7 +12,7 @@
     <script type="text/javascript" src="../../../scripts/buildfire.js"></script>
     <script type="text/javascript" src="../../../scripts/owlCarousel/owlCarousel.js"></script>
     <script src="../../../scripts/buildfire/components/carousel/carousel.js"></script>
-
+    <script src="../../../scripts/buildfire/components/pluginInstance/sortableList.js"></script>
 </head>
 <body ng-controller="folderPluginCtrl" ng-cloak>
     <style>
@@ -47,7 +47,7 @@
                 <div id="carousel" class="plugin-slider text-center"></div>
             </div>
             <div class="text-left padded padding-bottom-zero clearfix folder-plugin-text" ng-bind-html="data.content.text"></div>
-            <div ng-include="layoutUrl" ng-if="data.design.selectedLayout && data._buildfire.plugins.result.length > 0"></div>
+            <div ng-include="layoutUrl" ng-if="data.design.selectedLayout && data.plugins.length > 0"></div>
         </div>
     </div>
     <script>
@@ -124,16 +124,6 @@
             function bind(data) {
                 $scope.data = data;
 
-                if (!$scope.data._buildfire) {
-                    $scope.data._buildfire = {
-                        plugins: {
-                            dataType: "pluginInstance",
-                            data: [],
-                            result: []
-                        }
-                    };
-                }
-
                 if (!$scope.data.design) {
                     $scope.data.design = {
                         backgroundImage: null,
@@ -142,25 +132,21 @@
                     };
                 }
 
-                $scope.data._buildfire.plugins.result = getPluginDetails($scope.data._buildfire.plugins.result, $scope.data._buildfire.plugins.data);
-
                 if ($scope.data.design.selectedLayout == 5 || $scope.data.design.selectedLayout == 6) {
                     var temp = [];
                     var currentItem = 0;
-                    for (var i = 0; i < data._buildfire.plugins.result.length; i++) {
+                    for (var i = 0; i < data.plugins.length; i++) {
                         if (i % 2 == 0) {
                             temp[currentItem] = [];
-                            temp[currentItem].push(data._buildfire.plugins.result[i]);
+                            temp[currentItem].push(data.plugins[i]);
                         } else {
-                            temp[currentItem].push(data._buildfire.plugins.result[i]);
+                            temp[currentItem].push(data.plugins[i]);
 
                             currentItem++;
                         }
-
-
                     }
 
-                    $scope.data._buildfire.plugins.result = temp;
+                    $scope.data.plugins = temp;
                 }
 
                 if (data && data.content && data.content.text) {
@@ -182,7 +168,6 @@
                 }
 
                 $scope.layoutUrl = 'templates/layout' + $scope.data.design.selectedLayout + '.html';
-
                 if (!$scope.$$phase && !$scope.$root.$$phase) {
                     $scope.$apply();
                 }
@@ -192,11 +177,33 @@
              * Go pull saved data
              * */
             function loadData() {
+                
                 buildfire.datastore.getWithDynamicData(function (err, result) {
                     if (result && result.data && !angular.equals({}, result.data)) {
-                        bind(result.data);
+                        result.data.plugins
+                        if (result.data.content && result.data.content.loadAllPlugins) {
+                            buildfire.components.pluginInstance.getAllPlugins(function (err, res) {
+                                result.data.plugins = res;
+                                bind(result.data);
+                            });
+                        } else {
+                            if (!result.data._buildfire) {
+                                result.data._buildfire = {
+                                    plugins: {
+                                        dataType: "pluginInstance",
+                                        data: [],
+                                        result: []
+                                    }
+                                };
+                            }
+
+                            result.data.plugins = getPluginDetails(result.data._buildfire.plugins.result, result.data._buildfire.plugins.data);
+                            bind(result.data);
+                        }
+
                     } else {
                         $scope.data = {
+                            plugins: [],
                             _buildfire: {
                                 plugins: {
                                     dataType: "pluginInstance",
@@ -206,7 +213,8 @@
                             },
                             content: {
                                 carouselImages: [],
-                                text: ""
+                                text: "",
+                                loadAllPlugins: false
                             },
                             design: {
                                 backgroundImage: null,
