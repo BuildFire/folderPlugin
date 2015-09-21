@@ -1,4 +1,4 @@
-﻿<div ng-repeat="plugin in data._buildfire.plugins.result" ng-click="navigateToPlugin(plugin)">
+﻿<div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
     <div class="plugin-banner clearfix border-bottom-grey">
         <div class="plugin-slide text-center">
             <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 450, height: 254}) }}">

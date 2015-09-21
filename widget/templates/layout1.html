@@ -1,6 +1,6 @@
 ﻿<div class="media-center-plugin layout3">
     <div class="list-layout">
-        <div class="list-item" ng-repeat="plugin in data._buildfire.plugins.result" ng-click="navigateToPlugin(plugin)">
+        <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
             <div class="list-item-media text-left overflow-hidden">
                 <div class="list-media-holder square-icon pull-left" ng-if="plugin.iconUrl">
                     <img ng-src="{{ cropImage(plugin.iconUrl, {width: 80, height: 80}) }}">

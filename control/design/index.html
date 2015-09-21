@@ -12,7 +12,7 @@
     <script src="../../../../scripts/angular/angular.min.js"></script>
 
 </head>
-<body ng-controller="folderPluginCtrl">
+<body ng-controller="folderPluginCtrl" ng-cloak>
     <div ng-form="frmMain">
         <div class="item row margin-bottom-twenty clearfix">
             <div class="labels col-md-3 padding-right-zero pull-left">
@@ -112,7 +112,8 @@
                         },
                         content: {
                             carouselImages: [],
-                            text: ""
+                            text: "",
+                            loadAllPlugins: false
                         },
                         design: {
                             backgroundImage: null,
