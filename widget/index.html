@@ -31,6 +31,10 @@
             .overlay.background img {
                 height: 100%;
             }
+
+        .layout-6 .list-item-media {
+            background-color: transparent !important;
+        }
     </style>
     <div class="overlay background" ng-if="data.design.backgroundImage && deviceWidth != 0 && deviceHeight != 0">
         <img ng-src="{{ cropImage(data.design.backgroundImage, {width: deviceWidth, height: deviceHeight}) }}"
