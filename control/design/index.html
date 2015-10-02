@@ -1,8 +1,9 @@
 ﻿<!DOCTYPE html>
 <html ng-app="folderPluginDesign">
 <head lang="en">
-    <meta charset="UTF-8">
     <title>design</title>
+    <meta charset="UTF-8">
+
     <!-- CSS -->
     <link href="../../../../styles/helper.css" rel="stylesheet">
     <link href="../../../../styles/siteIcons.css" rel="stylesheet">
@@ -10,6 +11,7 @@
     <!-- JS -->
     <script src="../../../../scripts/buildfire.js"></script>
     <script src="../../../../scripts/angular/angular.min.js"></script>
+    <script src="../../js/shared.js"></script>
 
 </head>
 <body ng-controller="folderPluginCtrl" ng-cloak>
@@ -67,20 +69,25 @@
         var folderPluginApp = angular.module('folderPluginDesign', []);
 
         folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
-            $scope.availableLayouts = [
-                "./layouts/layout1.png",
-                "./layouts/layout2.png",
-                "./layouts/layout3.png",
-                "./layouts/layout4.png",
-                "./layouts/layout5.png",
-                "./layouts/layout6.png"
-            ];
 
-            console.log("here")
+            var datastoreInitialized = false;
+
+            $scope.availableLayouts = folderPluginShared.getLayouts();
+
+            $scope.data = folderPluginShared.getDefaultScopeData();
+
             /*
             * Go pull any previously saved data
             * */
             buildfire.datastore.getWithDynamicData(function (err, result) {
+
+                if (!err) {
+                    datastoreInitialized = true;
+                } else {
+                    console.error("Error: ", err);
+                    return;
+                }
+
                 if (result && result.data && !angular.equals({}, result.data)) {
                     $scope.data = result.data;
                     $scope.id = result.id;
@@ -101,75 +108,46 @@
                             backgroundblur: 0
                         };
                     }
-
-                } else {
-                    $scope.data = {
-                        _buildfire: {
-                            plugins: {
-                                dataType: "pluginInstance",
-                                data: []
-                            }
-                        },
-                        content: {
-                            carouselImages: [],
-                            text: "",
-                            loadAllPlugins: false
-                        },
-                        design: {
-                            backgroundImage: null,
-                            selectedLayout: 1,
-                            backgroundblur: 0
-                        }
-                    };
-                }
-
-                if (!$scope.$$phase && !$scope.$root.$$phase) {
-                    $scope.$apply();
                 }
 
                 /*
                  * watch for changes in data and trigger the saveData function on change
                  * */
                 $scope.$watch('data', saveData, true);
+                folderPluginShared.digest($scope);
             });
 
             /*
              * Call the datastore to save the data object
              * */
             var saveData = function (newObj, oldObj) {
-                if (newObj == undefined) return;
-                if (newObj == oldObj)
+                if (!datastoreInitialized) {
+                    console.error("Error with datastore didn't get called");
                     return;
+                }
+
+                if (newObj == undefined) return;
+                if (angular.equals(newObj, oldObj)) return;
 
                 if ($scope.frmMain.$invalid) {
                     console.warn('invalid data, details will not be saved');
                     return;
                 }
 
-                buildfire.datastore.save(newObj, function (err, result) {
-                    if (err || !result) {
-                        console.error('Error saving the widget details: ', err);
-                    }
-                    else {
-                        console.info('Widget details saved');
-                    }
-                });
+                folderPluginShared.save(newObj);
             };
 
             /*
             * Open a dailog to change the background image
             * */
             $scope.changeBackground = function () {
-                console.log("ddd")
                 buildfire.imageLib.showDialog({ showIcons: false, multiSelection: false }, function (error, result) {
                     if (result && result.selectedFiles && result.selectedFiles.length > 0) {
                         if (!$scope.data.design) {
                             $scope.data.design = {};
                         }
                         $scope.data.design.backgroundImage = result.selectedFiles[0];
-                        if (!$scope.$$phase && !$scope.$root.$$phase) {
-                            $scope.$apply();
-                        }
+                        folderPluginShared.digest($scope);
                     }
                 });
             };
@@ -191,22 +169,21 @@
             * */
             $scope.deleteBackground = function () {
                 $scope.data.design.backgroundImage = "";
+                folderPluginShared.digest($scope);
             };
 
             $scope.changeLayout = function (layoutId) {
-                setTimeout(function () {
-                    if (!$scope.data.design) {
-                        $scope.data.design = {};
-                    }
-                    var newLayout = layoutId + 1;
-                    if (newLayout != $scope.data.design.selectedLayout) {
-                        $scope.data.design.selectedLayout = newLayout;
-                        if (!$scope.$$phase && !$scope.$root.$$phase) {
-                            $scope.$apply();
-                        }
-                    }
+                var newLayout = layoutId + 1;
+                if (newLayout != $scope.data.design.selectedLayout) {
+                    $scope.data.design.selectedLayout = newLayout;
+                    folderPluginShared.digest($scope);
+                }
+            };
 
-                }, 500);
+            var digest = function () {
+                if (!$scope.$$phase && !$scope.$root.$$phase) {
+                    $scope.$apply();
+                }
             };
         }]);
     </script>
