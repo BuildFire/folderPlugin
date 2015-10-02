@@ -1,8 +1,9 @@
 ﻿<!DOCTYPE html>
 <html ng-app="folderPlugin">
 <head lang="en">
-    <meta charset="UTF-8">
     <title>content</title>
+    <meta charset="UTF-8">
+
     <!-- CSS -->
     <link href="../../../../styles/helper.css" rel="stylesheet">
     <link href="../../../../styles/siteIcons.css" rel="stylesheet">
@@ -10,16 +11,15 @@
     <!-- JS -->
     <script src="../../../../scripts/buildfire.js"></script>
     <script src="../../../../scripts/angular/angular.min.js"></script>
-    <!--<script src="../../../../scripts/angular/ui-bootstrap.min.js"></script> -->
     <script src="../../../../scripts/tinymce/tinymce.min.js"></script>
     <script src="../../../../scripts/tinymce/ui-tinymce.js"></script>
-
     <script src="../../../../scripts/jquery/jquery-1.11.2.min.js"></script>
+
     <script src="../../../../scripts/sortable.min.js"></script>
     <script src="../../../../scripts/buildfire/components/carousel/carousel.js"></script>
-
     <script src="../../../../scripts/buildfire/components/notifications/notifications.js"></script>
     <script src="../../../../scripts/buildfire/components/pluginInstance/sortableList.js"></script>
+    <script src="../../js/shared.js"></script>
 
 </head>
 <body ng-controller="folderPluginCtrl" ng-cloak>
@@ -48,46 +48,29 @@
         var folderPluginApp = angular.module('folderPlugin', ['ui.tinymce']);
 
         folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
-            $scope.editorOptions = {
-                plugins: 'advlist autolink link image lists charmap print preview',
-                skin: 'lightgray',
-                trusted: true,
-                theme: 'modern'                
-            };
 
-            // create a new instance of the buildfire carousel editor
+            var datastoreInitialized = false;
             var editor = new buildfire.components.carousel.editor("#carousel");
             var plugins = new buildfire.components.pluginInstance.sortableList("#plugins", []);
+            var tmrDelay = null;
 
-            var getPluginDetails = function (pluginsInfo, pluginIds) {
-                var returnPlugins = [];
-                var tempPlugin = null;
-                for (var id = 0; id < pluginIds.length; id++) {
-                    for (var i = 0; i < pluginsInfo.length; i++) {
-                        tempPlugin = {};
-                        if (pluginIds[id] == pluginsInfo[i].id) {
-                            tempPlugin.instanceId = pluginsInfo[i].id;
-                            if (pluginsInfo[i].data) {
-                                tempPlugin.iconUrl = pluginsInfo[i].data.iconUrl;
-                                tempPlugin.title = pluginsInfo[i].data.title;
-                                tempPlugin.pluginTypeId = pluginsInfo[i].data.pluginTypeId;
-                            } else {
-                                tempPlugin.iconUrl = "";
-                                tempPlugin.title = "[No title]";
-                            }
-                            returnPlugins.push(tempPlugin);
-                        }
-                        tempPlugin = null;
-                    }
-                }
-                return returnPlugins;
-            };
+            $scope.editorOptions = folderPluginShared.getEditorOptions();
+            $scope.data = folderPluginShared.getDefaultScopeData();
 
             /*
              * Go pull any previously saved data
              * */
             buildfire.datastore.getWithDynamicData(function (err, result) {
+
+                if (!err) {
+                    datastoreInitialized = true;
+                } else {
+                    console.error("Error: ", err);
+                    return;
+                }
+
                 if (result && result.data && !angular.equals({}, result.data)) {
+
                     $scope.data = result.data;
                     $scope.id = result.id;
                     if ($scope.data.content && $scope.data.content.carouselImages) {
@@ -95,7 +78,7 @@
                     }
 
                     if ($scope.data._buildfire && $scope.data._buildfire.plugins && $scope.data._buildfire.plugins.result) {
-                        var pluginsData = getPluginDetails($scope.data._buildfire.plugins.result, $scope.data._buildfire.plugins.data);
+                        var pluginsData = folderPluginShared.getPluginDetails($scope.data._buildfire.plugins.result, $scope.data._buildfire.plugins.data);
                         if ($scope.data.content && $scope.data.content.loadAllPlugins) {
 
                             plugins.loadAllItems();
@@ -121,67 +104,40 @@
                         };
                     }
 
-
-                    if (!$scope.$$phase && !$scope.$root.$$phase) {
-                        $scope.$apply();
-                    }
                     if (tmrDelay) clearTimeout(tmrDelay);
-                } else {
-
-                    $scope.data = {
-                        _buildfire: {
-                            plugins: {
-                                dataType: "pluginInstance",
-                                data: []
-                            }
-                        },
-                        content: {
-                            carouselImages: [],
-                            text: "",
-                            loadAllPlugins: false
-                        },
-                        design: {
-                            backgroundImage: null,
-                            selectedLayout: 1,
-                            backgroundblur: 0
-                        }
-                    };
-
-                    editor.loadItems([]);
-                    plugins.loadItems([]);
                 }
+
                 /*
                  * watch for changes in data and trigger the saveDataWithDelay function on change
                  * */
                 $scope.$watch('data', saveDataWithDelay, true);
+                folderPluginShared.digest($scope);
             });
 
             /*
              * Call the datastore to save the data object
              */
             var saveData = function (newObj) {
+                if (!datastoreInitialized) {
+                    console.error("Error with datastore didn't get called");
+                    return;
+                }
+
                 if (newObj == undefined) return;
                 if ($scope.frmMain.$invalid) {
                     console.warn('invalid data, details will not be saved');
                     return;
                 }
 
-                buildfire.datastore.save(newObj, function (err, result) {
-                    if (err || !result) {
-                        console.error('Error saving the widget details: ', err);
-                    }
-                    else {
-                        console.info('Widget details saved');
-                    }
-                });
+                folderPluginShared.save(newObj);
             };
 
             /*
              * create an artificial delay so api isnt called on every character entered
              * */
-            var tmrDelay = null;
             var saveDataWithDelay = function (newObj, oldObj) {
                 if (tmrDelay) clearTimeout(tmrDelay);
+                if (angular.equals(newObj, oldObj)) return;
                 tmrDelay = setTimeout(function () {
                     saveData(newObj);
                 }, 500);
@@ -198,7 +154,7 @@
             // this method will be called when a new item added to the list
             editor.onAddItems = editor.onDeleteItem = editor.onItemChange = editor.onOrderChange = function () {
                 $scope.data.content.carouselImages = editor.items;
-                saveData($scope.data);
+                folderPluginShared.digest($scope);
             };
 
             plugins.onAddItems = function () {
@@ -209,7 +165,8 @@
                         scopeItems.push(itemIds[i]);
                     }
                 }
-                saveData($scope.data);
+
+                folderPluginShared.digest($scope);
             };
 
             plugins.onDeleteItem = function (item, index) {
@@ -219,7 +176,7 @@
                     $scope.data._buildfire.plugins.data.splice(index, 1);
                 }
 
-                saveData($scope.data);
+                folderPluginShared.digest($scope);
             };
 
             plugins.onOrderChange = function (item, oldIndex, newIndex) {
@@ -240,28 +197,35 @@
                 items[newIndex] = tmp;
 
                 $scope.data._buildfire = {
-                    "plugins": { // can be any valid name
+                    "plugins": {
                         "dataType": "pluginInstance",
-                        "data": items // saved criteria or parameters
+                        "data": items
                     }
                 };
-                saveData($scope.data);
+
+                folderPluginShared.digest($scope);
             };
 
             plugins.onLoadAll = function (items) {
                 $scope.data.content.loadAllPlugins = true;
                 $scope.data._buildfire = {
-                    "plugins": { // can be any valid name
+                    "plugins": {
                         "dataType": "pluginInstance",
-                        "data": [] // saved criteria or parameters
+                        "data": []
                     }
                 };
-                saveData($scope.data);
+                folderPluginShared.digest($scope);
             };
 
             plugins.onUnloadAll = function (items) {
                 $scope.data.content.loadAllPlugins = false;
-                saveData($scope.data);
+                folderPluginShared.digest($scope);
+            };
+
+            var digest = function () {
+                if (!$scope.$$phase && !$scope.$root.$$phase) {
+                    $scope.$apply();
+                }
             };
         }]);
     </script>
