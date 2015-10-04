@@ -11,6 +11,10 @@
     <!-- JS -->
     <script src="../../../scripts/angular/angular.min.js"></script>
     <script src="../../../scripts/jquery/jquery-1.11.2.min.js"></script>
+    <script src="../js/ng-infinite-scroll.min.js"></script>
+
+
+
     <script type="text/javascript" src="../../../scripts/buildfire.js"></script>
     <script type="text/javascript" src="../../../scripts/owlCarousel/owlCarousel.js"></script>
     <script src="../../../scripts/buildfire/components/carousel/carousel.js"></script>
@@ -32,9 +36,9 @@
                 height: 100%;
             }
 
-            .overlay.background img {
-                height: 100%;
-            }
+                .overlay.background img {
+                    height: 100%;
+                }
 
         .layout-6 .list-item-media {
             background-color: transparent !important;
@@ -60,11 +64,11 @@
                 <div id="carousel" class="plugin-slider text-center"></div>
             </div>
             <div class="text-left padded padding-bottom-zero clearfix folder-plugin-text hide-empty" ng-bind-html="data.content.text"></div>
-            <div ng-if="data.design.selectedLayout && data.plugins.length > 0">
+            <div ng-if="data.design.selectedLayout && data.plugins.length > 0" infinite-scroll="paging()">
 
                 <!-- Layout 1 -->
                 <div class="media-center-plugin layout3" ng-if="data.design.selectedLayout == 1">
-                    <div class="list-layout">
+                    <div class=" list-layout">
                         <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
                             <div class="list-item-media text-left overflow-hidden">
                                 <div class="list-media-holder square-icon pull-left" ng-if="plugin.iconUrl">
@@ -80,7 +84,6 @@
                     </div>
                 </div>
                 <!-- End layout 1 -->
-
                 <!-- Layout 2 -->
                 <div class="holder padding-zero" ng-if="data.design.selectedLayout == 2">
                     <div class="media-center-plugin layout3">
@@ -101,31 +104,32 @@
                     </div>
                 </div>
                 <!-- End layout 2 -->
-
                 <!-- Layout 3 -->
-                <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 3">
-                    <div class="plugin-banner clearfix border-bottom-grey">
-                        <div class="plugin-slide text-center">
-                            <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 450, height: 254}) }}">
+                <div>
+                    <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 3">
+                        <div class="plugin-banner clearfix border-bottom-grey">
+                            <div class="plugin-slide text-center">
+                                <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 450, height: 254}) }}">
+                            </div>
                         </div>
-                    </div>
-                    <div class="padded text-left">
-                        <a class="text-primary">{{ plugin.title }}</a>
+                        <div class="padded text-left">
+                            <a class="text-primary">{{ plugin.title }}</a>
+                        </div>
                     </div>
                 </div>
                 <!-- End layout 3 -->
-
                 <!-- Layout 4 -->
-                <div class="plugin-banner has-info-bar clearfix" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 4">
-                    <div class="plugin-slide text-center">
-                        <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 450, height: 254}) }}">
-                    </div>
-                    <div class="info-bar bg-primary">
-                        <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">{{ plugin.title }}</p>
+                <div>
+                    <div class="plugin-banner has-info-bar clearfix" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 4">
+                        <div class="plugin-slide text-center">
+                            <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 450, height: 254}) }}">
+                        </div>
+                        <div class="info-bar bg-primary">
+                            <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">{{ plugin.title }}</p>
+                        </div>
                     </div>
                 </div>
                 <!-- End layout 4 -->
-
                 <!-- Layout 5 -->
                 <div class="padded padding-top-zero" ng-if="data.design.selectedLayout == 5">
                     <div class="list-layout">
@@ -146,7 +150,6 @@
                     </div>
                 </div>
                 <!-- End layout 5 -->
-
                 <!-- Layout 6 -->
                 <div class="padded padding-top-zero" ng-if="data.design.selectedLayout == 6">
                     <div class="list-layout layout-6">
@@ -173,11 +176,34 @@
         </div>
     </div>
     <script>
-        var folderPluginApp = angular.module('folderPlugin', []);
+        var folderPluginApp = angular.module('folderPlugin', ['infinite-scroll']);
 
         folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce', function ($scope, $sce) {
-
             var view = null;
+            var pagesCount = 0;
+            var currentPage = 0;
+            var loadingData = true;
+
+            $scope.data = {
+                plugins: [],
+                _buildfire: {
+                    plugins: {
+                        dataType: "pluginInstance",
+                        data: [],
+                        result: []
+                    }
+                },
+                content: {
+                    carouselImages: [],
+                    text: "",
+                    loadAllPlugins: false
+                },
+                design: {
+                    backgroundImage: null,
+                    selectedLayout: 1,
+                    backgroundblur: 0
+                }
+            };
 
             function initDeviceSize(callback) {
                 $scope.deviceHeight = window.innerHeight;
@@ -197,6 +223,26 @@
                 }
             }
 
+            function preparePluginsData(plugins) {
+                if ($scope.data.design.selectedLayout == 5 || $scope.data.design.selectedLayout == 6) {
+                    var temp = [];
+                    var currentItem = 0;
+                    var pluginsLength = plugins.length;
+
+                    for (var i = 0; i < pluginsLength; i++) {
+                        if (i % 2 == 0) {
+                            temp[currentItem] = [];
+                            temp[currentItem].push(plugins[i]);
+                        } else {
+                            temp[currentItem].push(plugins[i]);
+
+                            currentItem++;
+                        }
+                    }
+
+                    $scope.data.plugins = temp;
+                }
+            }
             /*
              * bind data to the scope
              * */
@@ -211,22 +257,7 @@
                     };
                 }
 
-                if ($scope.data.design.selectedLayout == 5 || $scope.data.design.selectedLayout == 6) {
-                    var temp = [];
-                    var currentItem = 0;
-                    for (var i = 0; i < data.plugins.length; i++) {
-                        if (i % 2 == 0) {
-                            temp[currentItem] = [];
-                            temp[currentItem].push(data.plugins[i]);
-                        } else {
-                            temp[currentItem].push(data.plugins[i]);
-
-                            currentItem++;
-                        }
-                    }
-
-                    $scope.data.plugins = temp;
-                }
+                preparePluginsData(data.plugins);
 
                 if (data && data.content && data.content.text) {
                     if (data.content.text == "<p>&nbsp;<br></p>") {
@@ -255,14 +286,16 @@
              * Go pull saved data
              * */
             function loadData() {
-                
+
                 buildfire.datastore.getWithDynamicData(function (err, result) {
                     if (result && result.data && !angular.equals({}, result.data)) {
                         result.data.plugins
                         if (result.data.content && result.data.content.loadAllPlugins) {
                             buildfire.components.pluginInstance.getAllPlugins(function (err, res) {
-                                result.data.plugins = res;
+                                pagesCount = Math.ceil(res.total / 20);
+                                result.data.plugins = res.data;
                                 bind(result.data);
+                                loadingData = false;
                             });
                         } else {
                             if (!result.data._buildfire) {
@@ -280,26 +313,7 @@
                         }
 
                     } else {
-                        $scope.data = {
-                            plugins: [],
-                            _buildfire: {
-                                plugins: {
-                                    dataType: "pluginInstance",
-                                    data: [],
-                                    result: []
-                                }
-                            },
-                            content: {
-                                carouselImages: [],
-                                text: "",
-                                loadAllPlugins: false
-                            },
-                            design: {
-                                backgroundImage: null,
-                                selectedLayout: 1,
-                                backgroundblur: 0
-                            }
-                        };
+                        // will be removed
                     }
                 });
             }
@@ -309,11 +323,19 @@
             /**
              * when a refresh is triggered get reload data
              */
-            buildfire.datastore.onRefresh(loadData);
 
-            buildfire.datastore.onUpdate(function (e) {
+            function onDatastoreChange() {
+                pagesCount = 0;
+                currentPage = 0;
+                loadingData = true;
+                $scope.data.plugins = [];
+                $("html, body").animate({ scrollTop: 0 }, "slow");
                 loadData();
-            });
+            }
+
+            buildfire.datastore.onRefresh(onDatastoreChange);
+
+            buildfire.datastore.onUpdate(onDatastoreChange);
 
             $scope.cropImage = function (url, settings) {
                 var options = {};
@@ -348,8 +370,52 @@
             };
 
             $scope.navigateToPlugin = function (plugin) {
-                buildfire.navigation.navigateTo(plugin.pluginTypeId, plugin.instanceId, plugin.title);
+                buildfire.navigation.navigateTo({
+                    pluginId: plugin.pluginTypeId,
+                    instanceId: plugin.instanceId,
+                    title: plugin.title,
+                    folderName: plugin.folderName
+                });
             }
+
+            $scope.paging = function () {
+                if ($scope.data.content && $scope.data.content.loadAllPlugins && !loadingData && pagesCount > 1) {
+                    loadingData = true;
+                    if (currentPage + 1 < pagesCount) {
+                        buildfire.spinner.show();
+                        currentPage++;
+                        buildfire.components.pluginInstance.getAllPlugins(currentPage, function (err, res) {
+                            buildfire.spinner.hide();
+                            loadingData = false;
+                            var pluginsLength = res.data.length;
+
+                            if ($scope.data.design.selectedLayout == 5 || $scope.data.design.selectedLayout == 6) {
+                                var currentItem = $scope.data.plugins.length;
+
+
+                                for (var i = 0; i < pluginsLength; i++) {
+                                    if (i % 2 == 0) {
+                                        $scope.data.plugins[currentItem] = [];
+                                        $scope.data.plugins[currentItem].push(res.data[i]);
+                                    } else {
+                                        $scope.data.plugins[currentItem].push(res.data[i]);
+                                        currentItem++;
+                                    }
+                                }
+                                // $scope.data.plugins
+                            } else {
+                                for (var i = 0; i < pluginsLength; i++) {
+                                    $scope.data.plugins.push(res.data[i]);
+                                }
+                            }
+
+                            folderPluginShared.digest($scope);
+                        });
+                    }
+                };
+                return;
+
+            };
         }]);
     </script>
 </body>
