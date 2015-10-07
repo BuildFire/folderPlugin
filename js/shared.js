@@ -35,7 +35,7 @@ folderPluginShared.getDefaultScopeData = function () {
         },
         content: {
             carouselImages: [],
-            text: "<p>&nbsp;<br></p>",
+            text: "",
             loadAllPlugins: false
         },
         design: {

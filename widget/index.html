@@ -216,7 +216,7 @@
                 },
                 content: {
                     carouselImages: [],
-                    text: "<p>&nbsp;<br></p>",
+                    text: "",
                     loadAllPlugins: false
                 },
                 design: {
@@ -330,7 +330,7 @@
                 preparePluginsData(data.plugins);
 
                 if (data && data.content && data.content.text) {
-                    if (data.content.text == "<p>&nbsp;<br></p>") {
+                    if (data.content.text.replace(/<.+?>/g, "") == "") {
                         $scope.data.content.text = "";
                     } else {
                         $scope.data.content.text = $sce.trustAsHtml(data.content.text);
@@ -352,36 +352,43 @@
                 }
             }
 
+            function dataLoadedHandler(result) {
+                if (result && result.data && !angular.equals({}, result.data)) {
+                    result.data.plugins
+                    if (result.data.content && result.data.content.loadAllPlugins) {
+                        buildfire.components.pluginInstance.getAllPlugins(function (err, res) {
+                            pagesCount = Math.ceil(res.total / 20);
+                            result.data.plugins = res.data;
+                            bind(result.data);
+                            loadingData = false;
+                        });
+                    } else {
+                        if (!result.data._buildfire) {
+                            result.data._buildfire = {
+                                plugins: {
+                                    dataType: "pluginInstance",
+                                    data: [],
+                                    result: []
+                                }
+                            };
+                        }
+                        result.data.plugins = folderPluginShared.getPluginDetails(result.data._buildfire.plugins.result, result.data._buildfire.plugins.data);
+                        bind(result.data);
+                    }
+                }
+            };
+
             /*
              * Go pull saved data
              * */
             function loadData() {
 
                 buildfire.datastore.getWithDynamicData(function (err, result) {
-                    if (result && result.data && !angular.equals({}, result.data)) {
-                        result.data.plugins
-                        if (result.data.content && result.data.content.loadAllPlugins) {
-                            buildfire.components.pluginInstance.getAllPlugins(function (err, res) {
-                                pagesCount = Math.ceil(res.total / 20);
-                                result.data.plugins = res.data;
-                                bind(result.data);
-                                loadingData = false;
-                            });
-                        } else {
-                            if (!result.data._buildfire) {
-                                result.data._buildfire = {
-                                    plugins: {
-                                        dataType: "pluginInstance",
-                                        data: [],
-                                        result: []
-                                    }
-                                };
-                            }
-
-                            result.data.plugins = folderPluginShared.getPluginDetails(result.data._buildfire.plugins.result, result.data._buildfire.plugins.data);
-                            bind(result.data);
-                        }
+                    if (err) {
+                        console.error("Error: ", err);
+                        return;
                     }
+                    dataLoadedHandler(result);
                 });
             }
 
@@ -391,18 +398,24 @@
              * when a refresh is triggered get reload data
              */
 
-            function onDatastoreChange() {
+            function resetPaging() {
                 pagesCount = 0;
                 currentPage = 0;
                 loadingData = true;
                 $scope.data.plugins = [];
                 $("html, body").animate({ scrollTop: 0 }, "slow");
+            }
+            function onDatastoreChange(hardRefresh) {
+                resetPaging();
                 loadData();
             }
 
             buildfire.datastore.onRefresh(onDatastoreChange);
 
-            buildfire.datastore.onUpdate(onDatastoreChange);
+            buildfire.datastore.onUpdate(function (result) {
+                resetPaging();
+                dataLoadedHandler(result);
+            });
 
             $scope.cropImage = function (url, settings) {
                 var options = {};
