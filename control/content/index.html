@@ -22,7 +22,7 @@
     <script src="../../js/shared.js"></script>
 
 </head>
-<body ng-controller="folderPluginCtrl" ng-cloak>
+<body ng-controller="folderPluginCtrl" ng-cloak ng-show="datastoreInitialized">
     <div ng-form="frmMain">
 
         <div id="carousel"></div>
@@ -48,22 +48,24 @@
         var folderPluginApp = angular.module('folderPlugin', ['ui.tinymce']);
 
         folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
-
-            var datastoreInitialized = false;
             var editor = new buildfire.components.carousel.editor("#carousel");
             var plugins = new buildfire.components.pluginInstance.sortableList("#plugins", []);
             var tmrDelay = null;
 
             $scope.editorOptions = folderPluginShared.getEditorOptions();
+
             $scope.data = folderPluginShared.getDefaultScopeData();
+
+
+
+            $scope.datastoreInitialized = false;
 
             /*
              * Go pull any previously saved data
              * */
             buildfire.datastore.getWithDynamicData(function (err, result) {
-
                 if (!err) {
-                    datastoreInitialized = true;
+                    $scope.datastoreInitialized = true;
                 } else {
                     console.error("Error: ", err);
                     return;
@@ -118,7 +120,7 @@
              * Call the datastore to save the data object
              */
             var saveData = function (newObj) {
-                if (!datastoreInitialized) {
+                if (!$scope.datastoreInitialized) {
                     console.error("Error with datastore didn't get called");
                     return;
                 }

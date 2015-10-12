@@ -90,7 +90,7 @@
                 <div class="holder padding-zero" ng-if="data.design.selectedLayout == 2">
                     <div class="media-center-plugin layout3">
                         <div class="list-layout">
-                            <div class="list-item" ng-repeat="plugin in data.plugins">
+                            <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
                                 <div class="list-item-media text-left overflow-hidden">
                                     <div class="list-media-holder pull-left" ng-if="plugin.iconUrl">
                                         <img ng-src="{{ resizeImage(plugin.iconUrl, {width: 110, height: 60}) }}">
@@ -353,8 +353,8 @@
             }
 
             function dataLoadedHandler(result) {
-                if (result && result.data && !angular.equals({}, result.data)) {
-                    result.data.plugins
+                var pluginsList = null;
+                if (result && result.data && !angular.equals({}, result.data) &&  result.data.content &&  result.data.design) {
                     if (result.data.content && result.data.content.loadAllPlugins) {
                         buildfire.components.pluginInstance.getAllPlugins(function (err, res) {
                             pagesCount = Math.ceil(res.total / 20);
@@ -363,16 +363,11 @@
                             loadingData = false;
                         });
                     } else {
-                        if (!result.data._buildfire) {
-                            result.data._buildfire = {
-                                plugins: {
-                                    dataType: "pluginInstance",
-                                    data: [],
-                                    result: []
-                                }
-                            };
+                        pluginsList = result.data._buildfire.plugins;
+
+                        if (result.data._buildfire && pluginsList && pluginsList.result && pluginsList.data) {
+                            result.data.plugins = folderPluginShared.getPluginDetails(result.data._buildfire.plugins.result, result.data._buildfire.plugins.data);
                         }
-                        result.data.plugins = folderPluginShared.getPluginDetails(result.data._buildfire.plugins.result, result.data._buildfire.plugins.data);
                         bind(result.data);
                     }
                 }
