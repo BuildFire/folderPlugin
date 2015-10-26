@@ -7,6 +7,7 @@
     <!-- CSS -->
     <link href="../../../scripts/owlCarousel/owlCarousel.css" rel="stylesheet" />
     <link rel="stylesheet" href="../../../styles/helper.css">
+    <link rel="stylesheet" href="../../../styles/siteIcons.css">
 
     <!-- JS -->
     <script src="../../../scripts/angular/angular.min.js"></script>
@@ -73,11 +74,12 @@
                     <div class=" list-layout">
                         <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
                             <div class="list-item-media text-left overflow-hidden">
-                                <div class="list-media-holder square-icon pull-left" ng-if="plugin.iconUrl">
-                                    <img ng-src="{{ cropImage(plugin.iconUrl, {width: 80, height: 80}) }}">
+                                <div class="list-media-holder square-icon pull-left">
+                                    <img ng-src="{{ cropImage(plugin.iconUrl, {width: 80, height: 80}) }}" ng-if="plugin.iconUrl">
+                                    <span class="main-icon text-primary pull-left {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
                                 </div>
                                 <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                                    <p class="ellipsis margin-zero text-primary margin-top-fifteen">
+                                    <p class="ellipsis margin-zero text-primary margin-top-twenty">
                                         <a class="text-primary">{{ plugin.title }}</a>
                                     </p>
                                 </div>
@@ -93,10 +95,11 @@
                             <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
                                 <div class="list-item-media text-left overflow-hidden">
                                     <div class="list-media-holder pull-left" ng-if="plugin.iconUrl">
-                                        <img ng-src="{{ resizeImage(plugin.iconUrl, {width: 110, height: 60}) }}">
+                                        <img ng-src="{{ resizeImage(plugin.iconUrl, {width: 110, height: 60}) }}" ng-if="plugin.iconUrl">
+                                        <span class="main-icon text-primary pull-left {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
                                     </div>
                                     <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                                        <p class="ellipsis margin-zero text-primary margin-top-fifteen">
+                                        <p class="ellipsis margin-zero text-primary margin-top-twenty">
                                             <a class="text-primary">{{ plugin.title }}</a>
                                         </p>
                                     </div>
@@ -139,7 +142,7 @@
                             <div class="list-item col-xs-6 padding-zero has-info-bar pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
                                 <div class="list-item-media text-center">
                                     <div class="list-media-holder">
-                                        <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/200x200', {width: 200, height: 200}) }}">
+                                        <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 200, height: 200}) }}">
                                     </div>
                                     <div class="info-bar bg-primary">
                                         <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">
@@ -159,7 +162,7 @@
                             <div class="list-item col-xs-6 pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
                                 <div class="list-item-media text-center border-radius-three overflow-hidden">
                                     <div class="list-media-holder">
-                                        <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/200x200', {width: 200, height: 200}) }}">
+                                        <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 200, height: 200}) }}">
                                     </div>
                                     <div class="list-item-copy text-center" style="min-height: 42px;">
                                         <p cclass="ellipsis margin-zero text-primary">
@@ -187,8 +190,8 @@
             for (var id = 0; id < pluginIds.length; id++) {
                 for (var i = 0; i < pluginsInfo.length; i++) {
                     tempPlugin = {};
-                    if (pluginIds[id] == pluginsInfo[i].id) {
-                        tempPlugin.instanceId = pluginsInfo[i].id;
+                    if (pluginIds[id] == pluginsInfo[i].data.refId) {
+                        tempPlugin.instanceId = pluginsInfo[i].data.refId;
                         if (pluginsInfo[i].data) {
                             tempPlugin.iconUrl = pluginsInfo[i].data.iconUrl;
                             tempPlugin.title = pluginsInfo[i].data.title;
@@ -408,7 +411,7 @@
 
             buildfire.datastore.onUpdate(function (result) {
                 resetPaging();
-                dataLoadedHandler(result);
+                loadData();
             });
 
             $scope.cropImage = function (url, settings) {
