@@ -50,6 +50,10 @@
         .folder-plugin-text:empty + div .layout3 .list-layout {
             border-top: 0;
         }
+
+        #mainContainer {
+            position: relative;
+        }
     </style>
     <div class="overlay background" ng-if="data.design.backgroundImage && deviceWidth != 0 && deviceHeight != 0">
         <img ng-src="{{ cropImage(data.design.backgroundImage, {width: deviceWidth, height: deviceHeight}) }}"
@@ -61,7 +65,7 @@
              filter blur({{data.design.backgroundblur}}px);">
     </div>
 
-    <div class="overlay holder padding-zero">
+    <div class="holder padding-zero" id="mainContainer">
         <div class="folder-plugin list-layout">
             <div ng-class="{ 'hidden': data.content.carouselImages.length == 0 }" class="plugin-banner clearfix border-bottom-grey">
                 <div id="carousel" class="plugin-slider text-center"></div>
@@ -76,7 +80,7 @@
                             <div class="list-item-media text-left overflow-hidden">
                                 <div class="list-media-holder square-icon pull-left">
                                     <img ng-src="{{ cropImage(plugin.iconUrl, {width: 80, height: 80}) }}" ng-if="plugin.iconUrl">
-                                    <span class="main-icon text-primary pull-left {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
+                                    <span class="main-icon text-primary {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
                                 </div>
                                 <div class="list-item-copy text-left padding-left-ten padding-right-ten">
                                     <p class="ellipsis margin-zero text-primary margin-top-twenty">
@@ -94,9 +98,9 @@
                         <div class="list-layout">
                             <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
                                 <div class="list-item-media text-left overflow-hidden">
-                                    <div class="list-media-holder pull-left" ng-if="plugin.iconUrl">
+                                    <div class="list-media-holder pull-left">
                                         <img ng-src="{{ resizeImage(plugin.iconUrl, {width: 110, height: 60}) }}" ng-if="plugin.iconUrl">
-                                        <span class="main-icon text-primary pull-left {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
+                                        <span class="main-icon text-primary {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
                                     </div>
                                     <div class="list-item-copy text-left padding-left-ten padding-right-ten">
                                         <p class="ellipsis margin-zero text-primary margin-top-twenty">
@@ -136,7 +140,7 @@
                 </div>
                 <!-- End layout 4 -->
                 <!-- Layout 5 -->
-                <div class="padded padding-top-zero" ng-if="data.design.selectedLayout == 5">
+                <div class="padded padding-top-zero padding-bottom-zero" ng-if="data.design.selectedLayout == 5">
                     <div class="list-layout">
                         <div ng-repeat="pluginRow in data.plugins" class="row">
                             <div class="list-item col-xs-6 padding-zero has-info-bar pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
@@ -156,7 +160,7 @@
                 </div>
                 <!-- End layout 5 -->
                 <!-- Layout 6 -->
-                <div class="padded padding-top-zero" ng-if="data.design.selectedLayout == 6">
+                <div class="padded padding-top-zero padding-bottom-zero" ng-if="data.design.selectedLayout == 6">
                     <div class="list-layout layout-6">
                         <div ng-repeat="pluginRow in data.plugins" class="row">
                             <div class="list-item col-xs-6 pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
@@ -190,10 +194,11 @@
             for (var id = 0; id < pluginIds.length; id++) {
                 for (var i = 0; i < pluginsInfo.length; i++) {
                     tempPlugin = {};
-                    if (pluginIds[id] == pluginsInfo[i].data.refId) {
-                        tempPlugin.instanceId = pluginsInfo[i].data.refId;
+                    if (pluginIds[id] == pluginsInfo[i].data.instanceId) {
+                        tempPlugin.instanceId = pluginsInfo[i].data.instanceId;
                         if (pluginsInfo[i].data) {
                             tempPlugin.iconUrl = pluginsInfo[i].data.iconUrl;
+                            tempPlugin.iconClassName = pluginsInfo[i].data.iconClassName;
                             tempPlugin.title = pluginsInfo[i].data.title;
                             tempPlugin.pluginTypeId = pluginsInfo[i].data.pluginType.token;
                             tempPlugin.folderName = pluginsInfo[i].data.pluginType.folderName;

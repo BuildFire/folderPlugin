@@ -6,10 +6,11 @@ folderPluginShared.getPluginDetails = function (pluginsInfo, pluginIds) {
     for (var id = 0; id < pluginIds.length; id++) {
         for (var i = 0; i < pluginsInfo.length; i++) {
             tempPlugin = {};
-            if (pluginIds[id] == pluginsInfo[i].data.refId) {
-                tempPlugin.instanceId = pluginsInfo[i].data.refId;
+            if (pluginIds[id] == pluginsInfo[i].data.instanceId) {
+                tempPlugin.instanceId = pluginsInfo[i].data.instanceId;
                 if (pluginsInfo[i].data) {
                     tempPlugin.iconUrl = pluginsInfo[i].data.iconUrl;
+                    tempPlugin.iconClassName = pluginsInfo[i].data.iconClassName;
                     tempPlugin.title = pluginsInfo[i].data.title;
                     tempPlugin.pluginTypeId = pluginsInfo[i].data.pluginType.token;
                     tempPlugin.folderName = pluginsInfo[i].data.pluginType.folderName;
