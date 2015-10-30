@@ -416,7 +416,7 @@
 
             buildfire.datastore.onUpdate(function (result) {
                 resetPaging();
-                loadData();
+                dataLoadedHandler(result);
             });
 
             $scope.cropImage = function (url, settings) {
