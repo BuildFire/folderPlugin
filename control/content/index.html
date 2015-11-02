@@ -131,6 +131,10 @@
                     return;
                 }
 
+                if (newObj._buildfire && newObj._buildfire.plugins) {
+                    newObj._buildfire.plugins.result = plugins.items;
+                }
+
                 folderPluginShared.save(newObj);
             };
 
