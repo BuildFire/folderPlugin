@@ -118,7 +118,8 @@
                     <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 3">
                         <div class="plugin-banner clearfix border-bottom-grey">
                             <div class="plugin-slide text-center">
-                                <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 450, height: 254}) }}">
+                                <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 450, height: 254}) }}" ng-if="plugin.iconUrl" />
+								<span class="main-icon text-primary {{ plugin.iconClassName }}" ng-if="plugin.iconClassName" style="font-size: 190px;"></span>
                             </div>
                         </div>
                         <div class="padded text-left">
@@ -131,7 +132,8 @@
                 <div>
                     <div class="plugin-banner has-info-bar clearfix" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 4">
                         <div class="plugin-slide text-center">
-                            <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 450, height: 254}) }}">
+                            <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 450, height: 254}) }}" ng-if="plugin.iconUrl" />
+							<span class="main-icon text-primary {{ plugin.iconClassName }}" ng-if="plugin.iconClassName" style="font-size: 190px;"></span>
                         </div>
                         <div class="info-bar bg-primary">
                             <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">{{ plugin.title }}</p>
@@ -146,7 +148,8 @@
                             <div class="list-item col-xs-6 padding-zero has-info-bar pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
                                 <div class="list-item-media text-center">
                                     <div class="list-media-holder">
-                                        <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 200, height: 200}) }}">
+                                        <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 200, height: 200}) }}" ng-if="plugin.iconUrl" />
+										<span class="main-icon text-primary {{ plugin.iconClassName }}" ng-if="plugin.iconClassName" style="font-size: 167px;"></span>
                                     </div>
                                     <div class="info-bar bg-primary">
                                         <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">
@@ -166,7 +169,8 @@
                             <div class="list-item col-xs-6 pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
                                 <div class="list-item-media text-center overflow-hidden">
                                     <div class="list-media-holder">
-                                        <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 200, height: 200}) }}">
+                                        <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 200, height: 200}) }}" ng-if="plugin.iconUrl" />
+										<span class="main-icon text-primary {{ plugin.iconClassName }}" ng-if="plugin.iconClassName" style="font-size: 142px;"></span>
                                     </div>
                                     <div class="list-item-copy text-center" style="min-height: 42px;">
                                         <p cclass="ellipsis margin-zero text-primary">
