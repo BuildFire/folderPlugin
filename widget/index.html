@@ -75,24 +75,8 @@
     <!--<script src="../js/shared.js"></script>-->
 
 </head>
-<body ng-controller="folderPluginCtrl" ng-cloak>
+<body ng-controller="folderPluginCtrl" ng-cloak data-ng-attr-style="background:url({{ cropImage(data.design.backgroundImage, {width: deviceWidth, height: deviceHeight}) }}) !important; background-size:cover;">
 <style>
-    .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-    }
-
-    .overlay.background {
-        position: fixed;
-        height: 100%;
-    }
-
-    .overlay.background img {
-        height: 100%;
-    }
-
     .layout-6 .list-item-media {
         background-color: transparent !important;
     }
@@ -105,24 +89,12 @@
         position: relative;
     }
 </style>
-<div class="overlay background" ng-if="data.design.backgroundImage && deviceWidth != 0 && deviceHeight != 0">
-    <img ng-src="{{ cropImage(data.design.backgroundImage, {width: deviceWidth, height: deviceHeight}) }}"
-         style="-webkit-filter: blur({{data.design.backgroundBlur}}px);
-             -moz-filter blur({{data.design.backgroundblur}}px);
-             -o-filter blur({{data.design.backgroundblur}}px);
-             -ms-filter blur({{data.design.backgroundblur}}px);
-             -webkit-filter blur({{data.design.backgroundblur}}px);
-             filter blur({{data.design.backgroundblur}}px);">
-</div>
-
 <div class="holder padding-zero" id="mainContainer">
     <div class="folder-plugin list-layout">
-        <div ng-class="{ 'hidden': data.content.carouselImages.length == 0 }"
-             class="plugin-banner clearfix border-bottom-grey">
+        <div ng-class="{ 'hidden': data.content.carouselImages.length == 0 }" class="plugin-banner clearfix border-bottom-grey">
             <div id="carousel" class="plugin-slider text-center"></div>
         </div>
-        <div class="text-left padded padding-bottom-zero clearfix folder-plugin-text hide-empty"
-             ng-bind-html="data.content.text"></div>
+        <div class="text-left padded padding-bottom-zero clearfix folder-plugin-text hide-empty" ng-bind-html="data.content.text"></div>
         <div ng-if="data.design.selectedLayout && data.plugins.length > 0" infinite-scroll="paging()">
 
             <!-- Layout 1 -->
@@ -131,10 +103,8 @@
                     <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
                         <div class="list-item-media text-left overflow-hidden">
                             <div class="list-media-holder square-icon pull-left">
-                                <img ng-src="{{ cropImage(plugin.iconUrl, {width: 80, height: 80}) }}"
-                                     ng-if="plugin.iconUrl">
-                                <span class="main-icon text-primary {{ plugin.iconClassName }}"
-                                      ng-if="plugin.iconClassName"></span>
+                                <img ng-src="{{ cropImage(plugin.iconUrl, {width: 80, height: 80}) }}" ng-if="plugin.iconUrl">
+                                <span class="main-icon text-primary {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
                             </div>
                             <div class="list-item-copy text-left padding-left-ten padding-right-ten">
                                 <p class="ellipsis margin-zero text-primary margin-top-twenty">
@@ -153,10 +123,8 @@
                         <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
                             <div class="list-item-media text-left overflow-hidden">
                                 <div class="list-media-holder pull-left">
-                                    <img ng-src="{{ resizeImage(plugin.iconUrl, {width: 110, height: 60}) }}"
-                                         ng-if="plugin.iconUrl">
-                                    <span class="main-icon text-primary {{ plugin.iconClassName }}"
-                                          ng-if="plugin.iconClassName"></span>
+                                    <img ng-src="{{ resizeImage(plugin.iconUrl, {width: 110, height: 60}) }}" ng-if="plugin.iconUrl">
+                                    <span class="main-icon text-primary {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
                                 </div>
                                 <div class="list-item-copy text-left padding-left-ten padding-right-ten">
                                     <p class="ellipsis margin-zero text-primary margin-top-twenty">
@@ -171,8 +139,7 @@
             <!-- End layout 2 -->
             <!-- Layout 3 -->
             <div>
-                <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)"
-                     ng-if="data.design.selectedLayout == 3">
+                <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 3">
                     <div class="plugin-banner clearfix border-bottom-grey">
                         <div class="plugin-slide text-center">
                             <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 450, height: 254}) }}">
@@ -186,8 +153,7 @@
             <!-- End layout 3 -->
             <!-- Layout 4 -->
             <div>
-                <div class="plugin-banner has-info-bar clearfix" ng-repeat="plugin in data.plugins"
-                     ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 4">
+                <div class="plugin-banner has-info-bar clearfix" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 4">
                     <div class="plugin-slide text-center">
                         <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 450, height: 254}) }}">
                     </div>
@@ -201,8 +167,7 @@
             <div class="padded padding-top-zero padding-bottom-zero" ng-if="data.design.selectedLayout == 5">
                 <div class="list-layout">
                     <div ng-repeat="pluginRow in data.plugins" class="row">
-                        <div class="list-item col-xs-6 padding-zero has-info-bar pull-left"
-                             ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
+                        <div class="list-item col-xs-6 padding-zero has-info-bar pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
                             <div class="list-item-media text-center">
                                 <div class="list-media-holder">
                                     <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 200, height: 200}) }}">
@@ -222,14 +187,13 @@
             <div class="padded padding-top-zero padding-bottom-zero" ng-if="data.design.selectedLayout == 6">
                 <div class="list-layout layout-6">
                     <div ng-repeat="pluginRow in data.plugins" class="row">
-                        <div class="list-item col-xs-6 pull-left" ng-repeat="plugin in pluginRow"
-                             ng-click="navigateToPlugin(plugin)">
+                        <div class="list-item col-xs-6 pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
                             <div class="list-item-media text-center overflow-hidden">
                                 <div class="list-media-holder">
                                     <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 200, height: 200}) }}">
                                 </div>
                                 <div class="list-item-copy text-center" style="min-height: 42px;">
-                                    <p cclass="ellipsis margin-zero text-primary">
+                                    <p class="ellipsis margin-zero text-primary">
                                         <a class="text-primary">
                                             {{ plugin.title }}
                                         </a>
