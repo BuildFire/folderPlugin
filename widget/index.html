@@ -104,12 +104,10 @@
                         <div class="list-item-media text-left overflow-hidden">
                             <div class="list-media-holder square-icon pull-left">
                                 <img ng-src="{{ cropImage(plugin.iconUrl, {width: 80, height: 80}) }}" ng-if="plugin.iconUrl">
-                                <span class="main-icon text-primary {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
+                                <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
                             </div>
                             <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                                <p class="ellipsis margin-zero text-primary margin-top-twenty">
-                                    <a class="text-primary">{{ plugin.title }}</a>
-                                </p>
+                                <p class="ellipsis margin-zero margin-top-twenty">{{ plugin.title }}</p>
                             </div>
                         </div>
                     </div>
@@ -124,12 +122,10 @@
                             <div class="list-item-media text-left overflow-hidden">
                                 <div class="list-media-holder pull-left">
                                     <img ng-src="{{ resizeImage(plugin.iconUrl, {width: 110, height: 60}) }}" ng-if="plugin.iconUrl">
-                                    <span class="main-icon text-primary {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
+                                    <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
                                 </div>
                                 <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                                    <p class="ellipsis margin-zero text-primary margin-top-twenty">
-                                        <a class="text-primary">{{ plugin.title }}</a>
-                                    </p>
+                                    <p class="ellipsis margin-zero bodyTextTheme margin-top-twenty">{{ plugin.title }}</p>
                                 </div>
                             </div>
                         </div>
