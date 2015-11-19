@@ -103,7 +103,7 @@
                     <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
                         <div class="list-item-media text-left overflow-hidden">
                             <div class="list-media-holder square-icon pull-left">
-                                <img ng-src="{{ cropImage(plugin.iconUrl, {width: 80, height: 80}) }}" ng-if="plugin.iconUrl">
+                                <img ng-src="{{ cropImage(plugin.iconUrl, {width: 180, height: 180}) }}" ng-if="plugin.iconUrl">
                                 <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
                             </div>
                             <div class="list-item-copy text-left padding-left-ten padding-right-ten">
@@ -121,7 +121,7 @@
                         <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
                             <div class="list-item-media text-left overflow-hidden">
                                 <div class="list-media-holder pull-left">
-                                    <img ng-src="{{ resizeImage(plugin.iconUrl, {width: 110, height: 60}) }}" ng-if="plugin.iconUrl">
+                                    <img ng-src="{{ cropImage(plugin.iconUrl, {width: 220, height: 120}) }}" ng-if="plugin.iconUrl">
                                     <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
                                 </div>
                                 <div class="list-item-copy text-left padding-left-ten padding-right-ten">
