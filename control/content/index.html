@@ -49,7 +49,7 @@
 
         folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
             var editor = new buildfire.components.carousel.editor("#carousel");
-            var plugins = new buildfire.components.pluginInstance.sortableList("#plugins", []);
+            var plugins = new buildfire.components.pluginInstance.sortableList("#plugins", [], { showIcon: true, confirmDeleteItem: false });
             var tmrDelay = null;
 
             $scope.editorOptions = folderPluginShared.getEditorOptions();
