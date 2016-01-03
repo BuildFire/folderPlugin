@@ -1,7 +1,7 @@
 {
-   "author":"Ahmad Al-Hmoud",
+   "author":"BuildFire",
    "pluginName":"Folder",
-   "pluginDescription":"A plugin to show carousel, text and plugins list",
+   "pluginDescription":"The Folder plugin allows you to include any number of plugin instances inside it. It's a great for when you need to categorize content and help your users find what they are looking for quickly.",
    "supportEmail":"support@buildfire.com",
    "control":{
       "content":{
