@@ -136,3 +136,47 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 .layout3 .list-layout .list-item-copy{
 	padding:6px 10px 5px;
 }
+
+.holder .plugin-banner{
+	position:relative;
+	border-bottom:none !important;
+}
+
+/* Info Bar */
+.holder .info-bar{
+	position:absolute;
+	bottom:0;
+	left:0;
+	width:100%;
+	padding:10px 0;
+	opacity:0.85;
+	z-index:9;
+}
+.holder .info-bar{
+	background:rgba(0,0,0,0.8);
+}
+.holder .info-bar p{
+	max-width:100%;
+}
+.holder .info-bar .right-icon{
+	margin-top:7px;
+}
+.holder .info-bar .pull-right .padded-icon{
+	padding:5px;
+	display:inline-block;
+	width:30px;
+	height:30px;
+}
+.holder .info-bar .pull-right span.icon{
+	font-size:24px;
+	vertical-align:middle;
+}
+.holder .info-bar .pull-right span.icon.icon-sm{
+	font-size:14px;
+	position:relative;
+	top:-2px;
+}
+.holder .info-bar .pull-right.padded-icon span.icon{
+	font-size:18px;
+	vertical-align:middle;
+}
