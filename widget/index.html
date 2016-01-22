@@ -38,10 +38,14 @@
 		font-size: 140px;
 	}	
 	.icon5 {
-		font-size: 167px;
+		font-size: 130px;
+		position:relative;
+		top:22px;
 	}	
 	.icon6 {
-		font-size: 146px;
+		font-size: 120px;
+		position:relative;
+		top:15px;
 	}
 </style>
 <div class="holder padding-zero" id="mainContainer">
@@ -117,7 +121,7 @@
             <!-- End layout 4 -->
             <!-- Layout 5 -->
             <div class="padded padding-top-zero padding-bottom-zero" ng-if="data.design.selectedLayout == 5">
-                <div class="list-layout">
+                <div class="list-layout layout5">
                     <div ng-repeat="pluginRow in data.plugins" class="row">
                         <div class="list-item col-xs-6 padding-zero has-info-bar pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
                             <div class="list-item-media text-center">
