@@ -12,7 +12,12 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
 
     $scope.data = folderPluginShared.getDefaultScopeData();
 
-
+    $scope.data._buildfire = {
+        "plugins": {
+            "dataType": "pluginInstance",
+            "data": []
+        }
+    };
 
     $scope.datastoreInitialized = false;
 
@@ -170,12 +175,6 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
 
     plugins.onLoadAll = function () {
         $scope.data.content.loadAllPlugins = true;
-        $scope.data._buildfire = {
-            "plugins": {
-                "dataType": "pluginInstance",
-                "data": []
-            }
-        };
         folderPluginShared.digest($scope);
     };
 
