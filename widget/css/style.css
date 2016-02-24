@@ -73,10 +73,6 @@
 }
 .list-layout .list-item-media .list-media-holder{
 	margin:0 auto;
-	max-width:240px;
-}
-.list-layout.layout5 .list-item-media .list-media-holder{
-	height:172px;
 }
 .list-layout.layout5 .list-item-media .list-media-holder img{
 	max-height:100%;
