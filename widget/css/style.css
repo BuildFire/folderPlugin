@@ -162,8 +162,8 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 }
 .layout3 .list-layout .list-item{
 	padding:0;
-	border-bottom:1px solid #ddd;
 	min-height:71px;
+	position:relative;
 }
 .layout3 .list-layout .list-item-copy{
 	padding:6px 10px 5px;
