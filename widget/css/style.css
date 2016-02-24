@@ -7,7 +7,8 @@
 }
 
 /* List Items */
-.list-items .list-item{
+.list-items .list-item,
+.list-layout .list-item{
 	position:relative;
 }
 .list-items .list-item:before,
