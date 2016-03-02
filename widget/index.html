@@ -163,6 +163,21 @@
                 </div>
             </div>
             <!-- End layout 6 -->
+            <!-- Layout 7 -->
+            <div>
+                <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 7">
+                    <div class="plugin-banner clearfix">
+                        <div class="plugin-slide text-center">
+                            <div class="backgroundLayer" style="background:url('http://www.placehold.it/1024x420.jpg');"></div>
+                            <img ng-src="{{plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1024x420.jpg'}}" ng-if="plugin.iconUrl">
+                        </div>
+                        <div class="info-bar blackBackgroundTheme">
+                            <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme">{{ plugin.title }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Layout 7 -->
         </div>
     </div>
 </div>
