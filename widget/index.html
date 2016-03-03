@@ -47,6 +47,25 @@
 		position:relative;
 		top:15px;
 	}
+    .icon7 {
+        font-size: 100px;
+        position:relative;
+        top:15px;
+    }
+    .icon8 {
+        font-size: 56px;
+        position:relative;
+    }
+    .icon9 {
+        font-size: 180px;
+        position:relative;
+        top:15px;
+    }
+    .icon10 {
+        font-size: 180px;
+        position:relative;
+        top:15px;
+    }
 </style>
 <div class="holder padding-zero" id="mainContainer">
     <div class="folder-plugin list-layout">
@@ -169,7 +188,8 @@
                     <div class="plugin-banner clearfix">
                         <div class="plugin-slide text-center">
                             <div class="backgroundLayer" style="background:url('http://www.placehold.it/1024x420.jpg');"></div>
-                            <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x420', {width: 1280, height: 420}) }}">
+                            <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x420', {width: 1280, height: 420}) }}" ng-if="plugin.iconUrl" >
+                            <span class="main-icon {{ plugin.iconClassName }} icon7" ng-if="plugin.iconClassName"></span>
                         </div>
                         <div class="info-bar blackBackgroundTheme">
                             <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme">{{ plugin.title }}</p>
@@ -184,7 +204,8 @@
                 <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" style=" padding-left: 8px !important; ">
                     <div class="list-item-media text-left overflow-hidden">
                         <div class="list-media-holder square-icon pull-left" style=" max-width: 55px !important; ">
-                            <img ng-src="{{plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/180x180.jpg'}}" style="border-radius:50%;">
+                            <img ng-src="{{plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/180x180.jpg'}}" style="border-radius:50%;" ng-if="plugin.iconUrl" >
+                            <span class="main-icon {{ plugin.iconClassName }} icon8" ng-if="plugin.iconClassName"></span>
                         </div>
                         <div class="list-item-copy text-left padding-left-ten padding-right-ten">
                             <p class="ellipsis margin-zero text-primary margin-top-twenty" style=" padding-left: 8px; margin-top: 7px !important; "><a class="text-primary">{{ plugin.title }}</a></p>
@@ -201,7 +222,8 @@
                     <div class="plugin-slide text-center">
                         <div class="blackLayer"></div>
                         <div class="backgroundLayer" style="background:url('http://www.placehold.it/1280x720.jpg');"></div>
-                        <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x720', {width: 1280, height: 720}) }}">
+                        <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x720', {width: 1280, height: 720}) }}" ng-if="plugin.iconUrl" >
+                        <span class="main-icon {{ plugin.iconClassName }} icon9" ng-if="plugin.iconClassName"></span>
                         <p class="ellipsis item-text whiteTheme text-center">{{ plugin.title }}</p>
                     </div>
                 </div>
@@ -214,7 +236,8 @@
                     <div class="plugin-slide text-center">
                         <div class="blackLayer"></div>
                         <div class="backgroundLayer" style="background:url('http://www.placehold.it/1280x720.jpg');"></div>
-                        <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x720', {width: 1280, height: 720}) }}">
+                        <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x720', {width: 1280, height: 720}) }}" ng-if="plugin.iconUrl" >
+                        <span class="main-icon {{ plugin.iconClassName }} icon10" ng-if="plugin.iconClassName"></span>
                         <p class="ellipsis item-text whiteTheme text-center">{{ plugin.title }}</p>
                     </div>
                 </div>
