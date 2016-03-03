@@ -169,7 +169,7 @@
                     <div class="plugin-banner clearfix">
                         <div class="plugin-slide text-center">
                             <div class="backgroundLayer" style="background:url('http://www.placehold.it/1024x420.jpg');"></div>
-                            <img ng-src="{{plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1024x420.jpg'}}" ng-if="plugin.iconUrl">
+                            <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x420', {width: 1280, height: 420}) }}">
                         </div>
                         <div class="info-bar blackBackgroundTheme">
                             <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme">{{ plugin.title }}</p>
@@ -181,13 +181,13 @@
             <!-- Layout 8 -->
             <div class="padded padding-top-zero padding-bottom-zero" ng-if="data.design.selectedLayout == 8">
             <div class="list-layout">
-                <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
+                <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" style=" padding-left: 8px !important; ">
                     <div class="list-item-media text-left overflow-hidden">
-                        <div class="list-media-holder square-icon pull-left">
+                        <div class="list-media-holder square-icon pull-left" style=" max-width: 55px !important; ">
                             <img ng-src="{{plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/180x180.jpg'}}" style="border-radius:50%;">
                         </div>
                         <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                            <p class="ellipsis margin-zero text-primary margin-top-twenty"><a class="text-primary">{{ plugin.title }}</a></p>
+                            <p class="ellipsis margin-zero text-primary margin-top-twenty" style=" padding-left: 8px; margin-top: 7px !important; "><a class="text-primary">{{ plugin.title }}</a></p>
                         </div>
                     </div>
                 </div>
@@ -201,7 +201,7 @@
                     <div class="plugin-slide text-center">
                         <div class="blackLayer"></div>
                         <div class="backgroundLayer" style="background:url('http://www.placehold.it/1280x720.jpg');"></div>
-                        <img ng-src="{{plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x720.jpg'}}">
+                        <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x720', {width: 1280, height: 720}) }}">
                         <p class="ellipsis item-text whiteTheme text-center">{{ plugin.title }}</p>
                     </div>
                 </div>
@@ -214,13 +214,13 @@
                     <div class="plugin-slide text-center">
                         <div class="blackLayer"></div>
                         <div class="backgroundLayer" style="background:url('http://www.placehold.it/1280x720.jpg');"></div>
-                        <img ng-src="{{plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x720.jpg'}}">
+                        <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x720', {width: 1280, height: 720}) }}">
                         <p class="ellipsis item-text whiteTheme text-center">{{ plugin.title }}</p>
                     </div>
                 </div>
                 </div>
                 <!--End Layout 10 -->
-                    <!-- Layout 11 -->
+                 <!--   &lt;!&ndash; Layout 11 &ndash;&gt;
                     <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 11">
                     <div class="item-block clearfix col-md-4 col-sm-6 col-xs-6 pull-left">
                         <div class="text-center">
@@ -231,8 +231,8 @@
                         </div>
                     </div>
                     </div>
-                    <!--End Layout 11 -->
-                    <!-- Layout 12 -->
+                    &lt;!&ndash;End Layout 11 &ndash;&gt;
+                    &lt;!&ndash; Layout 12 &ndash;&gt;
                     <div class="holder padding-zero" style="height:100%;" ng-if="data.design.selectedLayout == 12">
                         <div class="folder-plugin layout12" style="height:100%;">
                             <div class="plugin-banner clearfix">
@@ -245,7 +245,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                     <!--End Layout 12 -->
         </div>
     </div>

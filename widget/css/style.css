@@ -57,7 +57,7 @@
 	width:112%;
 	height:112%;
 	z-index:4;
-	background-size:cover !important; 
+	background-size:cover !important;
 	background-position:center center !important;
 	-o-filter:blur(8px);
 	-moz-filter:blur(8px);
@@ -91,7 +91,7 @@
 	border-top:1px solid rgba(0,0,0,0.15);
 }
 .layout12 .plugin-slider .link-holder p + p a{
-	padding-top:10px;	
+	padding-top:10px;
 }
 .layout12 .plugin-slider .link-holder p a{
 	display:block;
