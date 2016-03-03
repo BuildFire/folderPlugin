@@ -202,7 +202,7 @@
             <div class="padded padding-top-zero padding-bottom-zero" ng-if="data.design.selectedLayout == 8">
             <div class="list-layout">
                 <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" style=" padding-left: 8px !important; ">
-                    <div class="list-item-media text-left overflow-hidden">
+                    <div class="list-item-media text-left overflow-hidden"  style=" padding-top: 12px !important; ">
                         <div class="list-media-holder square-icon pull-left" style=" max-width: 55px !important; ">
                             <img ng-src="{{plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/180x180.jpg'}}" style="border-radius:50%;" ng-if="plugin.iconUrl" >
                             <span class="main-icon {{ plugin.iconClassName }} icon8" ng-if="plugin.iconClassName"></span>
