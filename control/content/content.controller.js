@@ -43,10 +43,13 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
             if ($scope.data._buildfire && $scope.data._buildfire.plugins && $scope.data._buildfire.plugins.result) {
                 var pluginsData = folderPluginShared.getPluginDetails($scope.data._buildfire.plugins.result, $scope.data._buildfire.plugins.data);
                 if ($scope.data.content && $scope.data.content.loadAllPlugins) {
-
+                if(pluginsData.length){
+                    plugins.loadItems(pluginsData, "loadAll");
+                }else{
                     plugins.loadAllItems();
+                }
                 } else {
-                    plugins.loadItems(pluginsData);
+                    plugins.loadItems(pluginsData, "selected");
                 }
             }
 
