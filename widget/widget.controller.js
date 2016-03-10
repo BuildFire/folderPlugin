@@ -103,12 +103,52 @@ folderPluginApp.directive('emitLastRepeaterElement', function() {
     };
 });
 
+folderPluginApp.directive('imageCarousel', function ($timeout) {
+    return {
+        restrict: 'A',
+        scope: {},
+        link: function (scope, elem, attrs) {
+            scope.carousel = null;
+            scope.timeout = null;
+            function initCarousel() {
+                if (scope.timeout) {
+                    $timeout.cancel(scope.timeout);
+                }
+                if (scope.carousel) {
+                    scope.carousel.trigger("destroy.owl.carousel");
+                    $(elem).find(".owl-stage-outer").remove();
+                }
+                scope.carousel = null;
+                scope.timeout = $timeout(function () {
+                    var obj = {
+                        loop:false,
+                        nav:false,
+                        items:1
+                    };
+                    scope.carousel = $(elem).owlCarousel(obj);
+                }, 100);
+            }
+
+            initCarousel();
+            attrs.$observe("imageCarousel", function (newVal, oldVal) {
+                if (newVal) {
+                    if (scope.carousel) {
+                        initCarousel();
+                    }
+                }
+            });
+        }
+    }
+})
+
 folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', function ($scope, $sce,$timeout) {
     var view = null;
     var pagesCount = 0;
     var currentPage = 0;
     var loadingData = true;
     $scope.layout12Height='300px';
+    $scope.layout12TotalItem=0;
+
     $scope.data = folderPluginShared.getDefaultScopeData();
 
     function initDeviceSize(callback) {
@@ -177,8 +217,14 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
                 backgroundblur: 0
             };
         }
-
+        var currentCount =Number(data.plugins.length);
+       // console.error(currentCount);
         preparePluginsData(data.plugins);
+     //   console.error(currentCount);
+        if(currentCount){
+                $scope.layout12TotalItem=currentCount;
+        }
+
 
         if (data && data.content && data.content.text) {
             if (data.content.text.replace(/<.+?>/g, "") == "") {
@@ -213,7 +259,9 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
         var pluginsList = null;
         if (result && result.data && !angular.equals({}, result.data) && result.data.content && result.data.design) {
             if (result.data.content && result.data.content.loadAllPlugins) {
+
                 buildfire.components.pluginInstance.getAllPlugins(searchOptions,function (err, res) {
+                    $scope.imagesUpdated = false;
                     pagesCount = Math.ceil(res.total / searchOptions.pageSize);
                     result.data.plugins = res.data;
 
@@ -221,14 +269,18 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
                     loadingData = false;
                     if(pagesCount > 1)
                         $scope.paging();
+                    $scope.imagesUpdated = !!result.data.plugins;
                 });
+
             } else {
+                $scope.imagesUpdated = false;
                 pluginsList = result.data._buildfire.plugins;
 
                 if (result.data._buildfire && pluginsList && pluginsList.result && pluginsList.data) {
                     result.data.plugins = folderPluginShared.getPluginDetails(result.data._buildfire.plugins.result, result.data._buildfire.plugins.data);
                 }
                 bind(result.data);
+                $scope.imagesUpdated = !!result.data.plugins;
             }
         }
     };
@@ -355,7 +407,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
     };
 
     $scope.$on('LastRepeaterElement', function(){
-
+       // $('.plugin-slider.text-center.owl-carousel').trigger("destroy.owl.carousel");
         $scope.layout12Height= $('.plugin-slider .plugin-slide').first().height()+'px';
             var slides = $('.plugin-slider .plugin-slide').length;
 
