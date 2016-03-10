@@ -255,7 +255,7 @@
             <!-- Layout 12 -->
                 <div class="holder padding-zero" style="height:100%;" ng-if="data.design.selectedLayout == 12">
                   	<div class="folder-plugin layout12" style="height:100%;">
-                       	<div class="plugin-banner clearfix">{{layout12TotalItem}}
+                       	<div class="plugin-banner clearfix">
                            	<div class="plugin-slider text-center" image-carousel="{{layout12TotalItem}}" >
                               	<div class="plugin-slide" ng-repeat="rows in data.plugins" ng-style="data.plugins.length>1 ? {'height': layout12Height}  : {'height': '320px'} ">
                                   	<div class="link-holder" ng-class="rows.length<8 ? 'morePadding':''" ng-style="data.plugins.length>1 ? {'height': layout12Height}  : {'height': '320px'} ">
