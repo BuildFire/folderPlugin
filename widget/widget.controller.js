@@ -108,7 +108,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
     var pagesCount = 0;
     var currentPage = 0;
     var loadingData = true;
-
+    $scope.layout12Height='300px';
     $scope.data = folderPluginShared.getDefaultScopeData();
 
     function initDeviceSize(callback) {
@@ -356,6 +356,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
 
     $scope.$on('LastRepeaterElement', function(){
 
+        $scope.layout12Height= $('.plugin-slider .plugin-slide').first().height()+'px';
             var slides = $('.plugin-slider .plugin-slide').length;
 
             // Slider needs at least 2 slides or you'll get an error.
@@ -366,7 +367,5 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
                     items:1
                 });
             }
-
-
     });
 }]);
