@@ -45,14 +45,14 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
                 if ($scope.data.content && $scope.data.content.loadAllPlugins) {
                 if(pluginsData.length){
                     plugins.loadItems(pluginsData, "loadAll");
-                    $(".carousel-items").hide();
+                    $("#plugins").find(".carousel-items").hide();
                 }else{
                     plugins.loadAllItems();
-                    $(".carousel-items").hide();
+                    $("#plugins").find(".carousel-items").hide();
                 }
                 } else {
                     plugins.loadItems(pluginsData, "selected");
-                    $(".carousel-items").show();
+                    $("#plugins").find(".carousel-items").show();
                 }
             }
 
@@ -182,13 +182,13 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
     plugins.onLoadAll = function () {
         $scope.data.content.loadAllPlugins = true;
 
-        $(".carousel-items").hide();
+        $("#plugins").find(".carousel-items").hide();
         folderPluginShared.digest($scope);
     };
 
     plugins.onUnloadAll = function (items) {
         $scope.data.content.loadAllPlugins = false;
-        $(".carousel-items").show();
+        $("#plugins").find(".carousel-items").show();
         folderPluginShared.digest($scope);
     };
 
