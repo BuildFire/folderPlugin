@@ -15,7 +15,7 @@
 
     <script src="../../../scripts/jquery/jquery-1.11.2.min.js"></script>
 
-
+    <script src="js/angular-owl-carousel.js"></script>
     <script type="text/javascript" src="../../../scripts/buildfire.js"></script>
     <script type="text/javascript" src="../../../scripts/owlCarousel/owlCarousel.js"></script>
     <script src="../../../scripts/buildfire/components/carousel/carousel.js"></script>
@@ -51,6 +51,21 @@
 		height:100%;
 	}
 </style>
+<script type="text/javascript" charset="utf-8">
+    window.onload = function () {
+        var slides = $('.plugin-slider .plugin-slide').length;
+
+        // Slider needs at least 2 slides or you'll get an error.
+        if(slides > 1){
+            $('.plugin-slider').owlCarousel({
+                loop:false,
+                nav:false,
+                items:1
+            });
+        }
+    }
+
+</script>
 <div class="holder padding-zero hasBackground fullHeight" id="mainContainer">
     <div class="folder-plugin list-layout fullHeight">
         <div ng-class="{ 'hidden': data.content.carouselImages.length == 0 }" class="plugin-banner clearfix" ng-hide="data.design.selectedLayout == 12">
@@ -242,9 +257,9 @@
                   	<div class="folder-plugin layout12" style="height:100%;">
                        	<div class="plugin-banner clearfix">
                            	<div class="plugin-slider text-center">
-                              	<div class="plugin-slide">
+                              	<div class="plugin-slide" ng-repeat="rows in data.plugins">
                                   	<div class="link-holder">
-                                       	<p ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" class="ellipsis whiteTheme">
+                                       	<p ng-repeat="plugin in rows" ng-click="navigateToPlugin(plugin)" class="ellipsis whiteTheme" emit-last-repeater-element>
 											<a class="whiteTheme">{{ plugin.title }}</a>
 										</p>
                                     </div>
@@ -258,4 +273,7 @@
     </div>
 </div>
 </body>
+<script type="text/javascript" charset="utf-8">
+
+</script>
 </html>

@@ -75,7 +75,13 @@ folderPluginShared.getLayouts = function () {
         "./layouts/layout3.png",
         "./layouts/layout4.png",
         "./layouts/layout5.png",
-        "./layouts/layout6.png"
+        "./layouts/layout6.png",
+        "./layouts/layout7.png",
+        "./layouts/layout8.png",
+        "./layouts/layout9.png",
+        "./layouts/layout10.png",
+        "./layouts/layout11.png",
+        "./layouts/layout12.png"
     ];
 };
 
@@ -88,6 +94,14 @@ folderPluginShared.digest = function ($scope) {
 /* End shared functionality */
 
 var folderPluginApp = angular.module('folderPlugin',[]);
+
+folderPluginApp.directive('emitLastRepeaterElement', function() {
+    return function(scope) {
+        if (scope.$last){
+            scope.$emit('LastRepeaterElement');
+        }
+    };
+});
 
 folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', function ($scope, $sce,$timeout) {
     var view = null;
@@ -116,6 +130,20 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
     }
 
     function preparePluginsData(plugins) {
+
+        if ($scope.data.design.selectedLayout == 12) {
+            var matrix = [], i, k;
+            var matrix = []
+            for (i = 0, k = -1; i < plugins.length; i++) {
+                if (i % 8 === 0) {
+                    k++;
+                    matrix[k] = [];
+                }
+                matrix[k].push(plugins[i]);
+            }
+            $scope.data.plugins = matrix;
+        }
+
         if ($scope.data.design.selectedLayout == 5 || $scope.data.design.selectedLayout == 6) {
             var temp = [];
             var currentItem = 0;
@@ -325,4 +353,20 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
             }
         }
     };
+
+    $scope.$on('LastRepeaterElement', function(){
+
+            var slides = $('.plugin-slider .plugin-slide').length;
+
+            // Slider needs at least 2 slides or you'll get an error.
+            if(slides > 1){
+                $('.plugin-slider').owlCarousel({
+                    loop:false,
+                    nav:false,
+                    items:1
+                });
+            }
+
+
+    });
 }]);
