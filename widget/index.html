@@ -56,11 +56,11 @@
             <div id="carousel" class="plugin-slider text-center"></div>
         </div>
         <div class="text-left padded padding-bottom-zero clearfix folder-plugin-text hide-empty " ng-bind-html="data.content.text"></div>
-        <div ng-if="data.design.selectedLayout && data.plugins.length > 0" >
+        <div ng-if="data.design.selectedLayout && data.plugins.length > 0"  infinite-scroll="paging()"
+             data-infinite-container=".infinite-scroll-parent">
             <!-- Layout 1 -->
             <div class="media-center-plugin layout3" ng-if="data.design.selectedLayout == 1" >
-                <div class=" list-layout" infinite-scroll="paging()"
-                     data-infinite-container=".infinite-scroll-parent">
+                <div class=" list-layout" >
                     <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" >
                         <div class="list-item-media text-left overflow-hidden">
                             <div class="list-media-holder square-icon pull-left">
@@ -81,8 +81,7 @@
             <!-- Layout 2 -->
             <div class="holder padding-zero" ng-if="data.design.selectedLayout == 2">
                 <div class="media-center-plugin layout3">
-                    <div class="list-layout" infinite-scroll="paging()"
-                         data-infinite-container=".infinite-scroll-parent">
+                    <div class="list-layout" >
                         <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
                             <div class="list-item-media text-left overflow-hidden">
                                 <div class="list-media-holder pull-left">
@@ -99,8 +98,7 @@
             </div>
             <!-- End layout 2 -->
             <!-- Layout 3 -->
-            <div infinite-scroll="paging()"
-                 data-infinite-container=".infinite-scroll-parent">
+            <div >
                 <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 3">
                     <div class="plugin-banner clearfix border-bottom-grey">
                         <div class="plugin-slide text-center">
@@ -115,8 +113,7 @@
             </div>
             <!-- End layout 3 -->
             <!-- Layout 4 -->
-            <div infinite-scroll="paging()"
-                 data-infinite-container=".infinite-scroll-parent">
+            <div >
                 <div class="plugin-banner has-info-bar clearfix" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 4">
                     <div class="plugin-slide text-center">
                         <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 450, height: 254}) }}" ng-if="plugin.iconUrl" />
@@ -130,8 +127,7 @@
             <!-- End layout 4 -->
             <!-- Layout 5 -->
             <div class="padded padding-top-zero padding-bottom-zero" ng-if="data.design.selectedLayout == 5">
-                <div class="list-layout layout5" infinite-scroll="paging()"
-                     data-infinite-container=".infinite-scroll-parent">
+                <div class="list-layout layout5" >
                     <div ng-repeat="pluginRow in data.plugins" class="row">
                         <div class="list-item col-xs-6 padding-zero has-info-bar pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
                             <div class="list-item-media text-center">
@@ -152,8 +148,7 @@
             <!-- End layout 5 -->
             <!-- Layout 6 -->
             <div class="padded padding-top-zero padding-bottom-zero" ng-if="data.design.selectedLayout == 6">
-                <div class="list-layout layout-6" infinite-scroll="paging()"
-                     data-infinite-container=".infinite-scroll-parent">
+                <div class="list-layout layout-6">
                     <div ng-repeat="pluginRow in data.plugins" class="row">
                         <div class="list-item col-xs-6 pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
                             <div class="list-item-media text-center overflow-hidden">
