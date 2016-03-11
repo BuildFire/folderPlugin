@@ -171,18 +171,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
 
     function preparePluginsData(plugins) {
 
-        if ($scope.data.design.selectedLayout == 12) {
-            var matrix = [], i, k;
-            var matrix = []
-            for (i = 0, k = -1; i < plugins.length; i++) {
-                if (i % 8 === 0) {
-                    k++;
-                    matrix[k] = [];
-                }
-                matrix[k].push(plugins[i]);
-            }
-            $scope.data.plugins = matrix;
-        }
+
 
         if ($scope.data.design.selectedLayout == 5 || $scope.data.design.selectedLayout == 6) {
             var temp = [];
@@ -201,14 +190,29 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
             }
 
             $scope.data.plugins = temp;
+        }else if  ($scope.data.design.selectedLayout == 12) {
+            var matrix = [], i, k;
+            var matrix = []
+            for (i = 0, k = -1; i < plugins.length; i++) {
+                if (i % 8 === 0) {
+                    k++;
+                    matrix[k] = [];
+                }
+                matrix[k].push(plugins[i]);
+            }
+            $scope.data.plugins = matrix;
+        }else{
+            $scope.data.plugins = plugins;
         }
     }
 
     /*
      * bind data to the scope
      * */
+
+
     function bind(data) {
-        $scope.data = data;
+        $scope.data.design = data.design;
 
         if (!$scope.data.design) {
             $scope.data.design = {
@@ -218,14 +222,15 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
             };
         }
         var currentCount =Number(data.plugins.length);
-       // console.error(currentCount);
+
         preparePluginsData(data.plugins);
-     //   console.error(currentCount);
+
+
         if(currentCount){
-                $scope.layout12TotalItem=currentCount;
+            $scope.layout12TotalItem=currentCount;
         }
 
-
+        $scope.data.content = data.content;
         if (data && data.content && data.content.text) {
             if (data.content.text.replace(/<.+?>/g, "") == "") {
                 $scope.data.content.text = "";
@@ -250,6 +255,8 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
             $scope.$apply();
         }
     }
+
+
 
     var searchOptions = {pageIndex:0,pageSize:20};
 
