@@ -35,7 +35,7 @@ folderPluginShared.getPluginDetails = function (pluginsInfo, pluginIds) {
             tempPlugin = null;
         }
     }
-    return returnPlugins;
+     return returnPlugins;
 };
 
 folderPluginShared.getDefaultScopeData = function () {
@@ -87,7 +87,7 @@ folderPluginShared.digest = function ($scope) {
 };
 /* End shared functionality */
 
-var folderPluginApp = angular.module('folderPlugin',[]);
+var folderPluginApp = angular.module('folderPlugin',['infinite-scroll']);
 
 folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', function ($scope, $sce,$timeout) {
     var view = null;
@@ -177,7 +177,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
         }
     }
 
-    var searchOptions = {pageIndex:0,pageSize:20};
+    var searchOptions = {pageIndex:0,pageSize:10};
 
     function dataLoadedHandler(result) {
 
@@ -287,8 +287,10 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
     };
 
     $scope.paging = function () {
+        console.log("========= Inside paging")
         if ($scope.data.content && $scope.data.content.loadAllPlugins && !loadingData && pagesCount > 1) {
             loadingData = true;
+            $scope.loadMore = true;
             if (currentPage + 1 < pagesCount) {
 
                 buildfire.spinner.show();
@@ -300,27 +302,26 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
                     loadingData = false;
                     var pluginsLength = res.data.length;
 
-                    if ($scope.data.design.selectedLayout == 5 || $scope.data.design.selectedLayout == 6) {
-                        var currentItem = $scope.data.plugins.length;
+                        if ($scope.data.design.selectedLayout == 5 || $scope.data.design.selectedLayout == 6) {
+                            var currentItem = $scope.data.plugins.length;
 
-
-                        for (var i = 0; i < pluginsLength; i++) {
-                            if (i % 2 == 0) {
-                                $scope.data.plugins[currentItem] = [];
-                                $scope.data.plugins[currentItem].push(res.data[i]);
-                            } else {
-                                $scope.data.plugins[currentItem].push(res.data[i]);
-                                currentItem++;
+                            for (var i = 0; i < pluginsLength; i++) {
+                                if (i % 2 == 0) {
+                                    $scope.data.plugins[currentItem] = [];
+                                    $scope.data.plugins[currentItem].push(res.data[i]);
+                                } else {
+                                    $scope.data.plugins[currentItem].push(res.data[i]);
+                                    currentItem++;
+                                }
                             }
-                        }
-                    } else {
-                        for (var i = 0; i < pluginsLength; i++) {
+                        } else {
+                            for (var i = 0; i < 10; i++) {
                             $scope.data.plugins.push(res.data[i]);
+                             }
                         }
-                    }
 
                     folderPluginShared.digest($scope);
-                    setTimeout($scope.paging,500);
+                  //  setTimeout($scope.paging,500);
                 });
             }
         }

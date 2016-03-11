@@ -1,4 +1,4 @@
-﻿﻿<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html ng-app="folderPlugin">
 <head lang="en">
     <title>widget</title>
@@ -11,19 +11,19 @@
     <link rel="stylesheet" href="css/style.css">
 
     <!-- JS -->
-    <script src="../../../scripts/angular/angular.min.js"></script>
-
     <script src="../../../scripts/jquery/jquery-1.11.2.min.js"></script>
+    <script src="../../../scripts/angular/angular.min.js"></script>
 
 
     <script type="text/javascript" src="../../../scripts/buildfire.js"></script>
     <script type="text/javascript" src="../../../scripts/owlCarousel/owlCarousel.js"></script>
     <script src="../../../scripts/buildfire/components/carousel/carousel.js"></script>
     <script src="../../../scripts/buildfire/components/pluginInstance/sortableList.js"></script>
+    <script src="assets/js/ng-infinite-scroll.custom.js"  type="application/javascript"></script>
     <script type="text/javascript" src="widget.controller.js"></script>
 
 </head>
-<body ng-controller="folderPluginCtrl" ng-cloak data-ng-attr-style="background:url({{ cropImage(data.design.backgroundImage, {width: deviceWidth, height: deviceHeight}) }}) !important; background-size:cover !important;">
+<body ng-controller="folderPluginCtrl" ng-cloak data-ng-attr-style="background:url({{ cropImage(data.design.backgroundImage, {width: deviceWidth, height: deviceHeight}) }}) !important; background-size:cover !important;" class="infinite-scroll-parent">
 <style>
     .layout-6 .list-item-media {
         background-color: transparent !important;
@@ -56,12 +56,13 @@
         <div ng-class="{ 'hidden': data.content.carouselImages.length == 0 }" class="plugin-banner clearfix" ng-hide="data.design.selectedLayout == 12">
             <div id="carousel" class="plugin-slider text-center"></div>
         </div>
-        <div class="text-left padded padding-bottom-zero clearfix folder-plugin-text hide-empty" ng-bind-html="data.content.text" ng-hide="data.design.selectedLayout == 12"></div>
-        <div ng-if="data.design.selectedLayout && data.plugins.length > 0" ng-class="{'fullHeight': data.design.selectedLayout == 12}">
+        <div class="text-left padded padding-bottom-zero clearfix folder-plugin-text hide-empty " ng-bind-html="data.content.text"></div>
+        <div ng-if="data.design.selectedLayout && data.plugins.length > 0" ng-class="{'fullHeight': data.design.selectedLayout == 12}" infinite-scroll="paging()"
+             data-infinite-container=".infinite-scroll-parent">
             <!-- Layout 1 -->
-            <div class="media-center-plugin layout3" ng-if="data.design.selectedLayout == 1">
-                <div class=" list-layout">
-                    <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
+            <div class="media-center-plugin layout3" ng-if="data.design.selectedLayout == 1" >
+                <div class=" list-layout" >
+                    <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" >
                         <div class="list-item-media text-left overflow-hidden">
                             <div class="list-media-holder square-icon pull-left">
                                 <img ng-src="{{ cropImage(plugin.iconUrl, {width: 180, height: 180}) }}" ng-if="plugin.iconUrl">
@@ -78,7 +79,7 @@
             <!-- Layout 2 -->
             <div class="holder padding-zero" ng-if="data.design.selectedLayout == 2">
                 <div class="media-center-plugin layout3">
-                    <div class="list-layout">
+                    <div class="list-layout" >
                         <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
                             <div class="list-item-media text-left overflow-hidden">
                                 <div class="list-media-holder pull-left">
