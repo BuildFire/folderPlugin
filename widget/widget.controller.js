@@ -153,11 +153,14 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
         preparePluginsData(data.plugins);
 
         if (data && data.content && data.content.text) {
-            if (data.content.text.replace(/<.+?>/g, "") == "") {
-                $scope.data.content.text = "";
-            } else {
-                $scope.data.content.text = $sce.trustAsHtml(data.content.text);
-            }
+            var $html = $('<div />', {html: data.content.text});
+            $html.find('iframe').each(function (index, element) {
+                var src = element.src;
+                console.log('element is: ', src, src.indexOf('http'));
+                src = src && src.indexOf('file://') != -1 ? src.replace('file://', 'http://') : src;
+                element.src = src && src.indexOf('http') != -1 ? src : 'http:' + src;
+            });
+            $scope.data.content.text = $sce.trustAsHtml($html.html());
         }
 
         if ($scope.data.content && $scope.data.content.carouselImages) {
