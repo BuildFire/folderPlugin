@@ -15,8 +15,6 @@
     <script src="../../../scripts/angular/angular.min.js"></script>
 
 
-
-
     <script type="text/javascript" src="../../../scripts/buildfire.js"></script>
     <script type="text/javascript" src="../../../scripts/owlCarousel/owlCarousel.js"></script>
     <script src="../../../scripts/buildfire/components/carousel/carousel.js"></script>
@@ -49,14 +47,17 @@
 		position:relative;
 		top:15px;
 	}
+	.fullHeight{
+		height:100%;
+	}
 </style>
-<div class="holder padding-zero " id="mainContainer">
-    <div class="folder-plugin list-layout">
-        <div ng-class="{ 'hidden': data.content.carouselImages.length == 0 }" class="plugin-banner clearfix border-bottom-grey">
+<div class="holder padding-zero hasBackground fullHeight" id="mainContainer">
+    <div class="folder-plugin list-layout fullHeight">
+        <div ng-class="{ 'hidden': data.content.carouselImages.length == 0 }" class="plugin-banner clearfix" ng-hide="data.design.selectedLayout == 12">
             <div id="carousel" class="plugin-slider text-center"></div>
         </div>
         <div class="text-left padded padding-bottom-zero clearfix folder-plugin-text hide-empty " ng-bind-html="data.content.text"></div>
-        <div ng-if="data.design.selectedLayout && data.plugins.length > 0"  infinite-scroll="paging()"
+        <div ng-if="data.design.selectedLayout && data.plugins.length > 0" ng-class="{'fullHeight': data.design.selectedLayout == 12}" infinite-scroll="paging()"
              data-infinite-container=".infinite-scroll-parent">
             <!-- Layout 1 -->
             <div class="media-center-plugin layout3" ng-if="data.design.selectedLayout == 1" >
@@ -72,9 +73,6 @@
                             </div>
                         </div>
                     </div>
-                    <!--<div class="center">-->
-                    <!--<a ng-click="paging()">Load More...</a>-->
-                    <!--</div>-->
                 </div>
             </div>
             <!-- End layout 1 -->
@@ -98,11 +96,12 @@
             </div>
             <!-- End layout 2 -->
             <!-- Layout 3 -->
-            <div >
+            <div>
                 <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 3">
                     <div class="plugin-banner clearfix border-bottom-grey">
                         <div class="plugin-slide text-center">
-                            <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 450, height: 254}) }}" ng-if="plugin.iconUrl" />
+							<div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/900x508', {width: 450, height: 254}) }}');"></div>
+                            <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/900x508', {width: 450, height: 254}) }}" ng-if="plugin.iconUrl" />
 							<span class="main-icon text-primary {{ plugin.iconClassName }} icon3" ng-if="plugin.iconClassName"></span>
                         </div>
                     </div>
@@ -113,7 +112,7 @@
             </div>
             <!-- End layout 3 -->
             <!-- Layout 4 -->
-            <div >
+            <div>
                 <div class="plugin-banner has-info-bar clearfix" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 4">
                     <div class="plugin-slide text-center">
                         <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 450, height: 254}) }}" ng-if="plugin.iconUrl" />
@@ -127,12 +126,12 @@
             <!-- End layout 4 -->
             <!-- Layout 5 -->
             <div class="padded padding-top-zero padding-bottom-zero" ng-if="data.design.selectedLayout == 5">
-                <div class="list-layout layout5" >
+                <div class="list-layout layout5">
                     <div ng-repeat="pluginRow in data.plugins" class="row">
                         <div class="list-item col-xs-6 padding-zero has-info-bar pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
                             <div class="list-item-media text-center">
                                 <div class="list-media-holder">
-                                    <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 200, height: 200}) }}" ng-if="plugin.iconUrl" />
+                                    <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 320, height: 320}) }}" ng-if="plugin.iconUrl" />
 									<span class="main-icon text-primary {{ plugin.iconClassName }} icon5" ng-if="plugin.iconClassName"></span>
                                 </div>
                                 <div class="info-bar titleBarBackgroundTheme">
@@ -147,16 +146,16 @@
             </div>
             <!-- End layout 5 -->
             <!-- Layout 6 -->
-            <div class="padded padding-top-zero padding-bottom-zero" ng-if="data.design.selectedLayout == 6">
+            <div class="padded padding-top-zero padding-bottom-zero" ng-if="data.design.selectedLayout == 6" style=" padding-top: 10px; ">
                 <div class="list-layout layout-6">
                     <div ng-repeat="pluginRow in data.plugins" class="row">
-                        <div class="list-item col-xs-6 pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
+                        <div class="list-item col-xs-6 pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)" style="padding-top: 6px !important;">
                             <div class="list-item-media text-center overflow-hidden">
                                 <div class="list-media-holder">
-                                    <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 200, height: 200}) }}" ng-if="plugin.iconUrl" />
+                                    <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 200, height: 200}) }}" />
 									<span class="main-icon text-primary {{ plugin.iconClassName }} icon6" ng-if="plugin.iconClassName"></span>
                                 </div>
-                                <div class="list-item-copy text-center" style="min-height: 42px;">
+                                <div class="list-item-copy text-center padding-top-five" style="min-height: 42px;">
                                     <p class="ellipsis margin-zero text-primary">
                                         <a class="text-primary">
                                             {{ plugin.title }}
@@ -169,6 +168,93 @@
                 </div>
             </div>
             <!-- End layout 6 -->
+            <!-- Layout 7 -->
+            <div>
+                <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 7">
+                    <div class="plugin-banner clearfix">
+                        <div class="plugin-slide text-center">
+                            <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1024x420', {width: 512, height: 210}) }}');"></div>
+							<img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1024x420', {width: 512, height: 210}) }}" ng-if="plugin.iconUrl">
+                        </div>
+                        <div class="info-bar blackBackgroundTheme">
+                            <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme">{{ plugin.title }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Layout 7 -->
+            <!-- Layout 8 -->
+			<div class="media-center-plugin layout3" ng-if="data.design.selectedLayout == 8">
+                <div class=" list-layout">
+                    <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
+                        <div class="list-item-media text-left overflow-hidden">
+                            <div class="list-media-holder square-icon pull-left">
+	                            <img ng-src="{{ cropImage(plugin.iconUrl, {width: 180, height: 180}) }}" ng-if="plugin.iconUrl" style="border-radius:50%;">
+                                <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
+                            </div>
+                            <div class="list-item-copy text-left padding-left-ten padding-right-ten">
+                                <p class="ellipsis margin-zero margin-top-twenty">{{ plugin.title }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Layout 8 -->
+            <!-- Layout 9 -->
+            <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 9">
+            <div class="plugin-banner clearfix">
+                <div class="plugin-banner clearfix">
+                    <div class="plugin-slide text-center">
+                        <div class="blackLayer"></div>
+                        <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x720', {width: 640, height: 360}) }}');"></div>
+						<img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x720', {width: 640, height: 360}) }}">
+                        <p class="ellipsis item-text whiteTheme text-center">{{ plugin.title }}</p>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <!--End Layout 9 -->
+            <!-- Layout 10 -->
+              	<div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 10" style="margin-top:2px;">
+               		<div class="plugin-banner clearfix">
+                   		<div class="plugin-slide text-center">
+                       		<div class="blackLayer"></div>
+	                        <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x400', {width: 640, height: 200}) }}');"></div>
+							<img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x400', {width: 640, height: 200}) }}">
+                       		<p class="ellipsis item-text whiteTheme text-center">{{ plugin.title }}</p>
+                   		</div>
+               		</div>
+               </div>
+          	<!--End Layout 10 -->
+            <!-- Layout 11 -->
+              	<div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 11">
+                 	<div class="item-block clearfix col-md-4 col-sm-6 col-xs-6 pull-left">
+                      	<div class="text-center">
+	                        <img ng-src="{{ cropImage(plugin.iconUrl, {width: 400, height: 400}) }}">
+                            <div class="text-holder">
+                                <p class="item-text whiteTheme text-center">{{ plugin.title }}</p>
+                            </div>
+                        </div>
+                    </div>
+             	</div>
+       		<!--End Layout 11 -->
+            <!-- Layout 12 -->
+                <div class="holder padding-zero" style="height:100%;" ng-if="data.design.selectedLayout == 12">
+                  	<div class="folder-plugin layout12" style="height:100%;">
+                       	<div class="plugin-banner clearfix">
+                           	<div class="plugin-slider text-center">
+                              	<div class="plugin-slide">
+                                  	<div class="link-holder">
+                                       	<p ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" class="ellipsis whiteTheme">
+											<a class="whiteTheme">{{ plugin.title }}</a>
+										</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+         	<!--End Layout 12 -->
         </div>
     </div>
 </div>

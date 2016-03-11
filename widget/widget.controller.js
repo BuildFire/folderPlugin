@@ -89,7 +89,7 @@ folderPluginShared.digest = function ($scope) {
 
 var folderPluginApp = angular.module('folderPlugin',['infinite-scroll']);
 
-folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce', function ($scope, $sce) {
+folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', function ($scope, $sce,$timeout) {
     var view = null;
     var pagesCount = 0;
     var currentPage = 0;
@@ -162,11 +162,13 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce', function ($sco
 
         if ($scope.data.content && $scope.data.content.carouselImages) {
             initDeviceSize(function () {
-                if (!view) {
-                    view = new buildfire.components.carousel.view("#carousel", $scope.data.content.carouselImages);
-                } else {
-                    view.loadItems($scope.data.content.carouselImages);
-                }
+                $timeout(function () {
+                    if (!view) {
+                        view = new buildfire.components.carousel.view("#carousel", $scope.data.content.carouselImages);
+                    } else {
+                        view.loadItems($scope.data.content.carouselImages);
+                    }
+                }, 1000);
             });
         }
 
