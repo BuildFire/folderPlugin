@@ -88,7 +88,11 @@ describe('folderPlugin widget: controller', function () {
         var $scope, widgetController;
 
         beforeEach(function() {
-            $scope = {};
+            $scope = {
+                $on:function(){
+
+                }
+            };
             widgetController = $controller('folderPluginCtrl', { $scope: $scope });
         });
 
