@@ -42,7 +42,11 @@ describe('folderPlugin Content: controller', function () {
         var $scope, contentController;
 
         beforeEach(function() {
-            $scope = {};
+            $scope = {
+                $on:function(){
+
+                }
+            };
             contentController = $controller('folderPluginCtrl', { $scope: $scope });
         });
 

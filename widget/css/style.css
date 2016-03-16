@@ -300,6 +300,9 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 	padding:5px 15px;
 	border-radius:3px;
 }
+.layout12 .plugin-slider .morePadding {
+	padding:5px 15px 25px;
+}
 .layout12 .plugin-slider .link-holder p{
 	margin:0;
 }
