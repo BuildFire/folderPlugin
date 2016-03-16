@@ -258,7 +258,7 @@
                        	<div class="plugin-banner clearfix">
                            	<div class="plugin-slider text-center" image-carousel="{{ layout12TotalItem}}" >
                               	<div class="plugin-slide" ng-repeat="rows in data.plugins" ng-style="data.plugins.length>1 ? {'height': layout12Height}  : {'height': '320px'} ">
-                                  	<div class="link-holder" ng-class="rows.length>8 ? 'morePadding':''" ng-style="data.plugins.length>1 ? {'height': layout12Height}  : {'height': '320px'} ">
+                                  	<div class="link-holder" ng-class="rows.length<8 ? 'morePadding':''" ng-style="data.plugins.length>1 ? {'height': layout12Height}  : {'height': '320px'} ">
                                        	<p ng-repeat="plugin in rows"  ng-click="navigateToPlugin(plugin)" class="ellipsis whiteTheme" emit-last-repeater-element>
 											<a class="whiteTheme ellipsis">{{ plugin.title }}</a>
 										</p>
