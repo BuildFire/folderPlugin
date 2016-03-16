@@ -35,7 +35,7 @@ folderPluginShared.getPluginDetails = function (pluginsInfo, pluginIds) {
             tempPlugin = null;
         }
     }
-    return returnPlugins;
+     return returnPlugins;
 };
 
 folderPluginShared.getDefaultScopeData = function () {
@@ -93,7 +93,7 @@ folderPluginShared.digest = function ($scope) {
 };
 /* End shared functionality */
 
-var folderPluginApp = angular.module('folderPlugin',[]);
+var folderPluginApp = angular.module('folderPlugin',['infinite-scroll']);
 
 folderPluginApp.directive('emitLastRepeaterElement', function() {
     return function(scope) {
@@ -170,9 +170,6 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
     }
 
     function preparePluginsData(plugins) {
-
-
-
         if ($scope.data.design.selectedLayout == 5 || $scope.data.design.selectedLayout == 6) {
             var temp = [];
             var currentItem = 0;
@@ -209,8 +206,6 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
     /*
      * bind data to the scope
      * */
-
-
     function bind(data) {
         $scope.data.design = data.design;
 
@@ -232,11 +227,14 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
 
         $scope.data.content = data.content;
         if (data && data.content && data.content.text) {
-            if (data.content.text.replace(/<.+?>/g, "") == "") {
-                $scope.data.content.text = "";
-            } else {
-                $scope.data.content.text = $sce.trustAsHtml(data.content.text);
-            }
+            var $html = $('<div />', {html: data.content.text});
+            $html.find('iframe').each(function (index, element) {
+                var src = element.src;
+                console.log('element is: ', src, src.indexOf('http'));
+                src = src && src.indexOf('file://') != -1 ? src.replace('file://', 'http://') : src;
+                element.src = src && src.indexOf('http') != -1 ? src : 'http:' + src;
+            });
+            $scope.data.content.text = $sce.trustAsHtml($html.html());
         }
 
         if ($scope.data.content && $scope.data.content.carouselImages) {
@@ -256,9 +254,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
         }
     }
 
-
-
-    var searchOptions = {pageIndex:0,pageSize:20};
+    var searchOptions = {pageIndex:0,pageSize:10};
 
     function dataLoadedHandler(result) {
 
@@ -266,7 +262,6 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
         var pluginsList = null;
         if (result && result.data && !angular.equals({}, result.data) && result.data.content && result.data.design) {
             if (result.data.content && result.data.content.loadAllPlugins) {
-
                 buildfire.components.pluginInstance.getAllPlugins(searchOptions,function (err, res) {
                     $scope.imagesUpdated = false;
                     pagesCount = Math.ceil(res.total / searchOptions.pageSize);
@@ -278,7 +273,6 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
                         $scope.paging();
                     $scope.imagesUpdated = !!result.data.plugins;
                 });
-
             } else {
                 $scope.imagesUpdated = false;
                 pluginsList = result.data._buildfire.plugins;
@@ -376,6 +370,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
     $scope.paging = function () {
         if ($scope.data.content && $scope.data.content.loadAllPlugins && !loadingData && pagesCount > 1) {
             loadingData = true;
+            $scope.loadMore = true;
             if (currentPage + 1 < pagesCount) {
 
                 buildfire.spinner.show();
@@ -407,7 +402,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
                     }
 
                     folderPluginShared.digest($scope);
-                    setTimeout($scope.paging,500);
+                  //  setTimeout($scope.paging,500);
                 });
             }
         }

@@ -43,10 +43,16 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
             if ($scope.data._buildfire && $scope.data._buildfire.plugins && $scope.data._buildfire.plugins.result) {
                 var pluginsData = folderPluginShared.getPluginDetails($scope.data._buildfire.plugins.result, $scope.data._buildfire.plugins.data);
                 if ($scope.data.content && $scope.data.content.loadAllPlugins) {
-
+                if(pluginsData.length){
+                    plugins.loadItems(pluginsData, "loadAll");
+                    $("#plugins").find(".carousel-items").hide();
+                }else{
                     plugins.loadAllItems();
+                    $("#plugins").find(".carousel-items").hide();
+                }
                 } else {
-                    plugins.loadItems(pluginsData);
+                    plugins.loadItems(pluginsData, "selected");
+                    $("#plugins").find(".carousel-items").show();
                 }
             }
 
@@ -175,11 +181,14 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
 
     plugins.onLoadAll = function () {
         $scope.data.content.loadAllPlugins = true;
+
+        $("#plugins").find(".carousel-items").hide();
         folderPluginShared.digest($scope);
     };
 
     plugins.onUnloadAll = function (items) {
         $scope.data.content.loadAllPlugins = false;
+        $("#plugins").find(".carousel-items").show();
         folderPluginShared.digest($scope);
     };
 
