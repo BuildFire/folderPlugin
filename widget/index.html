@@ -258,8 +258,8 @@
                   	<div class="folder-plugin layout12" style="height:100%;">
                        	<div class="plugin-banner clearfix">
                            	<div class="plugin-slider text-center" image-carousel="{{ layout12TotalItem}}" >
-                              	<div class="plugin-slide" ng-repeat="rows in data.plugins" ng-class="rows.length>1 ? 'morePadding':''" ng-style="rows.length>1 ? {'height': layout12Height}  : {'height': '320px'} ">
-                                  	<div class="link-holder" >
+                              	<div class="plugin-slide" ng-repeat="rows in data.plugins" >
+                                  	<div class="link-holder"  ng-class="rows.length>1 ? 'morePadding':''" ng-style="rows.length>1 ? {'height': layout12Height}  : {'height': '320px'} ">
                                        	<p ng-repeat="plugin in rows"  ng-click="navigateToPlugin(plugin)" class="ellipsis whiteTheme" emit-last-repeater-element>
 											<a class="whiteTheme ellipsis">{{ plugin.title }}</a>
 										</p>
