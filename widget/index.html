@@ -71,7 +71,7 @@
         <div ng-class="{ 'hidden': data.content.carouselImages.length == 0 }" class="plugin-banner clearfix" ng-hide="data.design.selectedLayout == 12">
             <div id="carousel" class="plugin-slider text-center"></div>
         </div>
-        <div class="text-left padded padding-bottom-zero clearfix folder-plugin-text hide-empty " ng-bind-html="data.content.text"></div>
+        <div class="text-left padded padding-bottom-zero clearfix folder-plugin-text hide-empty " ng-bind-html="data.content.text" ng-hide="data.design.selectedLayout == 12"></div>
         <div ng-if="data.design.selectedLayout && data.plugins.length > 0" ng-class="{'fullHeight': data.design.selectedLayout == 12}" infinite-scroll="paging()"
              data-infinite-container=".infinite-scroll-parent">
             <!-- Layout 1 -->
@@ -258,8 +258,8 @@
                   	<div class="folder-plugin layout12" style="height:100%;">
                        	<div class="plugin-banner clearfix">
                            	<div class="plugin-slider text-center" image-carousel="{{ layout12TotalItem}}" >
-                              	<div class="plugin-slide" ng-repeat="rows in data.plugins" ng-style="data.plugins.length>1 ? {'height': layout12Height}  : {'height': '320px'} ">
-                                  	<div class="link-holder" ng-class="rows.length==8 ? 'morePadding':''" ng-style="data.plugins.length>1 ? {'height': layout12Height}  : {'height': '320px'} ">
+                              	<div class="plugin-slide" ng-repeat="rows in data.plugins" >
+                                  	<div class="link-holder"  ng-style="data.plugins.length>1 ? {'height': layout12Height}  : {} ">
                                        	<p ng-repeat="plugin in rows"  ng-click="navigateToPlugin(plugin)" class="ellipsis whiteTheme" emit-last-repeater-element>
 											<a class="whiteTheme ellipsis">{{ plugin.title }}</a>
 										</p>
