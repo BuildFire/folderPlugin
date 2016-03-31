@@ -95,6 +95,26 @@ folderPluginShared.digest = function ($scope) {
 
 var folderPluginApp = angular.module('folderPlugin',['infinite-scroll']);
 
+folderPluginApp.directive('imgPreload', ['$rootScope', function($rootScope) {
+    return {
+        restrict: 'A',
+        scope: {
+            ngSrc: '@'
+        },
+        link: function(scope, element, attrs) {
+            element.on('load', function() {
+                element.addClass('in');
+            }).on('error', function() {
+                //
+            });
+
+            scope.$watch('ngSrc', function(newVal) {
+                element.removeClass('in');
+            });
+        }
+    };
+}]);
+
 folderPluginApp.directive('emitLastRepeaterElement', function() {
     return function(scope) {
         if (scope.$last){

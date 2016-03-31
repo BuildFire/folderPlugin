@@ -116,7 +116,7 @@
                     <div class="plugin-banner clearfix border-bottom-grey">
                         <div class="plugin-slide text-center">
 							<div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/900x508', {width: 450, height: 254}) }}');"></div>
-                            <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/900x508', {width: 450, height: 254}) }}" ng-if="plugin.iconUrl" />
+                            <img img-preload ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/900x508', {width: 450, height: 254}) }}" ng-if="plugin.iconUrl" />
 							<span class="main-icon text-primary {{ plugin.iconClassName }} icon3" ng-if="plugin.iconClassName"></span>
                         </div>
                     </div>
@@ -130,7 +130,7 @@
             <div>
                 <div class="plugin-banner has-info-bar clearfix" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 4">
                     <div class="plugin-slide text-center">
-                        <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 450, height: 254}) }}" ng-if="plugin.iconUrl" />
+                        <img img-preload ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 450, height: 254}) }}" ng-if="plugin.iconUrl" />
 						<span class="main-icon text-primary {{ plugin.iconClassName }} icon4" ng-if="plugin.iconClassName"></span>
                     </div>
                     <div class="info-bar titleBarBackgroundTheme">
@@ -146,7 +146,7 @@
                         <div class="list-item col-xs-6 padding-zero has-info-bar pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
                             <div class="list-item-media text-center">
                                 <div class="list-media-holder">
-                                    <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 320, height: 320}) }}" ng-if="plugin.iconUrl" />
+                                    <img img-preload ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 320, height: 320}) }}" ng-if="plugin.iconUrl" />
 									<span class="main-icon text-primary {{ plugin.iconClassName }} icon5" ng-if="plugin.iconClassName"></span>
                                 </div>
                                 <div class="info-bar titleBarBackgroundTheme">
@@ -167,7 +167,7 @@
                         <div class="list-item col-xs-6 pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)" style="padding-top: 6px !important;">
                             <div class="list-item-media text-center overflow-hidden">
                                 <div class="list-media-holder">
-                                    <img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 200, height: 200}) }}" />
+                                    <img img-preload ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/450x254', {width: 200, height: 200}) }}" />
 									<span class="main-icon text-primary {{ plugin.iconClassName }} icon6" ng-if="plugin.iconClassName"></span>
                                 </div>
                                 <div class="list-item-copy text-center padding-top-five" style="min-height: 42px;">
@@ -189,7 +189,7 @@
                     <div class="plugin-banner clearfix">
                         <div class="plugin-slide text-center">
                             <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1024x420', {width: 512, height: 210}) }}');"></div>
-							<img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1024x420', {width: 512, height: 210}) }}" ng-if="plugin.iconUrl">
+							<img img-preload ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1024x420', {width: 512, height: 210}) }}" ng-if="plugin.iconUrl">
                         </div>
                         <div class="info-bar blackBackgroundTheme">
                             <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme">{{ plugin.title }}</p>
@@ -204,7 +204,7 @@
                     <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
                         <div class="list-item-media text-left overflow-hidden">
                             <div class="list-media-holder square-icon pull-left">
-	                            <img ng-src="{{ cropImage(plugin.iconUrl, {width: 180, height: 180}) }}" ng-if="plugin.iconUrl" style="border-radius:50%;">
+	                            <img img-preload ng-src="{{ cropImage(plugin.iconUrl, {width: 180, height: 180}) }}" ng-if="plugin.iconUrl" style="border-radius:50%;">
                                 <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
                             </div>
                             <div class="list-item-copy text-left padding-left-ten padding-right-ten">
@@ -222,7 +222,7 @@
                     <div class="plugin-slide text-center">
                         <div class="blackLayer"></div>
                         <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x720', {width: 640, height: 360}) }}');"></div>
-						<img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x720', {width: 640, height: 360}) }}">
+						<img img-preload ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x720', {width: 640, height: 360}) }}">
                         <p class="ellipsis item-text whiteTheme text-center">{{ plugin.title }}</p>
                     </div>
                 </div>
@@ -235,7 +235,7 @@
                    		<div class="plugin-slide text-center">
                        		<div class="blackLayer"></div>
 	                        <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x400', {width: 640, height: 200}) }}');"></div>
-							<img ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x400', {width: 640, height: 200}) }}">
+							<img img-preload ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x400', {width: 640, height: 200}) }}">
                        		<p class="ellipsis item-text whiteTheme text-center">{{ plugin.title }}</p>
                    		</div>
                		</div>
@@ -245,7 +245,7 @@
               	<div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 11">
                  	<div class="item-block clearfix col-md-4 col-sm-6 col-xs-6 pull-left">
                       	<div class="text-center">
-	                        <img ng-src="{{ cropImage(plugin.iconUrl, {width: 400, height: 400}) }}">
+	                        <img img-preload ng-src="{{ cropImage(plugin.iconUrl, {width: 400, height: 400}) }}">
                             <div class="text-holder">
                                 <p class="item-text whiteTheme text-center">{{ plugin.title }}</p>
                             </div>
