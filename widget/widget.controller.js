@@ -75,7 +75,13 @@ folderPluginShared.getLayouts = function () {
         "./layouts/layout3.png",
         "./layouts/layout4.png",
         "./layouts/layout5.png",
-        "./layouts/layout6.png"
+        "./layouts/layout6.png",
+        "./layouts/layout7.png",
+        "./layouts/layout8.png",
+        "./layouts/layout9.png",
+        "./layouts/layout10.png",
+        "./layouts/layout11.png",
+        "./layouts/layout12.png"
     ];
 };
 
@@ -103,11 +109,59 @@ var folderPluginApp = angular.module('folderPlugin',['infinite-scroll']).directi
     };
 }]);
 
+folderPluginApp.directive('emitLastRepeaterElement', function() {
+    return function(scope) {
+        if (scope.$last){
+            scope.$emit('LastRepeaterElement');
+        }
+    };
+});
+
+folderPluginApp.directive('imageCarousel', function ($timeout) {
+    return {
+        restrict: 'A',
+        scope: {},
+        link: function (scope, elem, attrs) {
+            scope.carousel = null;
+            scope.timeout = null;
+            function initCarousel() {
+                if (scope.timeout) {
+                    $timeout.cancel(scope.timeout);
+                }
+                if (scope.carousel) {
+                    scope.carousel.trigger("destroy.owl.carousel");
+                    $(elem).find(".owl-stage-outer").remove();
+                }
+                scope.carousel = null;
+                scope.timeout = $timeout(function () {
+                    var obj = {
+                        loop:false,
+                        nav:false,
+                        items:1
+                    };
+                    scope.carousel = $(elem).owlCarousel(obj);
+                }, 100);
+            }
+
+            initCarousel();
+            attrs.$observe("imageCarousel", function (newVal, oldVal) {
+                if (newVal) {
+                    if (scope.carousel) {
+                        initCarousel();
+                    }
+                }
+            });
+        }
+    }
+})
+
 folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', function ($scope, $sce,$timeout) {
     var view = null;
     var pagesCount = 0;
     var currentPage = 0;
     var loadingData = true;
+    $scope.layout12Height='300px';
+    $scope.layout12TotalItem=0;
 
     $scope.data = folderPluginShared.getDefaultScopeData();
 
@@ -147,6 +201,19 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
             }
 
             $scope.data.plugins = temp;
+        }else if  ($scope.data.design.selectedLayout == 12) {
+            var matrix = [], i, k;
+            var matrix = []
+            for (i = 0, k = -1; i < plugins.length; i++) {
+                if (i % 8 === 0) {
+                    k++;
+                    matrix[k] = [];
+                }
+                matrix[k].push(plugins[i]);
+            }
+            $scope.data.plugins = matrix;
+        }else{
+            $scope.data.plugins = plugins;
         }
     }
 
@@ -154,7 +221,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
      * bind data to the scope
      * */
     function bind(data) {
-        $scope.data = data;
+        $scope.data.design = data.design;
 
         if (!$scope.data.design) {
             $scope.data.design = {
@@ -163,15 +230,25 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
                 backgroundblur: 0
             };
         }
+        var currentCount =Number(data.plugins.length);
 
         preparePluginsData(data.plugins);
 
+
+        if(currentCount){
+            $scope.layout12TotalItem=currentCount;
+        }
+
+        $scope.data.content = data.content;
         if (data && data.content && data.content.text) {
-            if (data.content.text.replace(/<.+?>/g, "") == "") {
-                $scope.data.content.text = "";
-            } else {
-                $scope.data.content.text = $sce.trustAsHtml(data.content.text);
-            }
+            var $html = $('<div />', {html: data.content.text});
+            $html.find('iframe').each(function (index, element) {
+                var src = element.src;
+                console.log('element is: ', src, src.indexOf('http'));
+                src = src && src.indexOf('file://') != -1 ? src.replace('file://', 'http://') : src;
+                element.src = src && src.indexOf('http') != -1 ? src : 'http:' + src;
+            });
+            $scope.data.content.text = $sce.trustAsHtml($html.html());
         }
 
         if ($scope.data.content && $scope.data.content.carouselImages) {
@@ -200,6 +277,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
         if (result && result.data && !angular.equals({}, result.data) && result.data.content && result.data.design) {
             if (result.data.content && result.data.content.loadAllPlugins) {
                 buildfire.components.pluginInstance.getAllPlugins(searchOptions,function (err, res) {
+                    $scope.imagesUpdated = false;
                     pagesCount = Math.ceil(res.total / searchOptions.pageSize);
                     result.data.plugins = res.data;
 
@@ -207,14 +285,17 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
                     loadingData = false;
                     if(pagesCount > 1)
                         $scope.paging();
+                    $scope.imagesUpdated = !!result.data.plugins;
                 });
             } else {
+                $scope.imagesUpdated = false;
                 pluginsList = result.data._buildfire.plugins;
 
                 if (result.data._buildfire && pluginsList && pluginsList.result && pluginsList.data) {
                     result.data.plugins = folderPluginShared.getPluginDetails(result.data._buildfire.plugins.result, result.data._buildfire.plugins.data);
                 }
                 bind(result.data);
+                $scope.imagesUpdated = !!result.data.plugins;
             }
         }
     };
@@ -301,7 +382,6 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
     };
 
     $scope.paging = function () {
-        console.log("========= Inside paging")
         if ($scope.data.content && $scope.data.content.loadAllPlugins && !loadingData && pagesCount > 1) {
             loadingData = true;
             $scope.loadMore = true;
@@ -316,23 +396,24 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
                     loadingData = false;
                     var pluginsLength = res.data.length;
 
-                        if ($scope.data.design.selectedLayout == 5 || $scope.data.design.selectedLayout == 6) {
-                            var currentItem = $scope.data.plugins.length;
+                    if ($scope.data.design.selectedLayout == 5 || $scope.data.design.selectedLayout == 6) {
+                        var currentItem = $scope.data.plugins.length;
 
-                            for (var i = 0; i < pluginsLength; i++) {
-                                if (i % 2 == 0) {
-                                    $scope.data.plugins[currentItem] = [];
-                                    $scope.data.plugins[currentItem].push(res.data[i]);
-                                } else {
-                                    $scope.data.plugins[currentItem].push(res.data[i]);
-                                    currentItem++;
-                                }
+
+                        for (var i = 0; i < pluginsLength; i++) {
+                            if (i % 2 == 0) {
+                                $scope.data.plugins[currentItem] = [];
+                                $scope.data.plugins[currentItem].push(res.data[i]);
+                            } else {
+                                $scope.data.plugins[currentItem].push(res.data[i]);
+                                currentItem++;
                             }
-                        } else {
-                            for (var i = 0; i < 10; i++) {
-                            $scope.data.plugins.push(res.data[i]);
-                             }
                         }
+                    } else {
+                        for (var i = 0; i < pluginsLength; i++) {
+                            $scope.data.plugins.push(res.data[i]);
+                        }
+                    }
 
                     folderPluginShared.digest($scope);
                   //  setTimeout($scope.paging,500);
@@ -340,4 +421,19 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
             }
         }
     };
+
+    $scope.$on('LastRepeaterElement', function(){
+       // $('.plugin-slider.text-center.owl-carousel').trigger("destroy.owl.carousel");
+        $scope.layout12Height= $('.plugin-slider .plugin-slide').first().height()+17+'px';
+            var slides = $('.plugin-slider .plugin-slide').length;
+        $scope.layout12TotalItem=$scope.layout12TotalItem+1;
+            // Slider needs at least 2 slides or you'll get an error.
+            if(slides > 1){
+                $('.plugin-slider').owlCarousel({
+                    loop:false,
+                    nav:false,
+                    items:1
+                });
+            }
+    });
 }]);

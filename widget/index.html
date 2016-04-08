@@ -14,7 +14,7 @@
     <script src="../../../scripts/jquery/jquery-1.11.2.min.js"></script>
     <script src="../../../scripts/angular/angular.min.js"></script>
 
-
+    <script src="js/angular-owl-carousel.js"></script>
     <script type="text/javascript" src="../../../scripts/buildfire.js"></script>
     <script type="text/javascript" src="../../../scripts/owlCarousel/owlCarousel.js"></script>
     <script src="../../../scripts/buildfire/components/carousel/carousel.js"></script>
@@ -51,12 +51,27 @@
 		height:100%;
 	}
 </style>
+<script type="text/javascript" charset="utf-8">
+    window.onload = function () {
+        var slides = $('.plugin-slider .plugin-slide').length;
+
+        // Slider needs at least 2 slides or you'll get an error.
+        if(slides > 1){
+            $('.plugin-slider').owlCarousel({
+                loop:false,
+                nav:false,
+                items:1
+            });
+        }
+    }
+
+</script>
 <div class="holder padding-zero hasBackground fullHeight" id="mainContainer">
     <div class="folder-plugin list-layout fullHeight">
         <div ng-class="{ 'hidden': data.content.carouselImages.length == 0 }" class="plugin-banner clearfix" ng-hide="data.design.selectedLayout == 12">
             <div id="carousel" class="plugin-slider text-center"></div>
         </div>
-        <div class="text-left padded padding-bottom-zero clearfix folder-plugin-text hide-empty " ng-bind-html="data.content.text"></div>
+        <div class="text-left padded padding-bottom-zero clearfix folder-plugin-text hide-empty " ng-bind-html="data.content.text" ng-hide="data.design.selectedLayout == 12"></div>
         <div ng-if="data.design.selectedLayout && data.plugins.length > 0" ng-class="{'fullHeight': data.design.selectedLayout == 12}" infinite-scroll="paging()"
              data-infinite-container=".infinite-scroll-parent">
             <!-- Layout 1 -->
@@ -252,11 +267,11 @@
                 <div class="holder padding-zero" style="height:100%;" ng-if="data.design.selectedLayout == 12">
                   	<div class="folder-plugin layout12" style="height:100%;">
                        	<div class="plugin-banner clearfix">
-                           	<div class="plugin-slider text-center">
-                              	<div class="plugin-slide">
-                                  	<div class="link-holder">
-                                       	<p ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" class="ellipsis whiteTheme">
-											<a class="whiteTheme">{{ plugin.title }}</a>
+                           	<div class="plugin-slider text-center" image-carousel="{{ layout12TotalItem}}" >
+                              	<div class="plugin-slide" ng-repeat="rows in data.plugins" >
+                                  	<div class="link-holder"  ng-style="data.plugins.length>1 ? {'height': layout12Height}  : {} ">
+                                       	<p ng-repeat="plugin in rows"  ng-click="navigateToPlugin(plugin)" class="ellipsis whiteTheme" emit-last-repeater-element>
+											<a class="whiteTheme ellipsis">{{ plugin.title }}</a>
 										</p>
                                     </div>
                                 </div>
@@ -269,4 +284,7 @@
     </div>
 </div>
 </body>
+<script type="text/javascript" charset="utf-8">
+
+</script>
 </html>
