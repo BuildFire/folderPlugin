@@ -230,7 +230,7 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 	font-size:16px;
 	line-height:24px;
 	color:#fff;
-	z-index:7;
+	z-index:10;
 }
 .item-block .text-holder{
 	position:absolute;
