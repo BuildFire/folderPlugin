@@ -233,8 +233,8 @@
               	<div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 10" style="margin-top:2px;">
                		<div class="plugin-banner clearfix">
                    		<div class="plugin-slide text-center">
-                       		<div class="blackLayer"></div>
-	                        <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x400', {width: 640, height: 200}) }}');"></div>
+                       		<!--<div class="blackLayer"></div>-->
+	                        <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x400', {width: 640, height: 200}) }}');background: rgba(0,0,0, 0.35);"></div>
 							<img img-preload  class="fade" ng-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x400', {width: 640, height: 200}) }}">
                        		<p class="ellipsis item-text whiteTheme text-center">{{ plugin.title }}</p>
                    		</div>
