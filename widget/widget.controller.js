@@ -109,6 +109,26 @@ var folderPluginApp = angular.module('folderPlugin',['infinite-scroll']).directi
     };
 }]);
 
+folderPluginApp.directive('imgPreload', ['$rootScope', function($rootScope) {
+    return {
+        restrict: 'A',
+        scope: {
+            ngSrc: '@'
+        },
+        link: function(scope, element, attrs) {
+            element.on('load', function() {
+                element.addClass('in');
+            }).on('error', function() {
+                //
+            });
+
+            scope.$watch('ngSrc', function(newVal) {
+                element.removeClass('in');
+            });
+        }
+    };
+}]);
+
 folderPluginApp.directive('emitLastRepeaterElement', function() {
     return function(scope) {
         if (scope.$last){
@@ -424,7 +444,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
 
     $scope.$on('LastRepeaterElement', function(){
        // $('.plugin-slider.text-center.owl-carousel').trigger("destroy.owl.carousel");
-        $scope.layout12Height= $('.plugin-slider .plugin-slide').first().height()+17+'px';
+        $scope.layout12Height= $('.plugin-slider .plugin-slide').first().height()+380+'px';
             var slides = $('.plugin-slider .plugin-slide').length;
         $scope.layout12TotalItem=$scope.layout12TotalItem+1;
             // Slider needs at least 2 slides or you'll get an error.

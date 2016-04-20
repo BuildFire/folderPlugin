@@ -184,6 +184,7 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 	padding:10px 0;
 	opacity:0.85;
 	z-index:9;
+	-webkit-transform:translate3d(0,0,0);
 }
 .holder .info-bar{
 	background:rgba(0,0,0,0.8);
@@ -231,6 +232,7 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 	line-height:24px;
 	color:#fff;
 	z-index:7;
+	-webkit-transform:translate3d(0,0,0);
 }
 .item-block .text-holder{
 	position:absolute;
@@ -251,6 +253,7 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 	padding:15px;
 	/*text-shadow:1px 1px 3px #111;*/
 	margin:0;
+	-webkit-transform:translate3d(0,0,0);
 }
 .item-block img{
 	height:auto;
@@ -264,11 +267,12 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 	height:100%;
 	z-index:7;
 	background:rgba(0,0,0, 0.35);
+	-webkit-transform:translate3d(0,0,0);
 }
 .hasBackground .backgroundLayer{
 	position:absolute;
-	top:-15px;
-	left:-15px;
+	top:-9px;
+	left:-7%;
 	width:112%;
 	height:112%;
 	z-index:4;
