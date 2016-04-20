@@ -93,7 +93,21 @@ folderPluginShared.digest = function ($scope) {
 };
 /* End shared functionality */
 
-var folderPluginApp = angular.module('folderPlugin',['infinite-scroll']);
+var folderPluginApp = angular.module('folderPlugin',['infinite-scroll']).directive("loadImage", [function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            element.attr("src", "../../../styles/media/holder-" + attrs.loadImage + ".gif");
+
+            var elem = $("<img>");
+            elem[0].onload = function () {
+                element.attr("src", attrs.finalSrc);
+                elem.remove();
+            };
+            elem.attr("src", attrs.finalSrc);
+        }
+    };
+}]);
 
 folderPluginApp.directive('imgPreload', ['$rootScope', function($rootScope) {
     return {
