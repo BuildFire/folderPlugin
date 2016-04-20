@@ -444,7 +444,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
 
     $scope.$on('LastRepeaterElement', function(){
        // $('.plugin-slider.text-center.owl-carousel').trigger("destroy.owl.carousel");
-        $scope.layout12Height= $('.plugin-slider .plugin-slide').first().height()+'px';
+        $scope.layout12Height= $('.plugin-slider .plugin-slide').first().height()+380+'px';
             var slides = $('.plugin-slider .plugin-slide').length;
         $scope.layout12TotalItem=$scope.layout12TotalItem+1;
             // Slider needs at least 2 slides or you'll get an error.
