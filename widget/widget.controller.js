@@ -175,14 +175,16 @@ folderPluginApp.directive('imageCarousel', function ($timeout) {
     }
 })
 
-folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', function ($scope, $sce,$timeout) {
+folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout','$rootScope', function ($scope, $sce,$timeout,$rootScope) {
     var view = null;
     var pagesCount = 0;
     var currentPage = 0;
     var loadingData = true;
     $scope.layout12Height='300px';
     $scope.layout12TotalItem=0;
-
+    $scope.setWidth = function () {
+        $rootScope.deviceWidth = window.innerWidth;
+    };
     $scope.data = folderPluginShared.getDefaultScopeData();
 
     function initDeviceSize(callback) {
