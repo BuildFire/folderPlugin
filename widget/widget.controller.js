@@ -175,7 +175,7 @@ folderPluginApp.directive('imageCarousel', function ($timeout) {
     }
 })
 
-folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', function ($scope, $sce,$timeout) {
+folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', '$rootScope', function ($scope, $sce,$timeout, $rootScope) {
     var view = null;
     var pagesCount = 0;
     var currentPage = 0;
@@ -184,7 +184,9 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', fun
     $scope.layout12TotalItem=0;
 
     $scope.data = folderPluginShared.getDefaultScopeData();
-
+    $scope.setWidth = function () {
+        $rootScope.deviceFixedWidth = window.innerWidth;
+        };
     function initDeviceSize(callback) {
         $scope.deviceHeight = window.innerHeight;
         $scope.deviceWidth = window.innerWidth;
