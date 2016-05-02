@@ -184,9 +184,11 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', '$r
     $scope.layout12TotalItem=0;
 
     $scope.data = folderPluginShared.getDefaultScopeData();
-    $scope.setWidth = function () {
+
+
+    angular.element(document).ready(function () {
         $rootScope.deviceFixedWidth = window.innerWidth;
-        };
+    });
     function initDeviceSize(callback) {
         $scope.deviceHeight = window.innerHeight;
         $scope.deviceWidth = window.innerWidth;
