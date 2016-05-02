@@ -187,7 +187,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', '$r
 
 
     angular.element(document).ready(function () {
-        $rootScope.deviceFixedWidth = window.innerWidth;
+        $rootScope.deviceFixedWidth = window.outerWidth;
     });
     function initDeviceSize(callback) {
         $scope.deviceHeight = window.innerHeight;
