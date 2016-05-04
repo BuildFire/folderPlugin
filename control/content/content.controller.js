@@ -32,6 +32,10 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
             return;
         }
 
+        if(!result.id){
+            result.data=folderPluginShared.getDefaultScopeData();
+        }
+
         if (result && result.data && !angular.equals({}, result.data)) {
 
             $scope.data = result.data;
@@ -43,13 +47,13 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
             if ($scope.data._buildfire && $scope.data._buildfire.plugins && $scope.data._buildfire.plugins.result) {
                 var pluginsData = folderPluginShared.getPluginDetails($scope.data._buildfire.plugins.result, $scope.data._buildfire.plugins.data);
                 if ($scope.data.content && $scope.data.content.loadAllPlugins) {
-                if(pluginsData.length){
-                    plugins.loadItems(pluginsData, "loadAll");
-                    $("#plugins").find(".carousel-items").hide();
-                }else{
-                    plugins.loadAllItems();
-                    $("#plugins").find(".carousel-items").hide();
-                }
+                    if(pluginsData.length){
+                        plugins.loadItems(pluginsData, "loadAll");
+                        $("#plugins").find(".carousel-items").hide();
+                    }else{
+                        plugins.loadAllItems();
+                        $("#plugins").find(".carousel-items").hide();
+                    }
                 } else {
                     plugins.loadItems(pluginsData, "selected");
                     $("#plugins").find(".carousel-items").show();
@@ -75,6 +79,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
 
             if (tmrDelay) clearTimeout(tmrDelay);
         }
+
 
         /*
          * watch for changes in data and trigger the saveDataWithDelay function on change

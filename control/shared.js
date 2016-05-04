@@ -28,21 +28,33 @@ folderPluginShared.getPluginDetails = function (pluginsInfo, pluginIds) {
 
 folderPluginShared.getDefaultScopeData = function () {
     return {
-        _buildfire: {
-            plugins: {
-                dataType: "pluginInstance",
-                data: []
+        "_buildfire": {
+            "plugins": {
+                "dataType": "pluginInstance",
+                "data": []
             }
         },
-        content: {
-            carouselImages: [],
-            text: "",
-            loadAllPlugins: false
+        "content": {
+            "carouselImages": [{
+                "action": "noAction",
+                "iconUrl": "http://imageserver.prod.s3.amazonaws.com/1462345136293-07379761438351125/e5c4ac80-11c5-11e6-ad08-375cc71b6ca7.jpg",
+                "title": "image"
+            }, {
+                "action": "noAction",
+                "iconUrl": "http://imageserver.prod.s3.amazonaws.com/1462345136293-07379761438351125/e667f160-11c5-11e6-ad08-375cc71b6ca7.jpg",
+                "title": "image"
+            }, {
+                "action": "noAction",
+                "iconUrl": "http://imageserver.prod.s3.amazonaws.com/1462345136293-07379761438351125/e6f627a0-11c5-11e6-92ea-27ed66023d52.jpg",
+                "title": "image"
+            }],
+            "text": "<p>Folder plugin allow user to add plugin inside and arrange them as per preference</p>",
+            "loadAllPlugins": false
         },
-        design: {
-            backgroundImage: null,
-            selectedLayout: 1,
-            backgroundblur: 0
+        "design": {
+            "backgroundImage": null,
+            "selectedLayout": 1,
+            "backgroundblur": 0
         }
     };
 };

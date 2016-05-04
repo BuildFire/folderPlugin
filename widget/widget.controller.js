@@ -40,21 +40,33 @@ folderPluginShared.getPluginDetails = function (pluginsInfo, pluginIds) {
 
 folderPluginShared.getDefaultScopeData = function () {
     return {
-        _buildfire: {
-            plugins: {
-                dataType: "pluginInstance",
-                data: []
+        "_buildfire": {
+            "plugins": {
+                "dataType": "pluginInstance",
+                "data": []
             }
         },
-        content: {
-            carouselImages: [],
-            text: "",
-            loadAllPlugins: false
+        "content": {
+            "carouselImages": [{
+                "action": "noAction",
+                "iconUrl": "http://imageserver.prod.s3.amazonaws.com/1462345136293-07379761438351125/e5c4ac80-11c5-11e6-ad08-375cc71b6ca7.jpg",
+                "title": "image"
+            }, {
+                "action": "noAction",
+                "iconUrl": "http://imageserver.prod.s3.amazonaws.com/1462345136293-07379761438351125/e667f160-11c5-11e6-ad08-375cc71b6ca7.jpg",
+                "title": "image"
+            }, {
+                "action": "noAction",
+                "iconUrl": "http://imageserver.prod.s3.amazonaws.com/1462345136293-07379761438351125/e6f627a0-11c5-11e6-92ea-27ed66023d52.jpg",
+                "title": "image"
+            }],
+            "text": "<p>Folder plugin allow user to add plugin inside and arrange them as per preference</p>",
+            "loadAllPlugins": false
         },
-        design: {
-            backgroundImage: null,
-            selectedLayout: 1,
-            backgroundblur: 0
+        "design": {
+            "backgroundImage": null,
+            "selectedLayout": 1,
+            "backgroundblur": 0
         }
     };
 };
@@ -252,7 +264,10 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout','$ro
                 backgroundblur: 0
             };
         }
-        var currentCount =Number(data.plugins.length);
+        if(data.plugins){
+            var currentCount =Number(data.plugins.length);
+        }
+
 
         preparePluginsData(data.plugins);
 
@@ -262,7 +277,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout','$ro
         }
 
         $scope.data.content = data.content;
-        if (data && data.content && data.content.text) {
+       /* if (data && data.content && data.content.text) {
             var $html = $('<div />', {html: data.content.text});
             $html.find('iframe').each(function (index, element) {
                 var src = element.src;
@@ -271,7 +286,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout','$ro
                 element.src = src && src.indexOf('http') != -1 ? src : 'http:' + src;
             });
             $scope.data.content.text = $sce.trustAsHtml($html.html());
-        }
+        }*/
 
         if ($scope.data.content && $scope.data.content.carouselImages) {
             initDeviceSize(function () {
@@ -289,6 +304,19 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout','$ro
             $scope.$apply();
         }
     }
+
+    $scope.safeHtml = function (html) {
+        if (html) {
+            var $html = $('<div />', {html: html});
+            $html.find('iframe').each(function (index, element) {
+                var src = element.src;
+                console.log('element is: ', src, src.indexOf('http'));
+                src = src && src.indexOf('file://') != -1 ? src.replace('file://', 'http://') : src;
+                element.src = src && src.indexOf('http') != -1 ? src : 'http:' + src;
+            });
+            return $sce.trustAsHtml($html.html());
+        }
+    };
 
     var searchOptions = {pageIndex:0,pageSize:10};
 
@@ -332,7 +360,15 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout','$ro
                 console.error("Error: ", err);
                 return;
             }
-            dataLoadedHandler(result);
+            if(result.id){
+                dataLoadedHandler(result);
+            }else{
+                var obj={
+                    data:folderPluginShared.getDefaultScopeData()
+                }
+                dataLoadedHandler(obj);
+            }
+
         });
     }
 
