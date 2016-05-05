@@ -175,20 +175,18 @@ folderPluginApp.directive('imageCarousel', function ($timeout) {
     }
 })
 
-folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout', '$rootScope', function ($scope, $sce,$timeout, $rootScope) {
+folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout','$rootScope', function ($scope, $sce,$timeout,$rootScope) {
     var view = null;
     var pagesCount = 0;
     var currentPage = 0;
     var loadingData = true;
     $scope.layout12Height='300px';
     $scope.layout12TotalItem=0;
-
+    $scope.setWidth = function () {
+        $rootScope.deviceWidth = window.innerWidth;
+    };
     $scope.data = folderPluginShared.getDefaultScopeData();
 
-
-    angular.element(document).ready(function () {
-        $rootScope.deviceFixedWidth = window.outerWidth;
-    });
     function initDeviceSize(callback) {
         $scope.deviceHeight = window.innerHeight;
         $scope.deviceWidth = window.innerWidth;

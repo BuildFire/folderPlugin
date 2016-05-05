@@ -66,11 +66,10 @@
     }
 
 </script>
-{{ deviceFixedWidth }}
-<div class="holder padding-zero hasBackground fullHeight" id="mainContainer">
-    <div class="folder-plugin list-layout fullHeight" >
+<div data-ng-init="setWidth()" class="holder padding-zero hasBackground fullHeight" id="mainContainer">
+    <div class="folder-plugin list-layout fullHeight">
         <div ng-class="{ 'hidden': data.content.carouselImages.length == 0 }" class="plugin-banner clearfix" ng-hide="data.design.selectedLayout == 12">
-            <div id="carousel" class="plugin-slider text-center" ng-style="data.content.carouselImages.length > 0 ? {'min-height': (9 * deviceFixedWidth / 16) + 'px' } : {}"></div>
+            <div id="carousel" class="plugin-slider text-center" ng-style="data.content.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
         </div>
         <div class="text-left padded padding-bottom-zero clearfix folder-plugin-text hide-empty " ng-bind-html="data.content.text" ng-hide="data.design.selectedLayout == 12"></div>
         <div ng-if="data.design.selectedLayout && data.plugins.length > 0" ng-class="{'fullHeight': data.design.selectedLayout == 12}" infinite-scroll="paging()"
@@ -81,7 +80,7 @@
                     <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" >
                         <div class="list-item-media text-left overflow-hidden">
                             <div class="list-media-holder square-icon pull-left">
-                                <img load-image="1x1" data-final-src="{{ cropImage(plugin.iconUrl, {width: 180, height: 180}) }}" ng-if="plugin.iconUrl">
+                                <img load-image="4x1" data-final-src="{{ cropImage(plugin.iconUrl, {width: 180, height: 180}) }}" ng-if="plugin.iconUrl">
                                 <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
                             </div>
                             <div class="list-item-copy text-left padding-left-ten padding-right-ten">
@@ -116,7 +115,7 @@
                 <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 3">
                     <div class="plugin-banner clearfix border-bottom-grey">
                         <div class="plugin-slide text-center">
-							<div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/900x508', {width: 450, height: 254}) }}');"></div>
+							<div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-16x9.png', {width: 450, height: 254}) }}');"></div>
                             <img load-image="16x9" data-final-src="{{ cropImage(plugin.iconUrl, {width: 450, height: 254}) }}" ng-if="plugin.iconUrl" />
                             <img load-image="16x9" data-final-src="../../../styles/media/holder-16x9.png" ng-if="plugin.iconClassName" />
                         </div>
@@ -189,8 +188,8 @@
                 <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 7">
                     <div class="plugin-banner clearfix">
                         <div class="plugin-slide text-center">
-                            <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1024x420', {width: 512, height: 210}) }}');"></div>
-							<img load-image="239x1" data-final-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1024x420', {width: 512, height: 210}) }}" ng-if="plugin.iconUrl">
+                            <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-239x1.png', {width: 512, height: 210}) }}');"></div>
+							<img load-image="239x1" data-final-src="{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-239x1.png', {width: 512, height: 210}) }}" ng-if="plugin.iconUrl">
                        		<img load-image="239x1" data-final-src="../../../styles/media/holder-239x1.png" ng-if="plugin.iconClassName" />
                         </div>
                         <div class="info-bar blackBackgroundTheme">
@@ -223,7 +222,7 @@
                 <div class="plugin-banner clearfix">
                     <div class="plugin-slide text-center">
                         <div class="blackLayer"></div>
-                        <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x720', {width: 640, height: 360}) }}');"></div>
+                        <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-16x9.png', {width: 640, height: 360}) }}');"></div>
 						<img load-image="16x9" data-final-src="{{ cropImage(plugin.iconUrl, {width: 640, height: 360}) }}" ng-if="plugin.iconUrl" />
 						<img load-image="16x9" data-final-src="../../../styles/media/holder-16x9.png" ng-if="plugin.iconClassName" />
                         <p class="ellipsis item-text whiteTheme text-center">{{ plugin.title }}</p>
@@ -237,8 +236,8 @@
                		<div class="plugin-banner clearfix">
                    		<div class="plugin-slide text-center">
                        		<div class="blackLayer"></div>
-	                        <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : 'http://www.placehold.it/1280x400', {width: 640, height: 200}) }}');"></div>
-							<img load-image="4x1" data-final-src="{{ cropImage(plugin.iconUrl, {width: 640, height: 200}) }}" ng-if="plugin.iconUrl" />
+	                        <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-4x1.png', {width: 640, height: 160}) }}');"></div>
+							<img load-image="4x1" data-final-src="{{ cropImage(plugin.iconUrl, {width: 640, height: 160}) }}" ng-if="plugin.iconUrl" />
 							<img load-image="4x1" data-final-src="../../../styles/media/holder-4x1.png" ng-if="plugin.iconClassName" />
                        		<p class="ellipsis item-text whiteTheme text-center">{{ plugin.title }}</p>
                    		</div>
