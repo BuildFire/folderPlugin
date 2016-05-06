@@ -49,25 +49,22 @@ folderPluginShared.getDefaultScopeData = function () {
         "content": {
             "carouselImages": [{
                 "action": "noAction",
-                "iconUrl": "http://imageserver.prod.s3.amazonaws.com/1462345136293-07379761438351125/e5c4ac80-11c5-11e6-ad08-375cc71b6ca7.jpg",
+                "iconUrl": "http://buildfire.imgix.net/b55ee984-a8e8-11e5-88d3-124798dea82d/7ef5f050-134f-11e6-bd0b-2511d1715baa.jpeg",
                 "title": "image"
             }, {
                 "action": "noAction",
-                "iconUrl": "http://imageserver.prod.s3.amazonaws.com/1462345136293-07379761438351125/e667f160-11c5-11e6-ad08-375cc71b6ca7.jpg",
-                "title": "image"
-            }, {
-                "action": "noAction",
-                "iconUrl": "http://imageserver.prod.s3.amazonaws.com/1462345136293-07379761438351125/e6f627a0-11c5-11e6-92ea-27ed66023d52.jpg",
+                "iconUrl": "http://buildfire.imgix.net/b55ee984-a8e8-11e5-88d3-124798dea82d/7e028fa0-134f-11e6-b7ce-51a0b9ba84fd.jpg",
                 "title": "image"
             }],
-            "text": "<p>Folder plugin allow user to add plugin inside and arrange them as per preference</p>",
+            "text": "<p>With the Folder plugin you can categorize existing plugins so that you can easily direct your users to the proper content. Check out our tutorial in our knowledge base for more information. HINT: You'll also want to check out our article on the WYSIWYG</p>",
             "loadAllPlugins": false
         },
         "design": {
             "backgroundImage": null,
             "selectedLayout": 1,
             "backgroundblur": 0
-        }
+        },
+        "default" : true
     };
 };
 /*

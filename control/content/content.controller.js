@@ -114,8 +114,14 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
      * create an artificial delay so api isnt called on every character entered
      * */
     var saveDataWithDelay = function (newObj, oldObj) {
+
         if (tmrDelay) clearTimeout(tmrDelay);
         if (angular.equals(newObj, oldObj)) return;
+        if(newObj.default){
+            newObj=folderPluginShared.getDefaultScopeBlankData();
+            editor.loadItems([]);
+            $scope.data.content.text=""
+        }
         tmrDelay = setTimeout(function () {
             saveData(newObj);
         }, 500);
