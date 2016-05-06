@@ -183,13 +183,13 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout','$ro
     $scope.layout12Height='300px';
     $scope.layout12TotalItem=0;
     $scope.setWidth = function () {
-        $rootScope.deviceWidth = window.innerWidth;
+        $rootScope.deviceWidth = window.innerWidth || 320;
     };
     $scope.data = folderPluginShared.getDefaultScopeData();
 
     function initDeviceSize(callback) {
         $scope.deviceHeight = window.innerHeight;
-        $scope.deviceWidth = window.innerWidth;
+        $scope.deviceWidth = window.innerWidth || 320;
         $scope.sliderHeight = Math.ceil(9 * $scope.deviceWidth / 16);
         if (callback) {
             if ($scope.deviceWidth == 0 || $scope.deviceHeight == 0) {
