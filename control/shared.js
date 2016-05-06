@@ -28,21 +28,51 @@ folderPluginShared.getPluginDetails = function (pluginsInfo, pluginIds) {
 
 folderPluginShared.getDefaultScopeData = function () {
     return {
-        _buildfire: {
-            plugins: {
-                dataType: "pluginInstance",
-                data: []
+        "_buildfire": {
+            "plugins": {
+                "dataType": "pluginInstance",
+                "data": []
             }
         },
-        content: {
-            carouselImages: [],
-            text: "",
-            loadAllPlugins: false
+        "content": {
+            "carouselImages": [{
+                "action": "noAction",
+                "iconUrl": "http://buildfire.imgix.net/b55ee984-a8e8-11e5-88d3-124798dea82d/7ef5f050-134f-11e6-bd0b-2511d1715baa.jpeg",
+                "title": "image"
+            }, {
+                "action": "noAction",
+                "iconUrl": "http://buildfire.imgix.net/b55ee984-a8e8-11e5-88d3-124798dea82d/7e028fa0-134f-11e6-b7ce-51a0b9ba84fd.jpg",
+                "title": "image"
+            }],
+            "text": "<p>With the Folder plugin you can categorize existing plugins so that you can easily direct your users to the proper content. Check out our tutorial in our knowledge base for more information. HINT: You'll also want to check out our article on the WYSIWYG</p>",
+            "loadAllPlugins": false
         },
-        design: {
-            backgroundImage: null,
-            selectedLayout: 1,
-            backgroundblur: 0
+        "design": {
+            "backgroundImage": null,
+            "selectedLayout": 1,
+            "backgroundblur": 0
+        },
+        "default" : true
+    };
+};
+
+folderPluginShared.getDefaultScopeBlankData= function () {
+    return {
+        "_buildfire": {
+            "plugins": {
+                "dataType": "pluginInstance",
+                "data": []
+            }
+        },
+        "content": {
+            "carouselImages": [],
+            "text": "",
+            "loadAllPlugins": false
+        },
+        "design": {
+            "backgroundImage": null,
+            "selectedLayout": 1,
+            "backgroundblur": 0
         }
     };
 };

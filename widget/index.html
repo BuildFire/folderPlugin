@@ -71,7 +71,7 @@
         <div ng-class="{ 'hidden': data.content.carouselImages.length == 0 }" class="plugin-banner clearfix" ng-hide="data.design.selectedLayout == 12">
             <div id="carousel" class="plugin-slider text-center" ng-style="data.content.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
         </div>
-        <div class="text-left padded padding-bottom-zero clearfix folder-plugin-text hide-empty " ng-bind-html="data.content.text" ng-hide="data.design.selectedLayout == 12"></div>
+        <div class="text-left padded padding-bottom-zero clearfix folder-plugin-text hide-empty " ng-bind-html="safeHtml(data.content.text)" ng-hide="data.design.selectedLayout == 12"></div>
         <div ng-if="data.design.selectedLayout && data.plugins.length > 0" ng-class="{'fullHeight': data.design.selectedLayout == 12}" infinite-scroll="paging()"
              data-infinite-container=".infinite-scroll-parent">
             <!-- Layout 1 -->

@@ -64,6 +64,10 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
         if (newObj == undefined) return;
         if (angular.equals(newObj, oldObj)) return;
 
+        if(newObj.default){
+            newObj=folderPluginShared.getDefaultScopeBlankData();
+        }
+
         if ($scope.frmMain.$invalid) {
             console.warn('invalid data, details will not be saved');
             return;
