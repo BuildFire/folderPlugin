@@ -2,7 +2,7 @@
  * Created by zain on 13/01/16.
  */
 
-describe('folderPlugin widget: controller', function () {
+xdescribe('folderPlugin widget: controller', function () {
 
     beforeEach(module('folderPlugin'));
 
