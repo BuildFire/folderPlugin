@@ -10,7 +10,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
 
     $scope.editorOptions = folderPluginShared.getEditorOptions();
 
-    $scope.data = folderPluginShared.getDefaultScopeData();
+//    $scope.data = folderPluginShared.getDefaultScopeData();
 
     $scope.data._buildfire = {
         "plugins": {
