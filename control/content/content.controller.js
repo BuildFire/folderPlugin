@@ -12,13 +12,6 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
 
 //    $scope.data = folderPluginShared.getDefaultScopeData();
 
-    $scope.data._buildfire = {
-        "plugins": {
-            "dataType": "pluginInstance",
-            "data": []
-        }
-    };
-
     $scope.datastoreInitialized = false;
 
     /*
@@ -40,11 +33,11 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
 
             $scope.data = result.data;
             $scope.id = result.id;
-            if ($scope.data.content && $scope.data.content.carouselImages) {
+            if ($scope.data && $scope.data.content && $scope.data.content.carouselImages) {
                 editor.loadItems($scope.data.content.carouselImages);
             }
 
-            if ($scope.data._buildfire && $scope.data._buildfire.plugins && $scope.data._buildfire.plugins.result) {
+            if ($scope.data && $scope.data._buildfire && $scope.data._buildfire.plugins && $scope.data._buildfire.plugins.result) {
                 var pluginsData = folderPluginShared.getPluginDetails($scope.data._buildfire.plugins.result, $scope.data._buildfire.plugins.data);
                 if ($scope.data.content && $scope.data.content.loadAllPlugins) {
                     if(pluginsData.length){
@@ -60,7 +53,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
                 }
             }
 
-            if (!$scope.data._buildfire) {
+            if ($scope.data && !$scope.data._buildfire) {
                 $scope.data._buildfire = {
                     plugins: {
                         dataType: "pluginInstance",
@@ -69,7 +62,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
                 };
             }
 
-            if (!$scope.data.design) {
+            if ($scope.data && !$scope.data.design) {
                 $scope.data.design = {
                     backgroundImage: null,
                     selectedLayout: 1,
