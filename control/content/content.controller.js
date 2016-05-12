@@ -12,7 +12,17 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
 
 //    $scope.data = folderPluginShared.getDefaultScopeData();
 
+    $scope.masterData = folderPluginShared.getDefaultScopeData();
+
     $scope.datastoreInitialized = false;
+
+    function isUnchanged(data) {
+        return angular.equals(data, $scope.masterData);
+    }
+
+    function updateMasterItem(data) {
+        $scope.masterData = angular.copy(data);
+    }
 
     /*
      * Go pull any previously saved data
@@ -100,20 +110,24 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
             newObj._buildfire.plugins.result = plugins.items;
         }
 
+        updateMasterItem(newObj);
+
         folderPluginShared.save(newObj);
     };
 
     /*
      * create an artificial delay so api isnt called on every character entered
      * */
-    var saveDataWithDelay = function (newObj, oldObj) {
+    var saveDataWithDelay = function (newObj) {
 
         if (tmrDelay) clearTimeout(tmrDelay);
-        if (angular.equals(newObj, oldObj)) return;
+        if (isUnchanged(newObj)) {
+            return;
+        }
         if(newObj.default){
             newObj=folderPluginShared.getDefaultScopeBlankData();
             editor.loadItems([]);
-            $scope.data.content.text=""
+            $scope.data = newObj;
         }
         tmrDelay = setTimeout(function () {
             saveData(newObj);
