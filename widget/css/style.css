@@ -295,7 +295,7 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 .layout12 .plugin-banner{
 	position:relative;
 	top:50%;
-	transform:translateY(-50%);
+	transform:translateY(27%);
 }
 .layout12 .plugin-slider .link-holder{
 	width:240px;
