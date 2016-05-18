@@ -295,7 +295,7 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 .layout12 .plugin-banner{
 	position:relative;
 	top:50%;
-	transform:translateY(27%);
+	transform:translateY(-50%);
 }
 .layout12 .plugin-slider .link-holder{
 	width:240px;
@@ -303,6 +303,7 @@ html[browser="Firefox"] .layout3 .list-layout .list-item-media .list-media-holde
 	background:rgba(0,0,0,0.8);
 	padding:5px 15px;
 	border-radius:3px;
+	max-height:380px;
 }
 .layout12 .plugin-slider .morePadding {
 	padding:5px 15px 25px;
