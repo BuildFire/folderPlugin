@@ -194,7 +194,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout','$ro
     $scope.setWidth = function () {
         $rootScope.deviceWidth = window.innerWidth || 320;
     };
-    $scope.data = folderPluginShared.getDefaultScopeData();
+//    $scope.data = folderPluginShared.getDefaultScopeData();
 
     function initDeviceSize(callback) {
         $scope.deviceHeight = window.innerHeight;
@@ -318,7 +318,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout','$ro
     var searchOptions = {pageIndex:0,pageSize:10};
 
     function dataLoadedHandler(result) {
-
+        $scope.data = result.data;
         searchOptions.pageIndex=0;
         var pluginsList = null;
         if (result && result.data && !angular.equals({}, result.data) && result.data.content && result.data.design) {
