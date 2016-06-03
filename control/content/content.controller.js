@@ -5,8 +5,20 @@ var folderPluginApp = angular.module('folderPlugin', ['ui.tinymce']);
 
 folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
     var editor = new buildfire.components.carousel.editor("#carousel");
+    var _buildfire = {
+        plugins: {
+            dataType: "pluginInstance",
+            data: []
+        }
+    };
+    var _design = {
+        backgroundImage: null,
+        selectedLayout: 1,
+        backgroundblur: 0
+    };
     var plugins = new buildfire.components.pluginInstance.sortableList("#plugins", [], { showIcon: true, confirmDeleteItem: false });
     var tmrDelay = null;
+    var updateItem = null;
 
     $scope.editorOptions = folderPluginShared.getEditorOptions();
 
@@ -40,7 +52,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
         }
 
         if (result && result.data && !angular.equals({}, result.data)) {
-
+            updateMasterItem(result.data);
             $scope.data = result.data;
             $scope.id = result.id;
             if ($scope.data && $scope.data.content && $scope.data.content.carouselImages) {
@@ -64,20 +76,17 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
             }
 
             if ($scope.data && !$scope.data._buildfire) {
-                $scope.data._buildfire = {
-                    plugins: {
-                        dataType: "pluginInstance",
-                        data: []
-                    }
-                };
+                updateItem = angular.copy($scope.data);
+                updateItem._buildfire = _buildfire;
+                updateMasterItem(updateItem);
+                $scope.data = angular.copy(updateItem);
             }
 
             if ($scope.data && !$scope.data.design) {
-                $scope.data.design = {
-                    backgroundImage: null,
-                    selectedLayout: 1,
-                    backgroundblur: 0
-                };
+                updateItem = angular.copy($scope.data);
+                updateItem.design = _design;
+                updateMasterItem(updateItem);
+                $scope.data = angular.copy(updateItem);
             }
 
             if (tmrDelay) clearTimeout(tmrDelay);
