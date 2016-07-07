@@ -62,7 +62,8 @@ folderPluginShared.getDefaultScopeData = function () {
         "design": {
             "backgroundImage": null,
             "selectedLayout": 1,
-            "backgroundblur": 0
+            "backgroundblur": 0,
+            "hideText":false
         },
         "default" : true
     };
@@ -319,6 +320,7 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', '$sce','$timeout','$ro
 
     function dataLoadedHandler(result) {
         $scope.data = result.data;
+        $scope.$digest();
         searchOptions.pageIndex=0;
         var pluginsList = null;
         if (result && result.data && !angular.equals({}, result.data) && result.data.content && result.data.design) {

@@ -56,7 +56,7 @@
             </div>
         </div>
 
-		<div class="hidden">
+		<div>
 			<hr>
 			<div class="item row clearfix">
 			    <div class="labels col-md-3 padding-right-zero pull-left">
@@ -64,11 +64,11 @@
 			    </div>
 			    <div class="main col-md-9 pull-right">
 					<div class="radio radio-primary radio-inline">
-						<input id="showText" type="radio" name="toggleText" checked="">
+						<input id="showText" type="radio" name="toggleText" checked="" ng-model="data.design.hideText" value="false">
 						<label for="showText">False</label>
 					</div>
 					<div class="radio radio-primary radio-inline">
-						<input id="hideText" type="radio" name="toggleText">
+						<input id="hideText" type="radio" name="toggleText" ng-model="data.design.hideText" value="true">
 						<label for="hideText">True</label>
 					</div>
 					<p class="info margin-top-fifteen">Note: This will allow you to hide the text on specific layouts.</p>
