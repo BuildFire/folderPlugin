@@ -50,7 +50,8 @@ folderPluginShared.getDefaultScopeData = function () {
         "design": {
             "backgroundImage": null,
             "selectedLayout": 1,
-            "backgroundblur": 0
+            "backgroundblur": 0,
+            "hideText": true
         },
         "default" : true
     };
@@ -72,7 +73,8 @@ folderPluginShared.getDefaultScopeBlankData= function () {
         "design": {
             "backgroundImage": null,
             "selectedLayout": 1,
-            "backgroundblur": 0
+            "backgroundblur": 0,
+            "hideText": true
         }
     };
 };
