@@ -151,7 +151,7 @@ folderPluginApp.directive('backImg', ["$rootScope", function ($rootScope) {
                 }, function (err, imgUrl) {
                     if (imgUrl) {
                         img = imgUrl;
-                        element.attr("style", 'background:url(' + img + ') !important');
+                        element.attr("style", 'background:url(' + img + ') !important ; background-size: cover !important;');
                     } else {
                         img = '';
                         element.attr("style", 'background-color:white');
