@@ -255,7 +255,7 @@
                  	<div class="item-block clearfix pull-left" style="padding:0 !important;">
                       	<div class="text-center">
 							<div class="blackLayer"></div>
-	                        <img ng-src="{{ plugin.iconUrl }}" crop-width="400" crop-height="400" crop-type="crop" ng-if="plugin.iconUrl" />
+	                        <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="400" crop-height="400" crop-type="crop" ng-if="plugin.iconUrl" />
 							<img load-image="1x1" data-final-src="../../../styles/media/holder-1x1.png" ng-if="plugin.iconClassName" />
                             <div class="text-holder">
                                 <p class="item-text whiteTheme text-center"  ng-show="data.design.hideText=='false'">{{ plugin.title }}</p>
