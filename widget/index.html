@@ -128,7 +128,7 @@
                         </div>
                     </div>
                     <div class="padded text-left">
-                        <a class="text-primary" ng-show="data.design.hideText==false">{{ plugin.title }}</a>
+                        <a class="text-primary" ng-if="data.design.hideText=='false'">{{ plugin.title }}</a>
                     </div>
                 </div>
             </div>
@@ -140,8 +140,8 @@
                         <img load-image="16x9" data-final-src="{{ plugin.iconUrl }}" crop-width="450" crop-height="254" crop-type="crop" ng-if="plugin.iconUrl" />
 						<img load-image="16x9" data-final-src="../../../styles/media/holder-16x9.png" ng-if="plugin.iconClassName" />
                     </div>
-                    <div class="info-bar titleBarBackgroundTheme">
-                        <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons"  ng-show="data.design.hideText=='false'" >{{ plugin.title }}</p>
+                    <div class="info-bar titleBarBackgroundTheme" ng-show="data.design.hideText=='false'">
+                        <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">{{ plugin.title }}</p>
                     </div>
                 </div>
             </div>
@@ -156,8 +156,8 @@
                                     <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="320" crop-height="320" crop-type="crop" ng-if="plugin.iconUrl" />
 									<img load-image="1x1" data-final-src="../../../styles/media/holder-1x1.png" ng-if="plugin.iconClassName" />
                                 </div>
-                                <div class="info-bar titleBarBackgroundTheme">
-                                    <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons"  ng-show="data.design.hideText=='false'">
+                                <div class="info-bar titleBarBackgroundTheme" ng-show="data.design.hideText=='false'">
+                                    <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">
                                         {{ plugin.title }}
                                     </p>
                                 </div>
@@ -199,8 +199,8 @@
 							<img load-image="239x1" data-final-src="{{plugin.iconUrl}}" crop-width="512" crop-height="210" crop-type="crop" ng-if="plugin.iconUrl">
                        		<img load-image="239x1" data-final-src="../../../styles/media/holder-239x1.png" ng-if="plugin.iconClassName" />
                         </div>
-                        <div class="info-bar blackBackgroundTheme">
-                            <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme"  ng-show="data.design.hideText=='false'">{{ plugin.title }}</p>
+                        <div class="info-bar blackBackgroundTheme" ng-show="data.design.hideText=='false'">
+                            <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme">{{ plugin.title }}</p>
                         </div>
                     </div>
                 </div>
