@@ -40,7 +40,8 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
                 $scope.data.design = {
                     backgroundImage: null,
                     selectedLayout: 1,
-                    backgroundblur: 0
+                    backgroundblur: 0,
+                    hideText : false
                 };
             }
         }

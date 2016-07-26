@@ -15,7 +15,8 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
     var _design = {
         backgroundImage: null,
         selectedLayout: 1,
-        backgroundblur: 0
+        backgroundblur: 0,
+        hideText : false
     };
     var plugins = new buildfire.components.pluginInstance.sortableList("#plugins", [], { showIcon: true, confirmDeleteItem: false });
     var tmrDelay = null;
