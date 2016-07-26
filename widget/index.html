@@ -128,7 +128,7 @@
                         </div>
                     </div>
                     <div class="padded text-left">
-                        <a class="text-primary" ng-if="data.design.hideText=='false'">{{ plugin.title }}</a>
+                        <a class="text-primary" ng-if="data.design.hideText==false">{{ plugin.title }}</a>
                     </div>
                 </div>
             </div>
@@ -140,7 +140,7 @@
                         <img load-image="16x9" data-final-src="{{ plugin.iconUrl }}" crop-width="450" crop-height="254" crop-type="crop" ng-if="plugin.iconUrl" />
 						<img load-image="16x9" data-final-src="../../../styles/media/holder-16x9.png" ng-if="plugin.iconClassName" />
                     </div>
-                    <div class="info-bar titleBarBackgroundTheme" ng-show="data.design.hideText=='false'">
+                    <div class="info-bar titleBarBackgroundTheme" ng-show="data.design.hideText==false">
                         <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">{{ plugin.title }}</p>
                     </div>
                 </div>
@@ -156,7 +156,7 @@
                                     <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="320" crop-height="320" crop-type="crop" ng-if="plugin.iconUrl" />
 									<img load-image="1x1" data-final-src="../../../styles/media/holder-1x1.png" ng-if="plugin.iconClassName" />
                                 </div>
-                                <div class="info-bar titleBarBackgroundTheme" ng-show="data.design.hideText=='false'">
+                                <div class="info-bar titleBarBackgroundTheme" ng-show="data.design.hideText==false">
                                     <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">
                                         {{ plugin.title }}
                                     </p>
@@ -179,7 +179,7 @@
                                 </div>
                                 <div class="list-item-copy text-center padding-top-five" style="min-height: 42px;">
                                     <p class="ellipsis margin-zero text-primary">
-                                        <a class="text-primary"  ng-show="data.design.hideText=='false'">
+                                        <a class="text-primary"  ng-show="data.design.hideText==false">
                                             {{ plugin.title }}
                                         </a>
                                     </p>
@@ -199,7 +199,7 @@
 							<img load-image="239x1" data-final-src="{{plugin.iconUrl}}" crop-width="512" crop-height="210" crop-type="crop" ng-if="plugin.iconUrl">
                        		<img load-image="239x1" data-final-src="../../../styles/media/holder-239x1.png" ng-if="plugin.iconClassName" />
                         </div>
-                        <div class="info-bar blackBackgroundTheme" ng-show="data.design.hideText=='false'">
+                        <div class="info-bar blackBackgroundTheme" ng-show="data.design.hideText==false">
                             <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme">{{ plugin.title }}</p>
                         </div>
                     </div>
@@ -232,7 +232,7 @@
                         <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-16x9.png', {width: 640, height: 360}) }}');"></div>
 						<img load-image="16x9" data-final-src="{{plugin.iconUrl}}" crop-width="640" crop-height="360" crop-type="crop" ng-if="plugin.iconUrl" />
 						<img load-image="16x9" data-final-src="../../../styles/media/holder-16x9.png" ng-if="plugin.iconClassName" />
-                        <p class="ellipsis item-text whiteTheme text-center"  ng-show="data.design.hideText=='false'">{{ plugin.title }}</p>
+                        <p class="ellipsis item-text whiteTheme text-center"  ng-show="data.design.hideText==false">{{ plugin.title }}</p>
                     </div>
                 </div>
             </div>
@@ -246,7 +246,7 @@
 	                        <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-4x1.png', {width: 640, height: 160}) }}');"></div>
 							<img load-image="4x1" data-final-src="{{plugin.iconUrl }}"  crop-width="640" crop-height="160" crop-type="crop" ng-if="plugin.iconUrl" />
 							<img load-image="4x1" data-final-src="../../../styles/media/holder-4x1.png" ng-if="plugin.iconClassName" />
-                       		<p class="ellipsis item-text whiteTheme text-center"  ng-show="data.design.hideText=='false'">{{ plugin.title }}</p>
+                       		<p class="ellipsis item-text whiteTheme text-center"  ng-show="data.design.hideText==false">{{ plugin.title }}</p>
                    		</div>
                		</div>
                </div>
@@ -259,7 +259,7 @@
 	                        <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="400" crop-height="400" crop-type="crop" ng-if="plugin.iconUrl" />
 							<img load-image="1x1" data-final-src="../../../styles/media/holder-1x1.png" ng-if="plugin.iconClassName" />
                             <div class="text-holder">
-                                <p class="item-text whiteTheme text-center"  ng-show="data.design.hideText=='false'">{{ plugin.title }}</p>
+                                <p class="item-text whiteTheme text-center"  ng-show="data.design.hideText==false">{{ plugin.title }}</p>
                             </div>
                         </div>
                     </div>
