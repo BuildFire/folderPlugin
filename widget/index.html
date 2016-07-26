@@ -169,17 +169,17 @@
             <!-- End layout 5 -->
             <!-- Layout 6 -->
             <div class="padded padding-top-zero padding-bottom-zero" ng-if="data.design.selectedLayout == 6" style=" padding-top: 10px; ">
-                <div class="list-layout layout-6">
+                <div class="list-layout layout-6" ng-class="data.content.text?'':'margin-top-fifteen'">
                     <div ng-repeat="pluginRow in data.plugins" class="row">
-                        <div class="list-item col-xs-6 pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)" style="padding-top: 6px !important;">
+                        <div class="list-item col-xs-6 pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
                             <div class="list-item-media text-center overflow-hidden">
                                 <div class="list-media-holder">
                                     <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="200" crop-height="200" crop-type="crop" ng-if="plugin.iconUrl"/>
 									<img load-image="1x1" data-final-src="../../../styles/media/holder-1x1.png" ng-if="plugin.iconClassName" />
                                 </div>
-                                <div class="list-item-copy text-center padding-top-five" style="min-height: 42px;">
+                                <div class="list-item-copy text-center" ng-class="data.design.hideText==false?'with-text':'without-text'">
                                     <p class="ellipsis margin-zero text-primary">
-                                        <a class="text-primary"  ng-show="data.design.hideText==false">
+                                        <a class="text-primary" ng-show="data.design.hideText==false">
                                             {{ plugin.title }}
                                         </a>
                                     </p>
