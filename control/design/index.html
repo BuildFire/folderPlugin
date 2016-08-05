@@ -62,8 +62,8 @@
 			    <div class="labels col-md-3 padding-right-zero pull-left">
 			        <span>Hide Text</span>
 			    </div>
-			    <div class="main col-md-9 pull-right">
-					<div class="radio radio-primary radio-inline">
+			    <div class="main col-md-9 pull-right" ng-init="data.design.hideText">
+					<div class="radio radio-primary radio-inline">{{data.design.hideText}}
 						<input id="showText" type="radio" name="toggleText"  ng-model="data.design.hideText" ng-value="false">
 						<label for="showText">False</label>
 					</div>

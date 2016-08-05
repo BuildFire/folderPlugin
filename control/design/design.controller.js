@@ -44,6 +44,9 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
                     hideText : false
                 };
             }
+            if(angular.isUndefined($scope.data.design.hideText)){
+                $scope.data.design.hideText = Boolean(false);
+            }
         }
 
         /*
