@@ -90,10 +90,6 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
                 updateMasterItem(updateItem);
                 $scope.data = angular.copy(updateItem);
             }
-             if(angular.isUndefined($scope.data.design.hideText)){
-                 $scope.data.design.hideText = Boolean(false);
-             }
-
             if (tmrDelay) clearTimeout(tmrDelay);
         }
 
