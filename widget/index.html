@@ -87,7 +87,7 @@
                     <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" >
                         <div class="list-item-media text-left overflow-hidden">
                             <div class="list-media-holder square-icon pull-left">
-                                <img load-image="4x1" data-final-src="{{ plugin.iconUrl }}"  crop-width="180" crop-height="180" crop-type="crop" ng-if="plugin.iconUrl">
+                                <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}"  crop-width="180" crop-height="180" crop-type="crop" ng-if="plugin.iconUrl">
                                 <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
                             </div>
                             <div class="list-item-copy text-left padding-left-ten padding-right-ten">
