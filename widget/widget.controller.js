@@ -109,24 +109,27 @@ var folderPluginApp = angular.module('folderPlugin',['infinite-scroll']).directi
         link: function (scope, element, attrs) {
             element.attr("src", "../../../styles/media/holder-" + attrs.loadImage + ".gif");
 
-            var _img = attrs.finalSrc;
-            if (attrs.cropType == 'resize') {
-                buildfire.imageLib.local.resizeImage(_img, {
-                    width: attrs.cropWidth,
-                    height: attrs.cropHeight
-                }, function (err, imgUrl) {
-                    _img = imgUrl;
-                    replaceImg(_img);
-                });
-            } else {
-                buildfire.imageLib.local.cropImage(_img, {
-                    width: attrs.cropWidth,
-                    height: attrs.cropHeight
-                }, function (err, imgUrl) {
-                    _img = imgUrl;
-                    replaceImg(_img);
-                });
-            }
+            attrs.$observe('finalSrc', function() {
+                var _img = attrs.finalSrc;
+
+                if (attrs.cropType == 'resize') {
+                    buildfire.imageLib.local.resizeImage(_img, {
+                        width: attrs.cropWidth,
+                        height: attrs.cropHeight
+                    }, function (err, imgUrl) {
+                        _img = imgUrl;
+                        replaceImg(_img);
+                    });
+                } else {
+                    buildfire.imageLib.local.cropImage(_img, {
+                        width: attrs.cropWidth,
+                        height: attrs.cropHeight
+                    }, function (err, imgUrl) {
+                        _img = imgUrl;
+                        replaceImg(_img);
+                    });
+                }
+            });
 
             function replaceImg(finalSrc) {
                 var elem = $("<img>");
