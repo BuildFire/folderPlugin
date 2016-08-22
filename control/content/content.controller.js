@@ -4,6 +4,7 @@
 var folderPluginApp = angular.module('folderPlugin', ['ui.tinymce']);
 
 folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
+    var tmpCarousalData=null;
     var editor = new buildfire.components.carousel.editor("#carousel");
     var _buildfire = {
         plugins: {
@@ -14,7 +15,8 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
     var _design = {
         backgroundImage: null,
         selectedLayout: 1,
-        backgroundblur: 0
+        backgroundblur: 0,
+        hideText : false
     };
     var plugins = new buildfire.components.pluginInstance.sortableList("#plugins", [], { showIcon: true, confirmDeleteItem: false });
     var tmrDelay = null;
@@ -88,7 +90,6 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
                 updateMasterItem(updateItem);
                 $scope.data = angular.copy(updateItem);
             }
-
             if (tmrDelay) clearTimeout(tmrDelay);
         }
 
@@ -135,7 +136,14 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
         }
         if(newObj.default){
             newObj=folderPluginShared.getDefaultScopeBlankData();
-            editor.loadItems([]);
+            if(tmpCarousalData){
+                editor.loadItems(tmpCarousalData);
+                newObj.content.carouselImages=tmpCarousalData;
+                tmpCarousalData=null;
+            }else{
+                editor.loadItems([]);
+            }
+
             $scope.data = newObj;
         }
         tmrDelay = setTimeout(function () {
@@ -152,10 +160,17 @@ folderPluginApp.controller('folderPluginCtrl', ['$scope', function ($scope) {
     }
 
     // this method will be called when a new item added to the list
-    editor.onAddItems = editor.onDeleteItem = editor.onItemChange = editor.onOrderChange = function () {
+    editor.onDeleteItem = editor.onItemChange = editor.onOrderChange = function () {
+
         $scope.data.content.carouselImages = editor.items;
         folderPluginShared.digest($scope);
     };
+
+    editor.onAddItems= function (items) {
+        tmpCarousalData=items;
+        $scope.data.content.carouselImages = editor.items;
+        folderPluginShared.digest($scope);
+    }
 
     plugins.onAddItems = function () {
         var scopeItems = $scope.data._buildfire.plugins.data;

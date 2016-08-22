@@ -40,14 +40,14 @@
 }
 
 /* List Layout Grids */
-.list-layout .list-item{
+/*.list-layout .list-item{
 	padding-left:15px;
 	padding-right:8px;
 }
 .list-layout .list-item + .list-item{
 	padding-left:8px;
 	padding-right:15px;
-}
+}*/
 .list-layout .list-item-media{
 	position:relative;
 	left:0;
@@ -93,9 +93,6 @@
 .list-layout.layout5 .list-item-media .list-media-holder img{
 	max-height:100%;
 }
-.list-layout.layout-6 .list-item-media .list-media-holder{
-	height:150px;
-}
 .list-layout.layout-6 .list-item-media .list-media-holder img{
 	max-height:100%;
 }
@@ -105,6 +102,12 @@
 .list-layout .list-item-copy{
 	padding:10px 0;
 	min-height:70px;
+}
+.list-layout .list-item-copy.with-text{
+	min-height:42px;
+}
+.list-layout .list-item-copy.without-text{
+	min-height:32px;
 }
 .list-layout .list-item-copy p.summary{
 	font-size:13px;
