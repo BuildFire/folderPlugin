@@ -208,7 +208,7 @@
                     <div class="plugin-banner clearfix">
                         <div class="plugin-slide text-center">
                             <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-239x1.png', {width: 512, height: 210}) }}');"></div>
-							<img load-image="239x1" data-final-src="{{plugin.iconUrl}}" crop-width="512" crop-height="210" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height':( (9 * deviceWidth / 16)/2)+20 + 'px' }">
+							<img load-image="239x1" data-final-src="{{plugin.iconUrl}}" crop-width="512" crop-height="210" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (1 * deviceWidth / 4)-12 + 'px' }">
                        		<img load-image="239x1" data-final-src="../../../styles/media/holder-239x1.png" ng-if="plugin.iconClassName" />
                         </div>
                         <div class="info-bar blackBackgroundTheme" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">
