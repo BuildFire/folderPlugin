@@ -260,8 +260,8 @@
                    		<div class="plugin-slide text-center">
                        		<div class="blackLayer"></div>
 	                        <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-4x1.png', {width: 640, height: 160}) }}');"></div>
-							<img load-image="4x1" data-final-src="{{plugin.iconUrl }}"  crop-width="640" crop-height="160" crop-type="crop" ng-if="plugin.iconUrl" />
-							<img load-image="4x1" data-final-src="../../../styles/media/holder-4x1.png" ng-if="plugin.iconClassName" />
+							<img load-image="4x1" data-final-src="{{plugin.iconUrl }}"  crop-width="640" crop-height="160" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (1 * deviceWidth / 4) + 'px' }"/>
+							<img load-image="4x1" data-final-src="../../../styles/media/holder-4x1.png" ng-if="plugin.iconClassName" ng-style="{'min-height': (1 * deviceWidth / 4) + 'px' }"/>
                        		<p class="ellipsis item-text whiteTheme text-center"  ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">{{ plugin.title }}</p>
                             <p class="ellipsis item-text whiteTheme text-center"  ng-if="data.design.hideText===undefined ? true : false ">{{ plugin.title }}</p>
                         </div>
