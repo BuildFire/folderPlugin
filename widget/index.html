@@ -123,7 +123,7 @@
                     <div class="plugin-banner clearfix border-bottom-grey">
                         <div class="plugin-slide text-center">
 							<div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-16x9.png', {width: 450, height: 254}) }}');"></div>
-                            <img load-image="16x9" data-final-src="{{ plugin.iconUrl }}" crop-width="450" crop-height="254" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (9 * deviceWidth / 16) + 'px' }"/>
+                            <img load-image="16x9" data-final-src="{{ plugin.iconUrl }}" crop-width="450" crop-height="254" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (9 * deviceWidth / 16)-12 + 'px' }"/>
                             <img load-image="16x9" data-final-src="../../../styles/media/holder-16x9.png" ng-if="plugin.iconClassName" />
                         </div>
                     </div>
@@ -138,7 +138,7 @@
             <div>
                 <div class="plugin-banner has-info-bar clearfix" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 4">
                     <div class="plugin-slide text-center">
-                        <img load-image="16x9" data-final-src="{{ plugin.iconUrl }}" crop-width="450" crop-height="254" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (9 * deviceWidth / 16) + 'px' }"/>
+                        <img load-image="16x9" data-final-src="{{ plugin.iconUrl }}" crop-width="450" crop-height="254" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (9 * deviceWidth / 16)-12 + 'px' }"/>
 						<img load-image="16x9" data-final-src="../../../styles/media/holder-16x9.png" ng-if="plugin.iconClassName" />
                     </div>
                     <div class="info-bar titleBarBackgroundTheme"  ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">
@@ -157,7 +157,7 @@
                         <div class="list-item col-xs-6 padding-zero has-info-bar pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
                             <div class="list-item-media text-center">
                                 <div class="list-media-holder">
-                                    <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="320" crop-height="320" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (1 * deviceWidth / 1) + 'px' }"/>
+                                    <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="320" crop-height="320" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (1 * deviceWidth / 1)-12 + 'px' }"/>
 									<img load-image="1x1" data-final-src="../../../styles/media/holder-1x1.png" ng-if="plugin.iconClassName" />
                                 </div>
                                 <div class="info-bar titleBarBackgroundTheme"  ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">
@@ -183,7 +183,7 @@
                         <div class="list-item col-xs-6 pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
                             <div class="list-item-media text-center overflow-hidden">
                                 <div class="list-media-holder">
-                                    <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="200" crop-height="200" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (1 * deviceWidth / 1) + 'px' }"/>
+                                    <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="200" crop-height="200" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (1 * deviceWidth / 1)-12 + 'px' }"/>
 									<img load-image="1x1" data-final-src="../../../styles/media/holder-1x1.png" ng-if="plugin.iconClassName" />
                                 </div>
                                 <div class="list-item-copy text-center" ng-class="data.design.hideText==false?'with-text':'without-text'">
@@ -208,7 +208,7 @@
                     <div class="plugin-banner clearfix">
                         <div class="plugin-slide text-center">
                             <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-239x1.png', {width: 512, height: 210}) }}');"></div>
-							<img load-image="239x1" data-final-src="{{plugin.iconUrl}}" crop-width="512" crop-height="210" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (1 * deviceWidth / 239) + 'px' }">
+							<img load-image="239x1" data-final-src="{{plugin.iconUrl}}" crop-width="512" crop-height="210" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (1 * deviceWidth / 239)-12 + 'px' }">
                        		<img load-image="239x1" data-final-src="../../../styles/media/holder-239x1.png" ng-if="plugin.iconClassName" />
                         </div>
                         <div class="info-bar blackBackgroundTheme" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">
@@ -227,7 +227,7 @@
                     <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
                         <div class="list-item-media text-left overflow-hidden">
                             <div class="list-media-holder square-icon pull-left">
-	                            <img load-image="1x1" data-final-src="{{plugin.iconUrl}}" crop-width="180" crop-height="180" crop-type="crop" ng-if="plugin.iconUrl" style="border-radius:50%;" ng-style="{'min-height': (1 * deviceWidth / 1) + 'px' }">
+	                            <img load-image="1x1" data-final-src="{{plugin.iconUrl}}" crop-width="180" crop-height="180" crop-type="crop" ng-if="plugin.iconUrl" style="border-radius:50%;" >
                                 <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
                             </div>
                             <div class="list-item-copy text-left padding-left-ten padding-right-ten">
@@ -245,7 +245,7 @@
                     <div class="plugin-slide text-center">
                         <div class="blackLayer"></div>
                         <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-16x9.png', {width: 640, height: 360}) }}');"></div>
-						<img load-image="16x9" data-final-src="{{plugin.iconUrl}}" crop-width="640" crop-height="360" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (9 * deviceWidth / 16) + 'px' }"/>
+						<img load-image="16x9" data-final-src="{{plugin.iconUrl}}" crop-width="640" crop-height="360" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (9 * deviceWidth / 16)-12 + 'px' }"/>
 						<img load-image="16x9" data-final-src="../../../styles/media/holder-16x9.png" ng-if="plugin.iconClassName" />
                         <p class="ellipsis item-text whiteTheme text-center"  ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">{{ plugin.title }}</p>
                         <p class="ellipsis item-text whiteTheme text-center"   ng-if="data.design.hideText===undefined ? true : false ">{{ plugin.title }}</p>
@@ -260,7 +260,7 @@
                    		<div class="plugin-slide text-center">
                        		<div class="blackLayer"></div>
 	                        <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-4x1.png', {width: 640, height: 160}) }}');"></div>
-							<img load-image="4x1" data-final-src="{{plugin.iconUrl }}"  crop-width="640" crop-height="160" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (1 * deviceWidth / 4) + 'px' }"/>
+							<img load-image="4x1" data-final-src="{{plugin.iconUrl }}"  crop-width="640" crop-height="160" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (1 * deviceWidth / 4)-12 + 'px' }"/>
 							<img load-image="4x1" data-final-src="../../../styles/media/holder-4x1.png" ng-if="plugin.iconClassName" ng-style="{'min-height': (1 * deviceWidth / 4) + 'px' }"/>
                        		<p class="ellipsis item-text whiteTheme text-center"  ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">{{ plugin.title }}</p>
                             <p class="ellipsis item-text whiteTheme text-center"  ng-if="data.design.hideText===undefined ? true : false ">{{ plugin.title }}</p>
@@ -273,7 +273,7 @@
                  	<div class="item-block clearfix pull-left" style="padding:0 !important;">
                       	<div class="text-center">
 							<div class="blackLayer"></div>
-	                        <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="400" crop-height="400" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (1 * deviceWidth / 1) + 'px' }"/>
+	                        <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="400" crop-height="400" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (1 * deviceWidth / 1)-12 + 'px' }"/>
 							<img load-image="1x1" data-final-src="../../../styles/media/holder-1x1.png" ng-if="plugin.iconClassName" />
                             <div class="text-holder">
                                 <p class="item-text whiteTheme text-center"  ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">{{ plugin.title }}</p>
