@@ -1,307 +1,313 @@
 ﻿<!DOCTYPE html>
-<html ng-app="folderPlugin">
+<html ng-app="folderPluginWidget">
 <head lang="en">
     <title>widget</title>
     <meta charset="UTF-8">
-
     <!-- CSS -->
-    <link href="../../../scripts/owlCarousel/owlCarousel.css" rel="stylesheet"/>
+    <link href="../../../scripts/owlCarousel/owlCarousel.css" rel="stylesheet" />
     <link rel="stylesheet" href="../../../styles/helper.css">
     <link rel="stylesheet" href="../../../styles/siteIcons.css">
     <link rel="stylesheet" href="css/style.css">
-
     <!-- JS -->
     <script src="../../../scripts/jquery/jquery-1.11.2.min.js"></script>
     <script src="../../../scripts/smartcrop.js"></script>
     <script src="../../../scripts/angular/angular.min.js"></script>
-
     <script src="js/angular-owl-carousel.js"></script>
     <script type="text/javascript" src="../../../scripts/buildfire.js"></script>
     <script type="text/javascript" src="../../../scripts/owlCarousel/owlCarousel.js"></script>
     <script src="../../../scripts/buildfire/components/carousel/carousel.js"></script>
     <script src="../../../scripts/buildfire/components/pluginInstance/sortableList.js"></script>
-    <script src="../../../scripts/angular/ng-infinite-scroll.custom.js "  type="application/javascript"></script>
+    <script src="../../../scripts/angular/ng-infinite-scroll.custom.js " type="application/javascript"></script>
+    <script type="text/javascript" src="app.js"></script>
+    <script type="text/javascript" src="app.services.js"></script>
     <script type="text/javascript" src="widget.controller.js"></script>
-
 </head>
 <body ng-controller="folderPluginCtrl" ng-cloak data-back-img="{{ data.design.backgroundImage}}" class="infinite-scroll-parent">
-<style>
-    .layout-6 .list-item-media {
-        background-color: transparent !important;
-    }
-    .folder-plugin-text:empty + div .layout3 .list-layout {
-        border-top: 0;
-    }
-    #mainContainer {
-        position: relative;
-    }
-	.icon3, .icon4 {
-		font-size: 140px;
-	}	
-	.icon5 {
-		font-size: 130px;
-		position:relative;
-		top:22px;
-	}	
-	.icon6 {
-		font-size: 120px;
-		position:relative;
-		top:15px;
-	}
-	.fullHeight{
-		height:100%;
-	}
-	.marginTop{
-		margin-top:1px;
-	}
-    .owl-dots {
-        visibility : hidden;
-    }
-</style>
-<script type="text/javascript" charset="utf-8">
-    window.onload = function () {
-        var slides = $('.plugin-slider .plugin-slide').length;
-
-        // Slider needs at least 2 slides or you'll get an error.
-        if(slides > 1){
-            $('.plugin-slider').owlCarousel({
-                loop:false,
-                nav:false,
-                items:1
-            });
+    <style>
+        .layout-6 .list-item-media {
+            background-color: transparent !important;
         }
-    }
 
-</script>
-<div data-ng-init="setWidth()" class="holder padding-zero hasBackground fullHeight" id="mainContainer">
-    <div class="folder-plugin list-layout fullHeight">
-        <div ng-class="{ 'hidden': data.content.carouselImages.length == 0 }" class="plugin-banner clearfix" ng-hide="data.design.selectedLayout == 12">
-            <div id="carousel" class="plugin-slider text-center" ng-style="data.content.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
-        </div>
-        <div class="text-left padded padding-bottom-zero clearfix folder-plugin-text hide-empty " ng-bind-html="safeHtml(data.content.text)" ng-hide="data.design.selectedLayout == 12"></div>
-        <div ng-if="data.design.selectedLayout && data.plugins.length > 0" ng-class="{'marginTop': data.design.selectedLayout == 11, 'fullHeight': data.design.selectedLayout == 12}" infinite-scroll="paging()"
-             data-infinite-container=".infinite-scroll-parent">
-            <!-- Layout 1 -->
-            <div class="media-center-plugin layout3" ng-if="data.design.selectedLayout == 1" >
-                <div class=" list-layout" >
-                    <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" >
-                        <div class="list-item-media text-left overflow-hidden">
-                            <div class="list-media-holder square-icon pull-left">
-                                <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}"  crop-width="180" crop-height="180" crop-type="crop" ng-if="plugin.iconUrl">
-                                <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
-                            </div>
-                            <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                                <p class="ellipsis margin-zero margin-top-twenty">{{ plugin.title }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        .folder-plugin-text:empty + div .layout3 .list-layout {
+            border-top: 0;
+        }
+
+        #mainContainer {
+            position: relative;
+        }
+
+        .icon3, .icon4 {
+            font-size: 140px;
+        }
+
+        .icon5 {
+            font-size: 130px;
+            position: relative;
+            top: 22px;
+        }
+
+        .icon6 {
+            font-size: 120px;
+            position: relative;
+            top: 15px;
+        }
+
+        .fullHeight {
+            height: 100%;
+        }
+
+        .marginTop {
+            margin-top: 1px;
+        }
+
+        .owl-dots {
+            visibility: hidden;
+        }
+    </style>
+    <script type="text/javascript" charset="utf-8">
+        window.onload = function () {
+            var slides = $('.plugin-slider .plugin-slide').length;
+
+            // Slider needs at least 2 slides or you'll get an error.
+            if (slides > 1) {
+                $('.plugin-slider').owlCarousel({
+                    loop: false,
+                    nav: false,
+                    items: 1
+                });
+            }
+        }
+
+    </script>
+    <div data-ng-init="setWidth()" class="holder padding-zero hasBackground fullHeight" id="mainContainer">
+        <div class="folder-plugin list-layout fullHeight">
+            <div ng-class="{ 'hidden': data.content.carouselImages.length == 0 }" class="plugin-banner clearfix" ng-hide="data.design.selectedLayout == 12">
+                <div id="carousel" class="plugin-slider text-center" ng-style="data.content.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
             </div>
-            <!-- End layout 1 -->
-            <!-- Layout 2 -->
-            <div class="holder padding-zero" ng-if="data.design.selectedLayout == 2">
-                <div class="media-center-plugin layout3">
-                    <div class="list-layout" >
+            <div class="text-left padded padding-bottom-zero clearfix folder-plugin-text hide-empty " ng-bind-html="safeHtml(data.content.text)" ng-hide="data.design.selectedLayout == 12"></div>
+            <div ng-if="data.design.selectedLayout && data.plugins.length > 0" ng-class="{'marginTop': data.design.selectedLayout == 11, 'fullHeight': data.design.selectedLayout == 12}" infinite-scroll="paging()"
+                 data-infinite-container=".infinite-scroll-parent">
+                <!-- Layout 1 -->
+                <div class="media-center-plugin layout3" ng-if="data.design.selectedLayout == 1">
+                    <div class=" list-layout">
                         <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
                             <div class="list-item-media text-left overflow-hidden">
-                                <div class="list-media-holder pull-left">
-                                    <img load-image="16x9" data-final-src="{{ plugin.iconUrl }}"  crop-width="220" crop-height="120" crop-type="crop" ng-if="plugin.iconUrl">
+                                <div class="list-media-holder square-icon pull-left">
+                                    <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="180" crop-height="180" crop-type="crop" ng-if="plugin.iconUrl">
                                     <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
                                 </div>
                                 <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                                    <p class="ellipsis margin-zero bodyTextTheme margin-top-twenty">{{ plugin.title }}</p>
+                                    <p class="ellipsis margin-zero margin-top-twenty">{{ plugin.title }}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- End layout 2 -->
-            <!-- Layout 3 -->
-            <div>
-                <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 3">
-                    <div class="plugin-banner clearfix border-bottom-grey">
-                        <div class="plugin-slide text-center">
-							<div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-16x9.png', {width: 450, height: 254}) }}');"></div>
-                            <img load-image="16x9" data-final-src="{{ plugin.iconUrl }}" crop-width="450" crop-height="254" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (9 * deviceWidth / 16)-12 + 'px' }"/>
-                            <img load-image="16x9" data-final-src="../../../styles/media/holder-16x9.png" ng-if="plugin.iconClassName" />
-                        </div>
-                    </div>
-                    <div class="padded text-left">
-                        <a class="text-primary" ng-if="data.design.hideText!==undefined? !data.design.hideText : '' ">{{ plugin.title }}</a>
-                        <a class="text-primary" ng-if="data.design.hideText===undefined ? true : false ">{{ plugin.title }}</a>
-                    </div>
-                </div>
-            </div>
-            <!-- End layout 3 -->
-            <!-- Layout 4 -->
-            <div>
-                <div class="plugin-banner has-info-bar clearfix" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 4">
-                    <div class="plugin-slide text-center">
-                        <img load-image="16x9" data-final-src="{{ plugin.iconUrl }}" crop-width="450" crop-height="254" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (9 * deviceWidth / 16)-12 + 'px' }"/>
-						<img load-image="16x9" data-final-src="../../../styles/media/holder-16x9.png" ng-if="plugin.iconClassName" />
-                    </div>
-                    <div class="info-bar titleBarBackgroundTheme"  ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">
-                        <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">{{ plugin.title }}</p>
-                    </div>
-                    <div class="info-bar titleBarBackgroundTheme" ng-if="data.design.hideText===undefined ? true : false ">
-                        <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">{{ plugin.title }}</p>
-                    </div>
-                </div>
-            </div>
-            <!-- End layout 4 -->
-            <!-- Layout 5 -->
-            <div class="padded padding-top-zero padding-bottom-zero" ng-if="data.design.selectedLayout == 5">
-                <div class="list-layout layout5">
-                    <div ng-repeat="pluginRow in data.plugins" class="row">
-                        <div class="list-item col-xs-6 padding-zero has-info-bar pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
-                            <div class="list-item-media text-center">
-                                <div class="list-media-holder">
-                                    <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="320" crop-height="320" crop-type="crop" ng-if="plugin.iconUrl"  ng-style="{'min-height': ((1 * deviceWidth / 1)/2)-12 + 'px' }"/>
-									<img load-image="1x1" data-final-src="../../../styles/media/holder-1x1.png" ng-if="plugin.iconClassName" />
-                                </div>
-                                <div class="info-bar titleBarBackgroundTheme"  ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">
-                                    <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">
-                                        {{ plugin.title }}
-                                    </p>
-                                </div>
-                                <div class="info-bar titleBarBackgroundTheme"  ng-if="data.design.hideText===undefined ? true : false ">
-                                    <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">
-                                        {{ plugin.title }}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End layout 5 -->
-            <!-- Layout 6 -->
-            <div class="padded padding-top-zero padding-bottom-zero" ng-if="data.design.selectedLayout == 6" style=" padding-top: 10px; ">
-                <div class="list-layout layout-6" ng-class="data.content.text?'':'margin-top-fifteen'">
-                    <div ng-repeat="pluginRow in data.plugins" class="row">
-                        <div class="list-item col-xs-6 pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
-                            <div class="list-item-media text-center overflow-hidden">
-                                <div class="list-media-holder">
-                                    <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="200" crop-height="200" crop-type="crop" ng-if="plugin.iconUrl"  ng-style="{'min-height': ((1 * deviceWidth / 1)/2)-45 + 'px' }"/>
-									<img load-image="1x1" data-final-src="../../../styles/media/holder-1x1.png" ng-if="plugin.iconClassName" />
-                                </div>
-                                <div class="list-item-copy text-center" ng-class="data.design.hideText==false?'with-text':'without-text'">
-                                    <p class="ellipsis margin-zero text-primary">
-                                        <a class="text-primary"  ng-show="data.design.hideText==false">
-                                            {{ plugin.title }}
-                                        </a>
-                                        <a class="text-primary"  ng-if="data.design.hideText===undefined ? true : false ">
-                                            {{ plugin.title }}
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End layout 6 -->
-            <!-- Layout 7 -->
-            <div>
-                <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 7">
-                    <div class="plugin-banner clearfix">
-                        <div class="plugin-slide text-center">
-                            <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-239x1.png', {width: 512, height: 210}) }}');"></div>
-							<img load-image="239x1" data-final-src="{{plugin.iconUrl}}" crop-width="512" crop-height="210" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (1 * deviceWidth / 4)-12 + 'px' }">
-                       		<img load-image="239x1" data-final-src="../../../styles/media/holder-239x1.png" ng-if="plugin.iconClassName" />
-                        </div>
-                        <div class="info-bar blackBackgroundTheme" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">
-                            <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme">{{ plugin.title }}</p>
-                        </div>
-                        <div class="info-bar blackBackgroundTheme"  ng-if="data.design.hideText===undefined ? true : false ">
-                            <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme">{{ plugin.title }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--End Layout 7 -->
-            <!-- Layout 8 -->
-			<div class="media-center-plugin layout3" ng-if="data.design.selectedLayout == 8">
-                <div class=" list-layout">
-                    <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
-                        <div class="list-item-media text-left overflow-hidden">
-                            <div class="list-media-holder square-icon pull-left">
-	                            <img load-image="1x1" data-final-src="{{plugin.iconUrl}}" crop-width="180" crop-height="180" crop-type="crop" ng-if="plugin.iconUrl" style="border-radius:50%;" >
-                                <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
-                            </div>
-                            <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                                <p class="ellipsis margin-zero margin-top-twenty">{{ plugin.title }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--End Layout 8 -->
-            <!-- Layout 9 -->
-            <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 9">
-            <div class="plugin-banner clearfix">
-                <div class="plugin-banner clearfix">
-                    <div class="plugin-slide text-center">
-                        <div class="blackLayer"></div>
-                        <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-16x9.png', {width: 640, height: 360}) }}');"></div>
-						<img load-image="16x9" data-final-src="{{plugin.iconUrl}}" crop-width="640" crop-height="360" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (9 * deviceWidth / 16)-12 + 'px' }"/>
-						<img load-image="16x9" data-final-src="../../../styles/media/holder-16x9.png" ng-if="plugin.iconClassName" />
-                        <p class="ellipsis item-text whiteTheme text-center"  ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">{{ plugin.title }}</p>
-                        <p class="ellipsis item-text whiteTheme text-center"   ng-if="data.design.hideText===undefined ? true : false ">{{ plugin.title }}</p>
-                    </div>
-                </div>
-            </div>
-            </div>
-            <!--End Layout 9 -->
-            <!-- Layout 10 -->
-              	<div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 10" style="margin-top:2px;">
-               		<div class="plugin-banner clearfix">
-                   		<div class="plugin-slide text-center">
-                       		<div class="blackLayer"></div>
-	                        <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-4x1.png', {width: 640, height: 160}) }}');"></div>
-							<img load-image="4x1" data-final-src="{{plugin.iconUrl }}"  crop-width="640" crop-height="160" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (1 * deviceWidth / 4)-12 + 'px' }"/>
-							<img load-image="4x1" data-final-src="../../../styles/media/holder-4x1.png" ng-if="plugin.iconClassName" ng-style="{'min-height': (1 * deviceWidth / 4) + 'px' }"/>
-                       		<p class="ellipsis item-text whiteTheme text-center"  ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">{{ plugin.title }}</p>
-                            <p class="ellipsis item-text whiteTheme text-center"  ng-if="data.design.hideText===undefined ? true : false ">{{ plugin.title }}</p>
-                        </div>
-               		</div>
-               </div>
-          	<!--End Layout 10 -->
-            <!-- Layout 11 -->
-              	<div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 11" class="col-md-4 col-sm-6 col-xs-6" style="padding:1px;">
-                 	<div class="item-block clearfix pull-left" style="padding:0 !important;">
-                      	<div class="text-center">
-							<div class="blackLayer"></div>
-	                        <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="400" crop-height="400" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': ((1 * deviceWidth / 1)/2)-12 + 'px' }"/>
-							<img load-image="1x1" data-final-src="../../../styles/media/holder-1x1.png" ng-if="plugin.iconClassName" />
-                            <div class="text-holder">
-                                <p class="item-text whiteTheme text-center"  ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">{{ plugin.title }}</p>
-                                <p class="item-text whiteTheme text-center"  ng-if="data.design.hideText===undefined ? true : false ">{{ plugin.title }}</p>
-                            </div>
-                        </div>
-                    </div>
-             	</div>
-       		<!--End Layout 11 -->
-            <!-- Layout 12 -->
-                <div class="holder padding-zero" style="height:100%;" ng-if="data.design.selectedLayout == 12">
-                  	<div class="folder-plugin layout12" style="height:100%;">
-                       	<div class="plugin-banner clearfix">
-                           	<div class="plugin-slider text-center" image-carousel="{{ layout12TotalItem}}" >
-                              	<div class="plugin-slide" ng-repeat="rows in data.plugins" >
-                                  	<div class="link-holder"  ng-style="data.plugins.length>1 ? {'height': layout12Height}  : {} ">
-                                       	<p ng-repeat="plugin in rows"  ng-click="navigateToPlugin(plugin)" class="ellipsis whiteTheme" emit-last-repeater-element>
-											<a class="whiteTheme ellipsis">{{ plugin.title }}</a>
-										</p>
+                <!-- End layout 1 -->
+                <!-- Layout 2 -->
+                <div class="holder padding-zero" ng-if="data.design.selectedLayout == 2">
+                    <div class="media-center-plugin layout3">
+                        <div class="list-layout">
+                            <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
+                                <div class="list-item-media text-left overflow-hidden">
+                                    <div class="list-media-holder pull-left">
+                                        <img load-image="16x9" data-final-src="{{ plugin.iconUrl }}" crop-width="220" crop-height="120" crop-type="crop" ng-if="plugin.iconUrl">
+                                        <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
+                                    </div>
+                                    <div class="list-item-copy text-left padding-left-ten padding-right-ten">
+                                        <p class="ellipsis margin-zero bodyTextTheme margin-top-twenty">{{ plugin.title }}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-         	<!--End Layout 12 -->
+                <!-- End layout 2 -->
+                <!-- Layout 3 -->
+                <div>
+                    <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 3">
+                        <div class="plugin-banner clearfix border-bottom-grey">
+                            <div class="plugin-slide text-center">
+                                <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-16x9.png', {width: 450, height: 254}) }}');"></div>
+                                <img load-image="16x9" data-final-src="{{ plugin.iconUrl }}" crop-width="450" crop-height="254" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (9 * deviceWidth / 16)-12 + 'px' }" />
+                                <img load-image="16x9" data-final-src="../../../styles/media/holder-16x9.png" ng-if="plugin.iconClassName" />
+                            </div>
+                        </div>
+                        <div class="padded text-left">
+                            <a class="text-primary" ng-if="data.design.hideText!==undefined? !data.design.hideText : '' ">{{ plugin.title }}</a>
+                            <a class="text-primary" ng-if="data.design.hideText===undefined ? true : false ">{{ plugin.title }}</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- End layout 3 -->
+                <!-- Layout 4 -->
+                <div>
+                    <div class="plugin-banner has-info-bar clearfix" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 4">
+                        <div class="plugin-slide text-center">
+                            <img load-image="16x9" data-final-src="{{ plugin.iconUrl }}" crop-width="450" crop-height="254" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (9 * deviceWidth / 16)-12 + 'px' }" />
+                            <img load-image="16x9" data-final-src="../../../styles/media/holder-16x9.png" ng-if="plugin.iconClassName" />
+                        </div>
+                        <div class="info-bar titleBarBackgroundTheme" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">
+                            <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">{{ plugin.title }}</p>
+                        </div>
+                        <div class="info-bar titleBarBackgroundTheme" ng-if="data.design.hideText===undefined ? true : false ">
+                            <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">{{ plugin.title }}</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- End layout 4 -->
+                <!-- Layout 5 -->
+                <div class="padded padding-top-zero padding-bottom-zero" ng-if="data.design.selectedLayout == 5">
+                    <div class="list-layout layout5">
+                        <div ng-repeat="pluginRow in data.plugins" class="row">
+                            <div class="list-item col-xs-6 padding-zero has-info-bar pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
+                                <div class="list-item-media text-center">
+                                    <div class="list-media-holder">
+                                        <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="320" crop-height="320" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': ((1 * deviceWidth / 1)/2)-12 + 'px' }" />
+                                        <img load-image="1x1" data-final-src="../../../styles/media/holder-1x1.png" ng-if="plugin.iconClassName" />
+                                    </div>
+                                    <div class="info-bar titleBarBackgroundTheme" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">
+                                        <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">
+                                            {{ plugin.title }}
+                                        </p>
+                                    </div>
+                                    <div class="info-bar titleBarBackgroundTheme" ng-if="data.design.hideText===undefined ? true : false ">
+                                        <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">
+                                            {{ plugin.title }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End layout 5 -->
+                <!-- Layout 6 -->
+                <div class="padded padding-top-zero padding-bottom-zero" ng-if="data.design.selectedLayout == 6" style=" padding-top: 10px; ">
+                    <div class="list-layout layout-6" ng-class="data.content.text?'':'margin-top-fifteen'">
+                        <div ng-repeat="pluginRow in data.plugins" class="row">
+                            <div class="list-item col-xs-6 pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
+                                <div class="list-item-media text-center overflow-hidden">
+                                    <div class="list-media-holder">
+                                        <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="200" crop-height="200" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': ((1 * deviceWidth / 1)/2)-45 + 'px' }" />
+                                        <img load-image="1x1" data-final-src="../../../styles/media/holder-1x1.png" ng-if="plugin.iconClassName" />
+                                    </div>
+                                    <div class="list-item-copy text-center" ng-class="data.design.hideText==false?'with-text':'without-text'">
+                                        <p class="ellipsis margin-zero text-primary">
+                                            <a class="text-primary" ng-show="data.design.hideText==false">
+                                                {{ plugin.title }}
+                                            </a>
+                                            <a class="text-primary" ng-if="data.design.hideText===undefined ? true : false ">
+                                                {{ plugin.title }}
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End layout 6 -->
+                <!-- Layout 7 -->
+                <div>
+                    <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 7">
+                        <div class="plugin-banner clearfix">
+                            <div class="plugin-slide text-center">
+                                <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-239x1.png', {width: 512, height: 210}) }}');"></div>
+                                <img load-image="239x1" data-final-src="{{plugin.iconUrl}}" crop-width="512" crop-height="210" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (1 * deviceWidth / 4)-12 + 'px' }">
+                                <img load-image="239x1" data-final-src="../../../styles/media/holder-239x1.png" ng-if="plugin.iconClassName" />
+                            </div>
+                            <div class="info-bar blackBackgroundTheme" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">
+                                <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme">{{ plugin.title }}</p>
+                            </div>
+                            <div class="info-bar blackBackgroundTheme" ng-if="data.design.hideText===undefined ? true : false ">
+                                <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme">{{ plugin.title }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--End Layout 7 -->
+                <!-- Layout 8 -->
+                <div class="media-center-plugin layout3" ng-if="data.design.selectedLayout == 8">
+                    <div class=" list-layout">
+                        <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
+                            <div class="list-item-media text-left overflow-hidden">
+                                <div class="list-media-holder square-icon pull-left">
+                                    <img load-image="1x1" data-final-src="{{plugin.iconUrl}}" crop-width="180" crop-height="180" crop-type="crop" ng-if="plugin.iconUrl" style="border-radius:50%;">
+                                    <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
+                                </div>
+                                <div class="list-item-copy text-left padding-left-ten padding-right-ten">
+                                    <p class="ellipsis margin-zero margin-top-twenty">{{ plugin.title }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--End Layout 8 -->
+                <!-- Layout 9 -->
+                <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 9">
+                    <div class="plugin-banner clearfix">
+                        <div class="plugin-banner clearfix">
+                            <div class="plugin-slide text-center">
+                                <div class="blackLayer"></div>
+                                <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-16x9.png', {width: 640, height: 360}) }}');"></div>
+                                <img load-image="16x9" data-final-src="{{plugin.iconUrl}}" crop-width="640" crop-height="360" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (9 * deviceWidth / 16)-12 + 'px' }" />
+                                <img load-image="16x9" data-final-src="../../../styles/media/holder-16x9.png" ng-if="plugin.iconClassName" />
+                                <p class="ellipsis item-text whiteTheme text-center" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">{{ plugin.title }}</p>
+                                <p class="ellipsis item-text whiteTheme text-center" ng-if="data.design.hideText===undefined ? true : false ">{{ plugin.title }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--End Layout 9 -->
+                <!-- Layout 10 -->
+                <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 10" style="margin-top:2px;">
+                    <div class="plugin-banner clearfix">
+                        <div class="plugin-slide text-center">
+                            <div class="blackLayer"></div>
+                            <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-4x1.png', {width: 640, height: 160}) }}');"></div>
+                            <img load-image="4x1" data-final-src="{{plugin.iconUrl }}" crop-width="640" crop-height="160" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (1 * deviceWidth / 4)-12 + 'px' }" />
+                            <img load-image="4x1" data-final-src="../../../styles/media/holder-4x1.png" ng-if="plugin.iconClassName" ng-style="{'min-height': (1 * deviceWidth / 4) + 'px' }" />
+                            <p class="ellipsis item-text whiteTheme text-center" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">{{ plugin.title }}</p>
+                            <p class="ellipsis item-text whiteTheme text-center" ng-if="data.design.hideText===undefined ? true : false ">{{ plugin.title }}</p>
+                        </div>
+                    </div>
+                </div>
+                <!--End Layout 10 -->
+                <!-- Layout 11 -->
+                <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 11" class="col-md-4 col-sm-6 col-xs-6" style="padding:1px;">
+                    <div class="item-block clearfix pull-left" style="padding:0 !important;">
+                        <div class="text-center">
+                            <div class="blackLayer"></div>
+                            <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="400" crop-height="400" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': ((1 * deviceWidth / 1)/2)-12 + 'px' }" />
+                            <img load-image="1x1" data-final-src="../../../styles/media/holder-1x1.png" ng-if="plugin.iconClassName" />
+                            <div class="text-holder">
+                                <p class="item-text whiteTheme text-center" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">{{ plugin.title }}</p>
+                                <p class="item-text whiteTheme text-center" ng-if="data.design.hideText===undefined ? true : false ">{{ plugin.title }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--End Layout 11 -->
+                <!-- Layout 12 -->
+                <div class="holder padding-zero" style="height:100%;" ng-if="data.design.selectedLayout == 12">
+                    <div class="folder-plugin layout12" style="height:100%;">
+                        <div class="plugin-banner clearfix">
+                            <div class="plugin-slider text-center" image-carousel="{{ layout12TotalItem}}">
+                                <div class="plugin-slide" ng-repeat="rows in data.plugins">
+                                    <div class="link-holder" ng-style="data.plugins.length>1 ? {'height': layout12Height}  : {} ">
+                                        <p ng-repeat="plugin in rows" ng-click="navigateToPlugin(plugin)" class="ellipsis whiteTheme" emit-last-repeater-element>
+                                            <a class="whiteTheme ellipsis">{{ plugin.title }}</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--End Layout 12 -->
+            </div>
         </div>
     </div>
-</div>
 </body>
 </html>
