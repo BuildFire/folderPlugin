@@ -40,8 +40,9 @@ describe('folderPlugin Content: controller', function () {
 
     describe('folderPluginCtrl', function() {
         var $scope, contentController;
-
         beforeEach(function() {
+            var fixture = '<div id="carousel"></div><div id="plugins"></div>';
+            document.body.insertAdjacentHTML('afterbegin', fixture);
             $scope = {
                 $on:function(){
 
@@ -53,7 +54,5 @@ describe('folderPlugin Content: controller', function () {
         it('contentController should be defined', function() {
             expect(contentController).toBeDefined();
         });
-
     });
-
 });
