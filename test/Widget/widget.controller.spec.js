@@ -4,7 +4,7 @@
 
 xdescribe('folderPlugin widget: controller', function () {
 
-    beforeEach(module('folderPlugin'));
+    beforeEach(module('folderPluginWidget'));
 
     beforeEach(inject(function(_$controller_){
         $controller = _$controller_;

@@ -4,7 +4,7 @@
 
 describe('folderPlugin Content: controller', function () {
 
-    beforeEach(module('folderPlugin'));
+    beforeEach(module('folderPluginContent'));
 
     beforeEach(inject(function(_$controller_){
         $controller = _$controller_;
