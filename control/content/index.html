@@ -1,50 +1,41 @@
 ﻿<!DOCTYPE html>
-<html ng-app="folderPlugin">
+<html ng-app="folderPluginContent">
 <head lang="en">
     <title>content</title>
     <meta charset="UTF-8">
-
     <!-- CSS -->
     <link href="../../../../styles/helper.css" rel="stylesheet">
     <link href="../../../../styles/siteIcons.css" rel="stylesheet">
-
     <!-- JS -->
     <script src="../../../../scripts/buildfire.js"></script>
     <script src="../../../../scripts/angular/angular.min.js"></script>
     <script src="../../../../scripts/tinymce/tinymce.min.js"></script>
     <script src="../../../../scripts/tinymce/ui-tinymce.js"></script>
     <script src="../../../../scripts/jquery/jquery-1.11.2.min.js"></script>
-
     <script src="../../../../scripts/sortable.min.js"></script>
     <script src="../../../../scripts/buildfire/components/carousel/carousel.js"></script>
     <script src="../../../../scripts/buildfire/components/notifications/notifications.js"></script>
     <script src="../../../../scripts/buildfire/components/pluginInstance/sortableList.js"></script>
-    <script src="../shared.js"></script>
+    <script src="../app.services.js"></script>
+    <script src="app.js"></script>
     <script src="content.controller.js"></script>
-
-
 </head>
 <body ng-controller="folderPluginCtrl" ng-cloak ng-show="datastoreInitialized">
     <div ng-form="frmMain">
-
         <div id="carousel"></div>
-
         <div class="item clearfix row">
             <div class="labels col-md-3 padding-right-zero pull-left">
                 <span>Text</span>
             </div>
         </div>
-
         <hr class="none">
         <div class="item clearfix row">
             <div class="main col-md-12 pull-left">
                 <textarea id="text" ui-tinymce="editorOptions" class="form-control" rows="5" width="100%" ng-model="data.content.text"></textarea>
             </div>
         </div>
-
         <hr class="none">
         <div id="plugins"></div>
     </div>
 </body>
-
 </html>
