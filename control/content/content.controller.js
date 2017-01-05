@@ -158,7 +158,7 @@
                         pluginsIds.push(plugins[i].instanceId);
                     }
                     return pluginsIds;
-                }
+                };
 
                 // this method will be called when a new item added to the list
                 editor.onDeleteItem = editor.onItemChange = editor.onOrderChange = function () {
@@ -171,7 +171,7 @@
                     tmpCarousalData = items;
                     $scope.data.content.carouselImages = editor.items;
                     Utility.digest($scope);
-                }
+                };
 
                 plugins.onAddItems = function () {
                     var scopeItems = $scope.data._buildfire.plugins.data;

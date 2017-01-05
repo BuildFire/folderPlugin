@@ -1,314 +1,466 @@
 ﻿<!DOCTYPE html>
-<html ng-app="folderPluginWidget">
+<html onscroll="alert('asd')">
 <head lang="en">
-    <title>widget</title>
-    <meta charset="UTF-8">
-    <!-- CSS -->
-    <link href="../../../scripts/owlCarousel/owlCarousel.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../../../styles/helper.css">
-    <link rel="stylesheet" href="../../../styles/siteIcons.css">
-    <link rel="stylesheet" href="css/style.css">
-    <!-- JS -->
-    <script src="../../../scripts/jquery/jquery-1.11.2.min.js"></script>
-    <script src="../../../scripts/smartcrop.js"></script>
-    <script src="../../../scripts/angular/angular.min.js"></script>
-    <script src="js/angular-owl-carousel.js"></script>
-    <script type="text/javascript" src="../../../scripts/buildfire.js"></script>
-    <script type="text/javascript" src="../../../scripts/owlCarousel/owlCarousel.js"></script>
-    <script src="../../../scripts/buildfire/components/carousel/carousel.js"></script>
-    <script src="../../../scripts/buildfire/components/pluginInstance/sortableList.js"></script>
-    <script src="../../../scripts/angular/ng-infinite-scroll.custom.js " type="application/javascript"></script>
-    <script type="text/javascript" src="app.js"></script>
-    <script type="text/javascript" src="app.services.js"></script>
-    <script type="text/javascript" src="directives.js"></script>
-    <script type="text/javascript" src="widget.controller.js"></script>
+    <script src="../../../scripts/buildfire.js"></script>
 </head>
-<body ng-controller="folderPluginCtrl" ng-cloak data-back-img="{{ data.design.backgroundImage}}" class="infinite-scroll-parent">
-    <style>
-        .layout-6 .list-item-media {
-            background-color: transparent !important;
+<body >
+    <div id="carousel"></div>
+    <div id="txt"></div>
+    <div id="pluginsContainer"></div>
+
+    <script>
+
+
+
+        function Carousel(){
+
         }
 
-        .folder-plugin-text:empty + div .layout3 .list-layout {
-            border-top: 0;
-        }
+        Carousel.prototype={
+            init:function(carouselImages, containerElement) {
 
-        #mainContainer {
-            position: relative;
-        }
+                this.carouselImages= [];
+                this.imageWidth = Math.min(1024, window.innerWidth);
+                this.imageHeight = this.imageWidth * (9/16);
+                var t=this;
+                carouselImages.forEach(function(cimg){
+                    t.carouselImages.push({
+                        src : buildfire.imageLib.cropImage(cimg.iconUrl,{width:t.imageWidth,height: t.imageHeight})
+                        , actionItem: cimg.actionItem
+                    });
 
-        .icon3, .icon4 {
-            font-size: 140px;
-        }
 
-        .icon5 {
-            font-size: 130px;
-            position: relative;
-            top: 22px;
-        }
-
-        .icon6 {
-            font-size: 120px;
-            position: relative;
-            top: 15px;
-        }
-
-        .fullHeight {
-            height: 100%;
-        }
-
-        .marginTop {
-            margin-top: 1px;
-        }
-
-        .owl-dots {
-            visibility: hidden;
-        }
-    </style>
-    <script type="text/javascript" charset="utf-8">
-        window.onload = function () {
-            var slides = $('.plugin-slider .plugin-slide').length;
-
-            // Slider needs at least 2 slides or you'll get an error.
-            if (slides > 1) {
-                $('.plugin-slider').owlCarousel({
-                    loop: false,
-                    nav: false,
-                    items: 1
                 });
+
+                this.containerElement = containerElement;
+                this.manifest = new Object();
+                this.stop();
+            }
+            ,start:function (){
+                if (!this.carouselImages || this.carouselImages.length ==0 || !this.containerElement) return;
+                this.containerElement.innerHTML = '';
+
+                this.loadNextImage();
+                if(this.carouselImages.length > 1) {
+                    var t = this;
+                    this.tmr = setInterval(function () {
+                        t.loadNextImage();
+                    }, 5000);
+                }
+
+            }
+            , stop:function(){
+                clearInterval(this.tmr);
+                this.tmr=null;
+            }
+            , loadNextImage: function(){
+                if(this.manifest.currentIndex == undefined) /// first time init
+                    this.manifest.currentIndex=-1;
+                else if(this.manifest.currentIndex >= this.carouselImages.length - 1){ /// loop and fadeout last image
+                    this.manifest.currentIndex=-1;
+                    var previousImg = this.getImage(this.carouselImages.length - 1);
+                    previousImg.classList.add('carouselInactive');
+                    previousImg.classList.remove('carouselActive');
+                }
+
+                this.manifest.currentIndex++; // bump up to next image
+
+                if(this.manifest.currentIndex>0) { // fade out previous image
+                    var previousImg = this.getImage(this.manifest.currentIndex - 1);
+                    previousImg.classList.add('carouselInactive');
+                    previousImg.classList.remove('carouselActive');
+                }
+
+
+                var img = this.getImage(this.manifest.currentIndex); // get/create next image
+                img.classList.remove('carouselInactive'); // fade in
+                img.classList.add('carouselActive');
+
+                this.containerElement.appendChild(img);
+            }
+            , getImage: function(index){
+                var id= this.getId (index);
+                if(!this.manifest[id])
+                    this.manifest[id] = this.createImage(this.carouselImages[index],index);
+
+                if(this.manifest[id].src != this.carouselImages[index].src)
+                    this.manifest[id].src = this.carouselImages[index].src;
+
+
+                return this.manifest[id];
+            }
+            , createImage:function(carouselImage, index){
+                if(!carouselImage)return;
+                var img = document.createElement('img');
+                img.src = carouselImage.src;
+                img.id = this.getId (index);
+                img.classList.add('carouselImg');
+                img.classList.add('carouselInactive');
+                return img;
+            }
+            , getId: function(index){
+                return '__$carouselImage' + index;
+            }
+        }
+    </script>
+    <style>
+        #carousel{
+            height:56vw ;
+            max-height:56.25vw ;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #carousel > img{
+            position: absolute;
+            top:0px;
+            left:0px;
+            width:105%
+        }
+
+        #carousel > img.carouselInactive{
+            -webkit-animation: fadeOut 1s ;
+            -moz-animation:    fadeOut 1s ;
+            -o-animation:      fadeOut 1s ;
+            animation:         fadeOut 1s ;
+            opacity: 0;
+        }
+
+        #carousel > img.carouselActive{
+            -webkit-animation: fadeIn 5s ease-out;
+            -moz-animation:    fadeIn 5s ease-out;
+            -o-animation:      fadeIn 5s ease-out;
+            animation:         fadeIn 5s ease-out;
+            animation-direction: alternate;
+        }
+
+       /* @-webkit-keyframes fadeIn {
+            0% {  opacity: 0; top:-5px ; left: -5px}
+            100% { opacity: 1; top: 0px ; left: 0px }
+        }
+
+        @-moz-keyframes fadeIn {
+            0% {  opacity: 0; top:-5px ; left: -5px}
+            100% { opacity: 1; top: 0px ; left: 0px }
+        }
+
+        @-o-keyframes fadeIn {
+            0% {  opacity: 0; top:-5px ; left: -5px}
+            100% { opacity: 1; top: 0px ; left: 0px }
+        }
+*/
+        @keyframes fadeIn {
+            0% {
+                transform: scale3d(1.1, 1.1, 1.1) translate3d(-5px, -5px, 0px);
+                opacity: 0;
+            }
+            50%{
+                opacity: 1;
+            }
+            100% {
+                transform: scale3d(1, 1, 1) translate3d(0px, 0px, 0px);
+                opacity: 1;
             }
         }
 
+        /***********************************/
+
+        @-webkit-keyframes fadeOut {
+            0% {  opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        @-moz-keyframes fadeOut {
+            0% {  opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        @-o-keyframes fadeOut {
+            0% {  opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        @keyframes fadeOut {
+            0% {  opacity: 1; }
+            100% { opacity: 0; }
+        }
+    </style>
+
+
+    <script>
+        var plugins=[];
+
+        var carousel = new Carousel();
+        function loadData(err,obj){
+            if(err)return;
+
+            var layout=obj.data.design.selectedLayout;
+
+            var style = document.getElementById("injectedStyle");
+            if(style) document.head.removeChild(style);
+
+            style = document.createElement('style');
+            style.id = "injectedStyle";
+
+
+            if(obj.data.design.backgroundImage) {
+
+                style.innerHTML+="body { background: no-repeat url('" + buildfire.imageLib.cropImage(obj.data.design.backgroundImage , {
+                        width: window.innerWidth,
+                        height: window.innerHeight
+                    })  + "') !Important } " ;
+
+
+            }
+
+            if(obj.data.design.hideText)
+                style.innerHTML +=" .divTitle { display:none !Important} " ;
+
+            if(layout==12) {
+                style.innerHTML +=" #carousel { display:none !Important} " ;
+            }
+
+            if(style.innerHTML.length > 0)
+                document.head.appendChild(style);
+
+            var carouselImages=obj.data.content.carouselImages;
+            var carouselContainer = document.getElementById("carousel");
+
+            if(layout!=12) {
+                carousel.init(carouselImages, carouselContainer);
+                carousel.start();
+            }
+
+
+
+            document.getElementById("txt").innerHTML = obj.data.content.text;
+            plugins = obj.data._buildfire.plugins.result;
+            var pluginsContainer= document.getElementById("pluginsContainer");
+            pluginsContainer.innerHTML='';
+
+
+
+
+            var options=calcImgOptions(layout);
+            pluginsContainer.innerHTML='';
+            for(var i=0; i < plugins.length ; i++){
+                if(!plugins[i].data) continue;
+                if(layout!=12) {
+                    var divImg = document.createElement('div');
+                    if (plugins[i].data.iconUrl)
+                        divImg.style.background = "no-repeat url(" + buildfire.imageLib.cropImage(plugins[i].data.iconUrl, options) + ")";
+                    else
+                        divImg.innerHTML = "<h1>loading</h1>";
+                    divImg.classList.add("divImage");
+                    divImg.classList.add("layout" + layout);
+                    divImg.setAttribute('index', i);
+                    divImg.onclick = onClick;
+                    pluginsContainer.appendChild(divImg);
+                }
+                var divTitle = document.createElement('div');
+                divTitle.innerHTML = plugins[i].data.title;
+                divTitle.classList.add("divTitle");
+                divTitle.classList.add("layout" + layout);
+                divTitle.onclick=onClick;
+                divTitle.setAttribute('index',i);
+                pluginsContainer.appendChild(divTitle);
+            }
+        }
+
+        buildfire.datastore.getWithDynamicData(loadData);
+        buildfire.datastore.onUpdate(function(obj){loadData(null,obj)});
+
+        function calcImgOptions(layout){
+            var option={};
+            if([3,4,9].indexOf(layout) >= 0 ) {
+                option.width = window.innerWidth;
+                option.height = option.width * 9 / 16;
+            }
+            else if ([1,8].indexOf(layout) >= 0){
+                option.width = 50;
+                option.height = 50;
+            }
+            else if (layout ==2){
+                option.width = 75;
+                option.height = 50;
+            }
+            else if ([5,11].indexOf(layout) >= 0){
+                option.width = Math.round(window.innerWidth / 2);
+                option.height =option.width;
+            }
+            else if (layout ==6){
+                option.width = Math.round(window.innerWidth / 2.1);
+                option.height =option.width;
+            }
+            else if (layout ==7){
+                option.width = window.innerWidth;
+                option.height = Math.round(window.innerWidth / 2.2);
+            }
+            else if (layout ==10){
+                option.width = window.innerWidth;
+                option.height = Math.round(window.innerWidth * 0.23);
+            }
+            return option;
+        }
+
+        function onClick(e){
+
+            var i = parseInt(this.getAttribute('index') );
+            var p = plugins[i].data;
+
+            buildfire.navigation.navigateTo({
+                pluginId: p.pluginTypeId
+                ,folderName : p.pluginType.folderName
+                ,instanceId : p.instanceId
+                ,title:p.title
+            });
+        }
+
     </script>
-    <div data-ng-init="setWidth()" class="holder padding-zero hasBackground fullHeight" id="mainContainer">
-        <div class="folder-plugin list-layout fullHeight">
-            <div ng-class="{ 'hidden': data.content.carouselImages.length == 0 }" class="plugin-banner clearfix" ng-hide="data.design.selectedLayout == 12">
-                <div id="carousel" class="plugin-slider text-center" ng-style="data.content.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
-            </div>
-            <div class="text-left padded padding-bottom-zero clearfix folder-plugin-text hide-empty " ng-bind-html="safeHtml(data.content.text)" ng-hide="data.design.selectedLayout == 12"></div>
-            <div ng-if="data.design.selectedLayout && data.plugins.length > 0" ng-class="{'marginTop': data.design.selectedLayout == 11, 'fullHeight': data.design.selectedLayout == 12}" infinite-scroll="paging()"
-                 data-infinite-container=".infinite-scroll-parent">
-                <!-- Layout 1 -->
-                <div class="media-center-plugin layout3" ng-if="data.design.selectedLayout == 1">
-                    <div class=" list-layout">
-                        <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
-                            <div class="list-item-media text-left overflow-hidden">
-                                <div class="list-media-holder square-icon pull-left">
-                                    <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="180" crop-height="180" crop-type="crop" ng-if="plugin.iconUrl">
-                                    <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
-                                </div>
-                                <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                                    <p class="ellipsis margin-zero margin-top-twenty">{{ plugin.title }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End layout 1 -->
-                <!-- Layout 2 -->
-                <div class="holder padding-zero" ng-if="data.design.selectedLayout == 2">
-                    <div class="media-center-plugin layout3">
-                        <div class="list-layout">
-                            <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
-                                <div class="list-item-media text-left overflow-hidden">
-                                    <div class="list-media-holder pull-left">
-                                        <img load-image="16x9" data-final-src="{{ plugin.iconUrl }}" crop-width="220" crop-height="120" crop-type="crop" ng-if="plugin.iconUrl">
-                                        <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
-                                    </div>
-                                    <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                                        <p class="ellipsis margin-zero bodyTextTheme margin-top-twenty">{{ plugin.title }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End layout 2 -->
-                <!-- Layout 3 -->
-                <div>
-                    <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 3">
-                        <div class="plugin-banner clearfix border-bottom-grey">
-                            <div class="plugin-slide text-center">
-                                <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-16x9.png', {width: 450, height: 254}) }}');"></div>
-                                <img load-image="16x9" data-final-src="{{ plugin.iconUrl }}" crop-width="450" crop-height="254" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (9 * deviceWidth / 16)-12 + 'px' }" />
-                                <img load-image="16x9" data-final-src="../../../styles/media/holder-16x9.png" ng-if="plugin.iconClassName" />
-                            </div>
-                        </div>
-                        <div class="padded text-left">
-                            <a class="text-primary" ng-if="data.design.hideText!==undefined? !data.design.hideText : '' ">{{ plugin.title }}</a>
-                            <a class="text-primary" ng-if="data.design.hideText===undefined ? true : false ">{{ plugin.title }}</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- End layout 3 -->
-                <!-- Layout 4 -->
-                <div>
-                    <div class="plugin-banner has-info-bar clearfix" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 4">
-                        <div class="plugin-slide text-center">
-                            <img load-image="16x9" data-final-src="{{ plugin.iconUrl }}" crop-width="450" crop-height="254" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (9 * deviceWidth / 16)-12 + 'px' }" />
-                            <img load-image="16x9" data-final-src="../../../styles/media/holder-16x9.png" ng-if="plugin.iconClassName" />
-                        </div>
-                        <div class="info-bar titleBarBackgroundTheme" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">
-                            <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">{{ plugin.title }}</p>
-                        </div>
-                        <div class="info-bar titleBarBackgroundTheme" ng-if="data.design.hideText===undefined ? true : false ">
-                            <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">{{ plugin.title }}</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- End layout 4 -->
-                <!-- Layout 5 -->
-                <div class="padded padding-top-zero padding-bottom-zero" ng-if="data.design.selectedLayout == 5">
-                    <div class="list-layout layout5">
-                        <div ng-repeat="pluginRow in data.plugins" class="row">
-                            <div class="list-item col-xs-6 padding-zero has-info-bar pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
-                                <div class="list-item-media text-center">
-                                    <div class="list-media-holder">
-                                        <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="320" crop-height="320" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': ((1 * deviceWidth / 1)/2)-12 + 'px' }" />
-                                        <img load-image="1x1" data-final-src="../../../styles/media/holder-1x1.png" ng-if="plugin.iconClassName" />
-                                    </div>
-                                    <div class="info-bar titleBarBackgroundTheme" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">
-                                        <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">
-                                            {{ plugin.title }}
-                                        </p>
-                                    </div>
-                                    <div class="info-bar titleBarBackgroundTheme" ng-if="data.design.hideText===undefined ? true : false ">
-                                        <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">
-                                            {{ plugin.title }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End layout 5 -->
-                <!-- Layout 6 -->
-                <div class="padded padding-top-zero padding-bottom-zero" ng-if="data.design.selectedLayout == 6" style=" padding-top: 10px; ">
-                    <div class="list-layout layout-6" ng-class="data.content.text?'':'margin-top-fifteen'">
-                        <div ng-repeat="pluginRow in data.plugins" class="row">
-                            <div class="list-item col-xs-6 pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
-                                <div class="list-item-media text-center overflow-hidden">
-                                    <div class="list-media-holder">
-                                        <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="200" crop-height="200" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': ((1 * deviceWidth / 1)/2)-45 + 'px' }" />
-                                        <img load-image="1x1" data-final-src="../../../styles/media/holder-1x1.png" ng-if="plugin.iconClassName" />
-                                    </div>
-                                    <div class="list-item-copy text-center" ng-class="data.design.hideText==false?'with-text':'without-text'">
-                                        <p class="ellipsis margin-zero text-primary">
-                                            <a class="text-primary" ng-show="data.design.hideText==false">
-                                                {{ plugin.title }}
-                                            </a>
-                                            <a class="text-primary" ng-if="data.design.hideText===undefined ? true : false ">
-                                                {{ plugin.title }}
-                                            </a>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End layout 6 -->
-                <!-- Layout 7 -->
-                <div>
-                    <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 7">
-                        <div class="plugin-banner clearfix">
-                            <div class="plugin-slide text-center">
-                                <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-239x1.png', {width: 512, height: 210}) }}');"></div>
-                                <img load-image="239x1" data-final-src="{{plugin.iconUrl}}" crop-width="512" crop-height="210" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (1 * deviceWidth / 4)-12 + 'px' }">
-                                <img load-image="239x1" data-final-src="../../../styles/media/holder-239x1.png" ng-if="plugin.iconClassName" />
-                            </div>
-                            <div class="info-bar blackBackgroundTheme" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">
-                                <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme">{{ plugin.title }}</p>
-                            </div>
-                            <div class="info-bar blackBackgroundTheme" ng-if="data.design.hideText===undefined ? true : false ">
-                                <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme">{{ plugin.title }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--End Layout 7 -->
-                <!-- Layout 8 -->
-                <div class="media-center-plugin layout3" ng-if="data.design.selectedLayout == 8">
-                    <div class=" list-layout">
-                        <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
-                            <div class="list-item-media text-left overflow-hidden">
-                                <div class="list-media-holder square-icon pull-left">
-                                    <img load-image="1x1" data-final-src="{{plugin.iconUrl}}" crop-width="180" crop-height="180" crop-type="crop" ng-if="plugin.iconUrl" style="border-radius:50%;">
-                                    <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
-                                </div>
-                                <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                                    <p class="ellipsis margin-zero margin-top-twenty">{{ plugin.title }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--End Layout 8 -->
-                <!-- Layout 9 -->
-                <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 9">
-                    <div class="plugin-banner clearfix">
-                        <div class="plugin-banner clearfix">
-                            <div class="plugin-slide text-center">
-                                <div class="blackLayer"></div>
-                                <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-16x9.png', {width: 640, height: 360}) }}');"></div>
-                                <img load-image="16x9" data-final-src="{{plugin.iconUrl}}" crop-width="640" crop-height="360" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (9 * deviceWidth / 16)-12 + 'px' }" />
-                                <img load-image="16x9" data-final-src="../../../styles/media/holder-16x9.png" ng-if="plugin.iconClassName" />
-                                <p class="ellipsis item-text whiteTheme text-center" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">{{ plugin.title }}</p>
-                                <p class="ellipsis item-text whiteTheme text-center" ng-if="data.design.hideText===undefined ? true : false ">{{ plugin.title }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--End Layout 9 -->
-                <!-- Layout 10 -->
-                <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 10" style="margin-top:2px;">
-                    <div class="plugin-banner clearfix">
-                        <div class="plugin-slide text-center">
-                            <div class="blackLayer"></div>
-                            <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-4x1.png', {width: 640, height: 160}) }}');"></div>
-                            <img load-image="4x1" data-final-src="{{plugin.iconUrl }}" crop-width="640" crop-height="160" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (1 * deviceWidth / 4)-12 + 'px' }" />
-                            <img load-image="4x1" data-final-src="../../../styles/media/holder-4x1.png" ng-if="plugin.iconClassName" ng-style="{'min-height': (1 * deviceWidth / 4) + 'px' }" />
-                            <p class="ellipsis item-text whiteTheme text-center" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">{{ plugin.title }}</p>
-                            <p class="ellipsis item-text whiteTheme text-center" ng-if="data.design.hideText===undefined ? true : false ">{{ plugin.title }}</p>
-                        </div>
-                    </div>
-                </div>
-                <!--End Layout 10 -->
-                <!-- Layout 11 -->
-                <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 11" class="col-md-4 col-sm-6 col-xs-6" style="padding:1px;">
-                    <div class="item-block clearfix pull-left" style="padding:0 !important;">
-                        <div class="text-center">
-                            <div class="blackLayer"></div>
-                            <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="400" crop-height="400" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': ((1 * deviceWidth / 1)/2)-12 + 'px' }" />
-                            <img load-image="1x1" data-final-src="../../../styles/media/holder-1x1.png" ng-if="plugin.iconClassName" />
-                            <div class="text-holder">
-                                <p class="item-text whiteTheme text-center" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">{{ plugin.title }}</p>
-                                <p class="item-text whiteTheme text-center" ng-if="data.design.hideText===undefined ? true : false ">{{ plugin.title }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--End Layout 11 -->
-                <!-- Layout 12 -->
-                <div class="holder padding-zero" style="height:100%;" ng-if="data.design.selectedLayout == 12">
-                    <div class="folder-plugin layout12" style="height:100%;">
-                        <div class="plugin-banner clearfix">
-                            <div class="plugin-slider text-center" image-carousel="{{ layout12TotalItem}}">
-                                <div class="plugin-slide" ng-repeat="rows in data.plugins">
-                                    <div class="link-holder" ng-style="data.plugins.length>1 ? {'height': layout12Height}  : {} ">
-                                        <p ng-repeat="plugin in rows" ng-click="navigateToPlugin(plugin)" class="ellipsis whiteTheme" emit-last-repeater-element>
-                                            <a class="whiteTheme ellipsis">{{ plugin.title }}</a>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--End Layout 12 -->
-            </div>
-        </div>
-    </div>
+    <style>
+
+        .divTitle {
+            padding: 10px;
+            font-size: larger;
+        }
+
+        .layout1, .layout5, .layout8 , .layout6{
+            display: inline-block;
+        }
+        .divImage.layout1,.divImage.layout8{
+            width: 50px;
+            height:50px;
+        }
+        .divTitle.layout1,.divTitle.layout8{
+            width:calc(100% - 50px);
+        }
+
+        .divImage.layout8{
+            border-radius: 50%;
+        }
+
+
+        .layout2{
+            display: inline-block;
+        }
+        .divImage.layout2{
+            width: 75px;
+            height:50px;
+        }
+        .divTitle.layout2{
+            width:calc(100% - 75px);
+
+        }
+
+        .divImage.layout3,.divImage.layout4{
+            width:100%;
+            min-height: calc(100vw * 0.5625);
+        }
+        .divTitle.layout4{
+            position: relative;
+            margin-top: -50px;
+            background-color: #000;
+            opacity: .8;
+            height: 50px;
+        }
+
+
+        .divImage.layout5{
+            width: 50%;
+            min-height:50vw;
+            float: left;
+        }
+        .divTitle.layout5{
+            width:50%;
+            margin-left: -50vw;
+            margin-top: calc(50vw - 50px);
+            height: 50px;
+            position: relative;
+            float:left;
+            background-color: #000;
+            opacity: .8;
+        }
+
+        .divImage.layout11{
+            width: 50%;
+            min-height:50vw;
+            float: left;
+        }
+        .divTitle.layout11{
+            display: none;
+        }
+
+
+        .divImage.layout6{
+            width: 44vw;
+            height:44vw;
+            float: left;
+            margin-left: 4vw ;
+            margin-bottom: calc(50px + 1vw) ;
+        }
+        .divTitle.layout6{
+            width:44vw;
+            margin-left: -44vw;
+            margin-top: 44vw;
+            height: 50px;
+            position: relative;
+            float:left;
+        }
+
+        .divImage.layout7,.divImage.layout9{
+            width:100%;
+            min-height: calc(100vw * 0.46);
+        }
+        .divTitle.layout7{
+            position: relative;
+            margin-top: -50px;
+            background-color: #000;
+            opacity: .8;
+            height: 50px;
+        }
+
+        .divTitle.layout9{
+            position: relative;
+            height: calc(100vw * 0.46);
+            margin-top: calc(-100vw * 0.46);
+            background-color: #000;
+            text-align: center;
+            vertical-align: middle;
+            opacity: .6;
+            float:left;
+            width:100%;
+            padding-top: calc(100vw * 0.46/2);
+        }
+
+
+        .divImage.layout10{
+            width:100%;
+            min-height: calc(100vw * 0.23);
+        }
+        .divTitle.layout10{
+            position: relative;
+            height: calc(100vw * 0.23);
+            margin-top: calc(-100vw * 0.23);
+            padding-top: calc(100vw * 0.23/2);
+            background-color: #000;
+            text-align: center;
+            vertical-align: middle;
+            opacity: .6;
+            float:left;
+            width:100%;
+
+        }
+
+        .divImage.layout12{
+            display: none;
+        }
+        .divTitle.layout12{
+            margin-left:10%;
+            margin-right:10%;
+            background-color: #000;
+            opacity: .8;
+            text-align: center;
+        }
+    </style>
 </body>
 </html>
