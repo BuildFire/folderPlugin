@@ -181,6 +181,70 @@
 
             var layout=obj.data.design.selectedLayout;
 
+            initStyle(obj,layout);
+
+            var carouselImages=obj.data.content.carouselImages;
+            var carouselContainer = document.getElementById("carousel");
+
+
+            if(obj.data.design.carouselEffect)
+                carouselContainer.className = obj.data.design.carouselEffect;
+
+
+            if(layout!=12) {
+                carousel.init(carouselImages, carouselContainer);
+                carousel.start();
+            }
+
+
+
+            document.getElementById("txt").innerHTML = obj.data.content.text;
+            plugins = prepPlugins(obj.data._buildfire.plugins);
+            var pluginsContainer= document.getElementById("pluginsContainer");
+            pluginsContainer.innerHTML='';
+
+            var options=calcImgOptions(layout);
+
+            for(var i=0; i < plugins.length ; i++){
+                var p=plugins[i].data || plugins[i];
+
+                if(layout!=12) {
+                    var divImg = document.createElement('div');
+                    if (p.iconUrl)
+                        divImg.style.background = "no-repeat url(" + buildfire.imageLib.cropImage(p.iconUrl, options) + ")";
+                    else
+                        divImg.innerHTML = "<h1>loading</h1>";
+                    divImg.classList.add("divImage");
+                    divImg.classList.add("layout" + layout);
+                    divImg.setAttribute('index', i);
+                    divImg.onclick = onClick;
+                    pluginsContainer.appendChild(divImg);
+                }
+                var divTitle = document.createElement('div');
+                divTitle.innerHTML = p.title;
+                divTitle.classList.add("divTitle");
+                divTitle.classList.add("layout" + layout);
+                divTitle.onclick=onClick;
+                divTitle.setAttribute('index',i);
+                pluginsContainer.appendChild(divTitle);
+            }
+        }
+
+        function prepPlugins(plugins){
+            if(!plugins || !plugins.result || !plugins.result.length) return [];
+            if(!plugins.result[0].data) return plugins.result;
+
+            var temp=[];
+            plugins.result.forEach(function(p){
+                var i = plugins.data.indexOf(p.data.instanceId);
+                if(i>=0) temp[i] = p.data;
+            });
+
+            debugger;
+            return temp;
+        }
+
+        function initStyle(obj,layout){
             var style = document.getElementById("injectedStyle");
             if(style) document.head.removeChild(style);
 
@@ -207,54 +271,6 @@
 
             if(style.innerHTML.length > 0)
                 document.head.appendChild(style);
-
-            var carouselImages=obj.data.content.carouselImages;
-            var carouselContainer = document.getElementById("carousel");
-
-
-            if(obj.data.design.carouselEffect)
-                carouselContainer.className = obj.data.design.carouselEffect;
-
-
-            if(layout!=12) {
-                carousel.init(carouselImages, carouselContainer);
-                carousel.start();
-            }
-
-
-
-            document.getElementById("txt").innerHTML = obj.data.content.text;
-            plugins = obj.data._buildfire.plugins.result;
-            var pluginsContainer= document.getElementById("pluginsContainer");
-            pluginsContainer.innerHTML='';
-
-
-
-
-            var options=calcImgOptions(layout);
-            pluginsContainer.innerHTML='';
-            for(var i=0; i < plugins.length ; i++){
-                if(!plugins[i].data) continue;
-                if(layout!=12) {
-                    var divImg = document.createElement('div');
-                    if (plugins[i].data.iconUrl)
-                        divImg.style.background = "no-repeat url(" + buildfire.imageLib.cropImage(plugins[i].data.iconUrl, options) + ")";
-                    else
-                        divImg.innerHTML = "<h1>loading</h1>";
-                    divImg.classList.add("divImage");
-                    divImg.classList.add("layout" + layout);
-                    divImg.setAttribute('index', i);
-                    divImg.onclick = onClick;
-                    pluginsContainer.appendChild(divImg);
-                }
-                var divTitle = document.createElement('div');
-                divTitle.innerHTML = plugins[i].data.title;
-                divTitle.classList.add("divTitle");
-                divTitle.classList.add("layout" + layout);
-                divTitle.onclick=onClick;
-                divTitle.setAttribute('index',i);
-                pluginsContainer.appendChild(divTitle);
-            }
         }
 
         buildfire.datastore.getWithDynamicData(loadData);
