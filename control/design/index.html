@@ -73,6 +73,29 @@
                 </div>
             </div>
         </div>
+
+        <div>
+            <hr>
+            <div class="item row clearfix">
+                <div class="labels col-md-3 padding-right-zero pull-left">
+                    <span>Carousel Effect</span>
+                </div>
+                <div class="main col-md-9 pull-right" >
+                    <div class="radio radio-primary radio-inline">
+                        <input  id="carouselEffectNone" type="radio" name="toggleText" ng-model="data.design.carouselEffect" value="">
+                        <label for="carouselEffectNone">None</label>
+                    </div>
+                    <div class="radio radio-primary radio-inline">
+                        <input  id="carouselEffectKenBurns" type="radio" name="toggleText" ng-model="data.design.carouselEffect" value="kenBurnsCarousel">
+                        <label for="carouselEffectKenBurns">Ken Burns</label>
+                    </div>
+                    <div class="radio radio-primary radio-inline">
+                        <input  id="carouselEffectSlider" type="radio" name="toggleText" ng-model="data.design.carouselEffect" value="sliderCarousel">
+                        <label for="carouselEffectSlider">Slider</label>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
