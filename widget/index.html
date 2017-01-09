@@ -4,7 +4,7 @@
     <script src="../../../scripts/buildfire.js"></script>
 </head>
 <body >
-    <div id="carousel" class="" ></div>
+    <div id="carousel" class="sliderCarousel" ></div>
     <div id="txt"></div>
     <div id="pluginsContainer"></div>
 
@@ -49,6 +49,7 @@
                 this.tmr=null;
             }
             , loadNextImage: function(){
+                if(this.carouselImages.length < 2 )return;
                 if(this.manifest.currentIndex == undefined) /// first time init
                     this.manifest.currentIndex=-1;
                 else if(this.manifest.currentIndex >= this.carouselImages.length - 1){ /// loop and kenBurnsOutFrames last image
@@ -71,12 +72,33 @@
                 img.classList.remove('carouselInactive'); // fade in
                 img.classList.add('carouselActive');
 
-                this.containerElement.appendChild(img);
+                //this.containerElement.appendChild(img);
+            }
+            , loadPreviousImage: function(){
+                if(this.carouselImages.length < 2 )return;
+                if(this.manifest.currentIndex == undefined) this.manifest.currentIndex=0;
+
+                var previousSlideIndex;
+                if(this.manifest.currentIndex==0)
+                    previousSlideIndex=this.carouselImages.length-1;
+                else
+                    previousSlideIndex = this.manifest.currentIndex-1; // to previous image
+
+
+                var previousImg = this.getImage(previousSlideIndex);
+                previousImg.className= 'carouselActiveL2R';
+
+                var img = this.getImage(this.manifest.currentIndex); // get/create next image
+                img.className ='carouselInactiveL2R'; // fade in
+
+                this.manifest.currentIndex--;
             }
             , getImage: function(index){
                 var id= this.getId (index);
-                if(!this.manifest[id])
-                    this.manifest[id] = this.createImage(this.carouselImages[index],index);
+                if(!this.manifest[id]) {
+                    this.manifest[id] = this.createImage(this.carouselImages[index], index);
+                    this.containerElement.appendChild(this.manifest[id]);
+                }
 
                 if(this.manifest[id].src != this.carouselImages[index].src)
                     this.manifest[id].src = this.carouselImages[index].src;
@@ -87,18 +109,44 @@
                 if(!carouselImage)return;
                 var img = document.createElement('img');
                 img.src = carouselImage.src;
+                img.draggable=false;
                 img.setAttribute('index',index);
                 img.id = this.getId (index);
                 img.classList.add('carouselImg');
                 img.classList.add('carouselInactive');
                 var t= this;
+
+                var suppressClick;
                 img.onclick = function(){
+                    if(suppressClick){
+                        suppressClick=false;
+                        return;
+                    }
                     var i=this.getAttribute('index');
                     if(isNaN(this.getAttribute(i))) return;
                     i = parseInt(i);
                     if(t.carouselImages[i].actionItem.action)
                         buildfire.actionItems.execute(t.carouselImages[i].actionItem);
                 };
+
+                var xStart;
+                img.addEventListener('mousedown', function(e){xStart = e.pageX; });
+                img.addEventListener('touchstart', function(e){ xStart = e.changedTouches[0].pageX;  });
+
+                img.addEventListener('mouseup', function(e){
+                    if(xStart) {
+                        var diff = e.pageX - xStart;
+                        if(Math.abs(diff) < 50) return;
+                        if(diff < 0)
+                            t.loadNextImage();
+                        else {
+                            t.stop();
+                            t.loadPreviousImage();
+                        }
+
+                        suppressClick=true;
+                    }
+                });
 
                 return img;
             }
@@ -115,58 +163,42 @@
             position: relative;
         }
 
-        .kenBurnsCarousel > img{
-            position: absolute;
-            top:0px;
-            left:0px;
-            width:105%
-        }
-        .kenBurnsCarousel > img.carouselInactive{
-            animation:         kenBurnsOutFrames 1s ;
-            opacity: 0;
-        }
-        .kenBurnsCarousel > img.carouselActive{
-            animation:         kenBurnsInFrames 5s ease-out;
-            animation-direction: alternate;
-        }
-        @keyframes kenBurnsInFrames {
-            0% {
-                transform: scale3d(1.1, 1.1, 1.1) translate3d(-5px, -5px, 0px);
-                opacity: 0;
-            }
-            50%{
-                opacity: 1;
-            }
-            100% {
-                transform: scale3d(1, 1, 1) translate3d(0px, 0px, 0px);
-                opacity: 1;
-            }
-        }
-        @keyframes kenBurnsOutFrames {
-            0% {  opacity: 1; }
-            100% { opacity: 0; }
-        }
-
-
         .sliderCarousel > img{
             position: absolute;
             top:0px;
             width:100%;
+        }
 
+        .sliderCarousel > img.carouselActive{
+            animation: slideInFrames 1s ;
         }
         .sliderCarousel > img.carouselInactive{
-            animation:         slideOutFrames 1s ;
-        }
-        .sliderCarousel > img.carouselActive{
-            animation:         slideInFrames 1s ;
+            animation: slideOutFrames 1s ;
+            opacity: 0;
         }
         @keyframes slideInFrames {
             0% { transform: translate3d(100vw, 0px, 0px);   }
             100% { transform: translate3d(0px, 0px, 0px);   }
         }
         @keyframes slideOutFrames {
-            0% { transform: translate3d(0vw, 0px, 0px);   }
-            100% { transform: translate3d(-100vw, 0px, 0px);   }
+            0% { opacity: 1;transform: translate3d(0vw, 0px, 0px);   }
+            100% { opacity: 1; transform: translate3d(-100vw, 0px, 0px);   }
+        }
+
+        .sliderCarousel > img.carouselActiveL2R{
+            animation: slideInFramesL2R 1s ;
+        }
+        .sliderCarousel > img.carouselInactiveL2R{
+            animation: slideOutFramesL2R 1s ;
+            opacity: 0;
+        }
+        @keyframes slideInFramesL2R {
+            0% { transform: translate3d(-100vw, 0px, 0px);   }
+            100% { transform: translate3d(0px, 0px, 0px);   }
+        }
+        @keyframes slideOutFramesL2R {
+            0% { opacity: 1;transform: translate3d(0vw, 0px, 0px);   }
+            100% { opacity: 1; transform: translate3d(100vw, 0px, 0px);   }
         }
 
     </style>
@@ -185,11 +217,6 @@
 
             var carouselImages=obj.data.content.carouselImages;
             var carouselContainer = document.getElementById("carousel");
-
-
-            if(obj.data.design.carouselEffect)
-                carouselContainer.className = obj.data.design.carouselEffect;
-
 
             if(layout!=12) {
                 carousel.init(carouselImages, carouselContainer);
@@ -240,7 +267,6 @@
                 if(i>=0) temp[i] = p.data;
             });
 
-            debugger;
             return temp;
         }
 
