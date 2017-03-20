@@ -71,10 +71,24 @@
 
             // Slider needs at least 2 slides or you'll get an error.
             if (slides > 1) {
-                $('.plugin-slider').owlCarousel({
-                    loop: false,
-                    nav: false,
-                    items: 1
+                var renderSlider=function () {
+                    $('.plugin-slider').owlCarousel({
+                        loop: false,
+                        nav: false,
+                        items: 1
+                    });
+                };
+                renderSlider();
+                buildfire.getContext(function (err, result) {
+                    if (result && result.device && result.device.platform && result.device.platform.toLowerCase() == 'ios') {
+                        buildfire.navigation.onAppLauncherActive(function () {
+                            renderSlider();
+                        }, true);
+                        buildfire.navigation.onAppLauncherInactive(function () {
+                            $('.plugin-slider').trigger('destroy.owl.carousel').removeClass('owl-carousel owl-loaded');
+                            $('.plugin-slider').find('.owl-stage-outer').children().unwrap();
+                        }, true);
+                    }
                 });
             }
         }
