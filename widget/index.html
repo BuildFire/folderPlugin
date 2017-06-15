@@ -179,7 +179,7 @@
                                 <div class="list-item-media text-center">
                                     <div class="list-media-holder">
                                         <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="320" crop-height="320" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': ((1 * deviceWidth / 1)/2)-12 + 'px' }" />
-                                        <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName" ng-style="{'font-size': ((1 * deviceWidth / 1)/2)-12 + 'px' }"></span>
+                                        <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName" ng-style="{'font-size': ((1 * deviceWidth / 1)/2)-4 + 'px' }"></span>
                                     </div>
                                     <div class="info-bar titleBarBackgroundTheme" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">
                                         <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">
@@ -230,7 +230,7 @@
                             <div class="plugin-slide text-center">
                                 <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-239x1.png', {width: 512, height: 210}) }}');"></div>
                                 <img load-image="239x1" data-final-src="{{plugin.iconUrl}}" crop-width="512" crop-height="210" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (1 * deviceWidth / 4)-12 + 'px' }">
-                                <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName" ng-style="{'font-size': (1 * deviceWidth / 4)-12 + 'px' }"></span>
+                                <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName" ng-style="{'font-size': (1 * deviceWidth / 17)-1 + 'vh' }"></span>
                             </div>
                             <div class="info-bar blackBackgroundTheme" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">
                                 <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme">{{ plugin.title }}</p>
