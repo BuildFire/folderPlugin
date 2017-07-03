@@ -1,7 +1,8 @@
 ﻿<!DOCTYPE html>
-<html onscroll="alert('asd')">
+<html>
 <head lang="en">
     <script src="../../../scripts/buildfire.js"></script>
+    <script src="../../../scripts/buildfire/components/carouselLight/carouselLight.js"></script>
 </head>
 <body >
     <div id="carousel" class="sliderCarousel" ></div>
@@ -9,205 +10,8 @@
     <div id="pluginsContainer"></div>
 
     <script>
-        function Carousel(){
-
-        }
-
-        Carousel.prototype={
-            init:function(carouselImages, containerElement) {
-
-                this.carouselImages= [];
-                this.imageWidth = Math.min(1024, window.innerWidth);
-                this.imageHeight = this.imageWidth * (9/16);
-                var t=this;
-                carouselImages.forEach(function(cimg){
-                    t.carouselImages.push({
-                        src : buildfire.imageLib.cropImage(cimg.iconUrl,{width:t.imageWidth,height: t.imageHeight})
-                        , actionItem: cimg
-                    });
-                });
-
-                this.containerElement = containerElement;
-                this.manifest = new Object();
-                this.stop();
-            }
-            ,start:function (){
-                if (!this.carouselImages || this.carouselImages.length ==0 || !this.containerElement) return;
-                this.containerElement.innerHTML = '';
-
-                this.loadNextImage();
-                if(this.carouselImages.length > 1) {
-                    var t = this;
-                    this.tmr = setInterval(function () {
-                        t.loadNextImage();
-                    }, 5000);
-                }
-
-            }
-            , stop:function(){
-                clearInterval(this.tmr);
-                this.tmr=null;
-            }
-            , loadNextImage: function(){
-                if(this.carouselImages.length < 2 )return;
-                if(this.manifest.currentIndex == undefined) /// first time init
-                    this.manifest.currentIndex=-1;
-                else if(this.manifest.currentIndex >= this.carouselImages.length - 1){ /// loop and kenBurnsOutFrames last image
-                    this.manifest.currentIndex=-1;
-                    var previousImg = this.getImage(this.carouselImages.length - 1);
-                    previousImg.classList.add('carouselInactive');
-                    previousImg.classList.remove('carouselActive');
-                }
-
-                this.manifest.currentIndex++; // bump up to next image
-
-                if(this.manifest.currentIndex>0) { // fade out previous image
-                    var previousImg = this.getImage(this.manifest.currentIndex - 1);
-                    previousImg.classList.add('carouselInactive');
-                    previousImg.classList.remove('carouselActive');
-                }
-
-
-                var img = this.getImage(this.manifest.currentIndex); // get/create next image
-                img.classList.remove('carouselInactive'); // fade in
-                img.classList.add('carouselActive');
-
-                //this.containerElement.appendChild(img);
-            }
-            , loadPreviousImage: function(){
-                if(this.carouselImages.length < 2 )return;
-                if(this.manifest.currentIndex == undefined) this.manifest.currentIndex=0;
-
-                var previousSlideIndex;
-                if(this.manifest.currentIndex==0)
-                    previousSlideIndex=this.carouselImages.length-1;
-                else
-                    previousSlideIndex = this.manifest.currentIndex-1; // to previous image
-
-
-                var previousImg = this.getImage(previousSlideIndex);
-                previousImg.className= 'carouselActiveL2R';
-
-                var img = this.getImage(this.manifest.currentIndex); // get/create next image
-                img.className ='carouselInactiveL2R'; // fade in
-
-                this.manifest.currentIndex--;
-            }
-            , getImage: function(index){
-                var id= this.getId (index);
-                if(!this.manifest[id]) {
-                    this.manifest[id] = this.createImage(this.carouselImages[index], index);
-                    this.containerElement.appendChild(this.manifest[id]);
-                }
-
-                if(this.manifest[id].src != this.carouselImages[index].src)
-                    this.manifest[id].src = this.carouselImages[index].src;
-
-                return this.manifest[id];
-            }
-            , createImage:function(carouselImage, index){
-                if(!carouselImage)return;
-                var img = document.createElement('img');
-                img.src = carouselImage.src;
-                img.draggable=false;
-                img.setAttribute('index',index);
-                img.id = this.getId (index);
-                img.classList.add('carouselImg');
-                img.classList.add('carouselInactive');
-                var t= this;
-
-                var suppressClick;
-                img.onclick = function(){
-                    if(suppressClick){
-                        suppressClick=false;
-                        return;
-                    }
-                    var i=this.getAttribute('index');
-                    if(isNaN(this.getAttribute(i))) return;
-                    i = parseInt(i);
-                    if(t.carouselImages[i].actionItem.action)
-                        buildfire.actionItems.execute(t.carouselImages[i].actionItem);
-                };
-
-                var xStart;
-                img.addEventListener('mousedown', function(e){xStart = e.pageX; });
-                img.addEventListener('touchstart', function(e){ xStart = e.changedTouches[0].pageX;  });
-
-                img.addEventListener('mouseup', function(e){
-                    if(xStart) {
-                        var diff = e.pageX - xStart;
-                        if(Math.abs(diff) < 50) return;
-                        if(diff < 0)
-                            t.loadNextImage();
-                        else {
-                            t.stop();
-                            t.loadPreviousImage();
-                        }
-
-                        suppressClick=true;
-                    }
-                });
-
-                return img;
-            }
-            , getId: function(index){
-                return '__$carouselImage' + index;
-            }
-        }
-    </script>
-    <style>
-        #carousel{
-            height:56vw ;
-            max-height:56.25vw ;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .sliderCarousel > img{
-            position: absolute;
-            top:0px;
-            width:100%;
-        }
-
-        .sliderCarousel > img.carouselActive{
-            animation: slideInFrames 1s ;
-        }
-        .sliderCarousel > img.carouselInactive{
-            animation: slideOutFrames 1s ;
-            opacity: 0;
-        }
-        @keyframes slideInFrames {
-            0% { transform: translate3d(100vw, 0px, 0px);   }
-            100% { transform: translate3d(0px, 0px, 0px);   }
-        }
-        @keyframes slideOutFrames {
-            0% { opacity: 1;transform: translate3d(0vw, 0px, 0px);   }
-            100% { opacity: 1; transform: translate3d(-100vw, 0px, 0px);   }
-        }
-
-        .sliderCarousel > img.carouselActiveL2R{
-            animation: slideInFramesL2R 1s ;
-        }
-        .sliderCarousel > img.carouselInactiveL2R{
-            animation: slideOutFramesL2R 1s ;
-            opacity: 0;
-        }
-        @keyframes slideInFramesL2R {
-            0% { transform: translate3d(-100vw, 0px, 0px);   }
-            100% { transform: translate3d(0px, 0px, 0px);   }
-        }
-        @keyframes slideOutFramesL2R {
-            0% { opacity: 1;transform: translate3d(0vw, 0px, 0px);   }
-            100% { opacity: 1; transform: translate3d(100vw, 0px, 0px);   }
-        }
-
-    </style>
-
-
-    <script>
         var plugins=[];
 
-        var carousel = new Carousel();
         function loadData(err,obj){
             if(err)return;
 
@@ -215,15 +19,18 @@
 
             initStyle(obj,layout);
 
-            var carouselImages=obj.data.content.carouselImages;
+            var carouselImages = obj.data.content.carouselImages;
             var carouselContainer = document.getElementById("carousel");
 
             if(layout!=12) {
-                carousel.init(carouselImages, carouselContainer);
-                carousel.start();
+                /*carousel.init(carouselImages, carouselContainer);
+                carousel.start();*/
+
+                var carousel = new buildfire.components.carousel.view({
+                    selector: carouselContainer,
+                    items: carouselImages
+                });
             }
-
-
 
             document.getElementById("txt").innerHTML = obj.data.content.text;
             plugins = prepPlugins(obj.data._buildfire.plugins);
