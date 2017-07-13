@@ -3,46 +3,50 @@
 <head lang="en">
     <script src="../../../scripts/buildfire.js"></script>
     <script src="../../../scripts/buildfire/components/carouselLight/carouselLight.js"></script>
+    <script src="../../../scripts/buildfire/components/pluginInstance/sortableList.js"></script>
 </head>
-<body >
-    <div id="carousel" class="sliderCarousel" ></div>
-    <div id="txt"></div>
-    <div id="pluginsContainer"></div>
+<body>
+<div id="carousel" class="sliderCarousel"></div>
+<div id="txt"></div>
+<div id="pluginsContainer"></div>
+<script>
+    var plugins = [];
 
-    <script>
-        var plugins=[];
+    function loadData(err, obj) {
+        debugger;
+        if (err)return;
 
-        function loadData(err,obj){
-            if(err)return;
+        var layout = obj.data.design.selectedLayout;
 
-            var layout=obj.data.design.selectedLayout;
+        initStyle(obj, layout);
 
-            initStyle(obj,layout);
+        var carouselImages = obj.data.content.carouselImages;
+        var carouselContainer = document.getElementById("carousel");
 
-            var carouselImages = obj.data.content.carouselImages;
-            var carouselContainer = document.getElementById("carousel");
+        if (layout != 12) {
+            /*carousel.init(carouselImages, carouselContainer);
+             carousel.start();*/
 
-            if(layout!=12) {
-                /*carousel.init(carouselImages, carouselContainer);
-                carousel.start();*/
+            var carousel = new buildfire.components.carousel.view({
+                selector: carouselContainer,
+                items: carouselImages
+            });
+        }
 
-                var carousel = new buildfire.components.carousel.view({
-                    selector: carouselContainer,
-                    items: carouselImages
-                });
-            }
+        document.getElementById("txt").innerHTML = obj.data.content.text;
 
-            document.getElementById("txt").innerHTML = obj.data.content.text;
-            plugins = prepPlugins(obj.data._buildfire.plugins);
-            var pluginsContainer= document.getElementById("pluginsContainer");
-            pluginsContainer.innerHTML='';
+        var pluginsContainer = document.getElementById("pluginsContainer");
+        pluginsContainer.innerHTML = '';
 
-            var options=calcImgOptions(layout);
+        getPlugins(obj, function (result) {
+            plugins = result;
 
-            for(var i=0; i < plugins.length ; i++){
-                var p=plugins[i].data || plugins[i];
+            var options = calcImgOptions(layout);
 
-                if(layout!=12) {
+            for (var i = 0; i < plugins.length; i++) {
+                var p = plugins[i].data || plugins[i];
+
+                if (layout != 12) {
                     var divImg = document.createElement('div');
                     if (p.iconUrl)
                         divImg.style.background = "no-repeat url(" + buildfire.imageLib.cropImage(p.iconUrl, options) + ")";
@@ -58,250 +62,298 @@
                 divTitle.innerHTML = p.title;
                 divTitle.classList.add("divTitle");
                 divTitle.classList.add("layout" + layout);
-                divTitle.onclick=onClick;
-                divTitle.setAttribute('index',i);
+                divTitle.onclick = onClick;
+                divTitle.setAttribute('index', i);
                 pluginsContainer.appendChild(divTitle);
             }
-        }
+        });
+    }
 
-        function prepPlugins(plugins){
-            if(!plugins || !plugins.result || !plugins.result.length) return [];
-            if(!plugins.result[0].data) return plugins.result;
-
-            var temp=[];
-            plugins.result.forEach(function(p){
-                var i = plugins.data.indexOf(p.data.instanceId);
-                if(i>=0) temp[i] = p.data;
-            });
-
-            return temp;
-        }
-
-        function initStyle(obj,layout){
-            var style = document.getElementById("injectedStyle");
-            if(style) document.head.removeChild(style);
-
-            style = document.createElement('style');
-            style.id = "injectedStyle";
-
-
-            if(obj.data.design.backgroundImage) {
-
-                style.innerHTML+="body { background: no-repeat url('" + buildfire.imageLib.cropImage(obj.data.design.backgroundImage , {
-                        width: window.innerWidth,
-                        height: window.innerHeight
-                    })  + "') !Important } " ;
-
-
-            }
-
-            if(obj.data.design.hideText)
-                style.innerHTML +=" .divTitle { display:none !Important} " ;
-
-            if(layout==12) {
-                style.innerHTML +=" #carousel { display:none !Important} " ;
-            }
-
-            if(style.innerHTML.length > 0)
-                document.head.appendChild(style);
-        }
-
-        buildfire.datastore.getWithDynamicData(loadData);
-        buildfire.datastore.onUpdate(function(obj){loadData(null,obj)});
-
-        function calcImgOptions(layout){
-            var option={};
-            if([3,4,9].indexOf(layout) >= 0 ) {
-                option.width = window.innerWidth;
-                option.height = option.width * 9 / 16;
-            }
-            else if ([1,8].indexOf(layout) >= 0){
-                option.width = 50;
-                option.height = 50;
-            }
-            else if (layout ==2){
-                option.width = 75;
-                option.height = 50;
-            }
-            else if ([5,11].indexOf(layout) >= 0){
-                option.width = Math.round(window.innerWidth / 2);
-                option.height =option.width;
-            }
-            else if (layout ==6){
-                option.width = Math.round(window.innerWidth / 2.1);
-                option.height =option.width;
-            }
-            else if (layout ==7){
-                option.width = window.innerWidth;
-                option.height = Math.round(window.innerWidth / 2.2);
-            }
-            else if (layout ==10){
-                option.width = window.innerWidth;
-                option.height = Math.round(window.innerWidth * 0.23);
-            }
-            return option;
-        }
-
-        function onClick(e){
-
-            var i = parseInt(this.getAttribute('index') );
-            var p = plugins[i].data;
-
-            buildfire.navigation.navigateTo({
-                pluginId: p.pluginTypeId
-                ,folderName : p.pluginType.folderName
-                ,instanceId : p.instanceId
-                ,title:p.title
+    function getPlugins(obj, callback) {
+        var plugins = [];
+        if (obj.data.content.loadAllPlugins) {
+            var searchOptions = {pageIndex: 0, pageSize: 100};
+            buildfire.components.pluginInstance.getAllPlugins(searchOptions, function (err, res) {
+                plugins = res.data;
+                callback(res.data);
             });
         }
+        else {
+            if (obj.data._buildfire && obj.data._buildfire.plugins &&
+                obj.data._buildfire.plugins.result && obj.data._buildfire.plugins.data) {
+                plugins = getPluginDetails(obj.data._buildfire.plugins.result, obj.data._buildfire.plugins.data);
+            }
+            callback(plugins);
+        }
+    }
 
-    </script>
-    <style>
+    function getPluginDetails(pluginsInfo, pluginIds) {
+        var returnPlugins = [];
+        var tempPlugin = null;
+        for (var id = 0; id < pluginIds.length; id++) {
+            for (var i = 0; i < pluginsInfo.length; i++) {
+                tempPlugin = {};
+                var obj = pluginsInfo[i].data ? pluginsInfo[i].data : pluginsInfo[i];
+                if (pluginIds[id] == obj.instanceId) {
+                    tempPlugin.instanceId = obj.instanceId;
+                    if (obj) {
+                        tempPlugin.iconUrl = obj.iconUrl;
+                        tempPlugin.iconClassName = obj.iconClassName;
+                        tempPlugin.title = obj.title;
+                        if (obj.pluginType) {
+                            tempPlugin.pluginTypeId = obj.pluginType.token;
+                            tempPlugin.folderName = obj.pluginType.folderName;
+                        }
+                        else {
+                            tempPlugin.pluginTypeId = obj.pluginTypeId;
+                            tempPlugin.folderName = obj.folderName;
+                        }
+                    } else {
+                        tempPlugin.iconUrl = "";
+                        tempPlugin.title = "[No title]";
+                    }
+                    returnPlugins.push(tempPlugin);
+                }
+                tempPlugin = null;
+            }
+        }
+        return returnPlugins;
+    }
 
-        .divTitle {
-            padding: 10px;
-            font-size: larger;
-        }
+    function initStyle(obj, layout) {
+        var style = document.getElementById("injectedStyle");
+        if (style) document.head.removeChild(style);
 
-        .layout1, .layout5, .layout8 , .layout6{
-            display: inline-block;
-        }
-        .divImage.layout1,.divImage.layout8{
-            width: 50px;
-            height:50px;
-        }
-        .divTitle.layout1,.divTitle.layout8{
-            width:calc(100% - 50px);
-        }
-
-        .divImage.layout8{
-            border-radius: 50%;
-        }
-
-
-        .layout2{
-            display: inline-block;
-        }
-        .divImage.layout2{
-            width: 75px;
-            height:50px;
-        }
-        .divTitle.layout2{
-            width:calc(100% - 75px);
-
-        }
-
-        .divImage.layout3,.divImage.layout4{
-            width:100%;
-            min-height: calc(100vw * 0.5625);
-        }
-        .divTitle.layout4{
-            position: relative;
-            margin-top: -50px;
-            background-color: #000;
-            opacity: .8;
-            height: 50px;
-        }
-
-
-        .divImage.layout5{
-            width: 50%;
-            min-height:50vw;
-            float: left;
-        }
-        .divTitle.layout5{
-            width:50%;
-            margin-left: -50vw;
-            margin-top: calc(50vw - 50px);
-            height: 50px;
-            position: relative;
-            float:left;
-            background-color: #000;
-            opacity: .8;
-        }
-
-        .divImage.layout11{
-            width: 50%;
-            min-height:50vw;
-            float: left;
-        }
-        .divTitle.layout11{
-            display: none;
-        }
+        style = document.createElement('style');
+        style.id = "injectedStyle";
 
 
-        .divImage.layout6{
-            width: 44vw;
-            height:44vw;
-            float: left;
-            margin-left: 4vw ;
-            margin-bottom: calc(50px + 1vw) ;
-        }
-        .divTitle.layout6{
-            width:44vw;
-            margin-left: -44vw;
-            margin-top: 44vw;
-            height: 50px;
-            position: relative;
-            float:left;
-        }
+        if (obj.data.design.backgroundImage) {
 
-        .divImage.layout7,.divImage.layout9{
-            width:100%;
-            min-height: calc(100vw * 0.46);
-        }
-        .divTitle.layout7{
-            position: relative;
-            margin-top: -50px;
-            background-color: #000;
-            opacity: .8;
-            height: 50px;
-        }
+            style.innerHTML += "body { background: no-repeat url('" + buildfire.imageLib.cropImage(obj.data.design.backgroundImage, {
+                    width: window.innerWidth,
+                    height: window.innerHeight
+                }) + "') !Important } ";
 
-        .divTitle.layout9{
-            position: relative;
-            height: calc(100vw * 0.46);
-            margin-top: calc(-100vw * 0.46);
-            background-color: #000;
-            text-align: center;
-            vertical-align: middle;
-            opacity: .8;
-            float:left;
-            width:100%;
-            padding-top: calc(100vw * 0.46/2);
-        }
-
-
-        .divImage.layout10{
-            width:100%;
-            min-height: calc(100vw * 0.23);
-        }
-        .divTitle.layout10{
-            position: relative;
-            height: calc(100vw * 0.23);
-            margin-top: calc(-100vw * 0.25);
-            padding-top: calc(100vw * 0.23/2);
-            text-align: center;
-            vertical-align: middle;
-            float: left;
-            width: 100%;
-            color:white;
-            font-weight: bold;
-            font-size: x-large;
-            /*-webkit-text-stroke: 1px #555;*/
 
         }
 
-        .divImage.layout12{
-            display: none;
+        if (obj.data.design.hideText)
+            style.innerHTML += " .divTitle { display:none !Important} ";
+
+        if (layout == 12) {
+            style.innerHTML += " #carousel { display:none !Important} ";
         }
-        .divTitle.layout12{
-            margin-left:10%;
-            margin-right:10%;
-            background-color: #000;
-            opacity: .8;
-            text-align: center;
+
+        if (style.innerHTML.length > 0)
+            document.head.appendChild(style);
+    }
+
+    buildfire.datastore.getWithDynamicData(loadData);
+    buildfire.datastore.onUpdate(function (obj) {
+        loadData(null, obj)
+    });
+
+    function calcImgOptions(layout) {
+        var option = {};
+        if ([3, 4, 9].indexOf(layout) >= 0) {
+            option.width = window.innerWidth;
+            option.height = option.width * 9 / 16;
         }
-    </style>
+        else if ([1, 8].indexOf(layout) >= 0) {
+            option.width = 50;
+            option.height = 50;
+        }
+        else if (layout == 2) {
+            option.width = 75;
+            option.height = 50;
+        }
+        else if ([5, 11].indexOf(layout) >= 0) {
+            option.width = Math.round(window.innerWidth / 2);
+            option.height = option.width;
+        }
+        else if (layout == 6) {
+            option.width = Math.round(window.innerWidth / 2.1);
+            option.height = option.width;
+        }
+        else if (layout == 7) {
+            option.width = window.innerWidth;
+            option.height = Math.round(window.innerWidth / 2.2);
+        }
+        else if (layout == 10) {
+            option.width = window.innerWidth;
+            option.height = Math.round(window.innerWidth * 0.23);
+        }
+        return option;
+    }
+
+    function onClick(e) {
+
+        var i = parseInt(this.getAttribute('index'));
+        var p = plugins[i];
+
+        buildfire.navigation.navigateTo({
+            pluginId: p.pluginTypeId
+            , folderName: p.folderName
+            , instanceId: p.instanceId
+            , title: p.title
+        });
+    }
+
+</script>
+<style>
+
+    .divTitle {
+        padding: 10px;
+        font-size: larger;
+    }
+
+    .layout1, .layout5, .layout8, .layout6 {
+        display: inline-block;
+    }
+
+    .divImage.layout1, .divImage.layout8 {
+        width: 50px;
+        height: 50px;
+    }
+
+    .divTitle.layout1, .divTitle.layout8 {
+        width: calc(100% - 50px);
+    }
+
+    .divImage.layout8 {
+        border-radius: 50%;
+    }
+
+    .layout2 {
+        display: inline-block;
+    }
+
+    .divImage.layout2 {
+        width: 75px;
+        height: 50px;
+    }
+
+    .divTitle.layout2 {
+        width: calc(100% - 75px);
+
+    }
+
+    .divImage.layout3, .divImage.layout4 {
+        width: 100%;
+        min-height: calc(100vw * 0.5625);
+    }
+
+    .divTitle.layout4 {
+        position: relative;
+        margin-top: -50px;
+        background-color: #000;
+        opacity: .8;
+        height: 50px;
+    }
+
+    .divImage.layout5 {
+        width: 50%;
+        min-height: 50vw;
+        float: left;
+    }
+
+    .divTitle.layout5 {
+        width: 50%;
+        margin-left: -50vw;
+        margin-top: calc(50vw - 50px);
+        height: 50px;
+        position: relative;
+        float: left;
+        background-color: #000;
+        opacity: .8;
+    }
+
+    .divImage.layout11 {
+        width: 50%;
+        min-height: 50vw;
+        float: left;
+    }
+
+    .divTitle.layout11 {
+        display: none;
+    }
+
+    .divImage.layout6 {
+        width: 44vw;
+        height: 44vw;
+        float: left;
+        margin-left: 4vw;
+        margin-bottom: calc(50px + 1vw);
+    }
+
+    .divTitle.layout6 {
+        width: 44vw;
+        margin-left: -44vw;
+        margin-top: 44vw;
+        height: 50px;
+        position: relative;
+        float: left;
+    }
+
+    .divImage.layout7, .divImage.layout9 {
+        width: 100%;
+        min-height: calc(100vw * 0.46);
+    }
+
+    .divTitle.layout7 {
+        position: relative;
+        margin-top: -50px;
+        background-color: #000;
+        opacity: .8;
+        height: 50px;
+    }
+
+    .divTitle.layout9 {
+        position: relative;
+        height: calc(100vw * 0.46);
+        margin-top: calc(-100vw * 0.46);
+        background-color: #000;
+        text-align: center;
+        vertical-align: middle;
+        opacity: .8;
+        float: left;
+        width: 100%;
+        padding-top: calc(100vw * 0.46 / 2);
+    }
+
+    .divImage.layout10 {
+        width: 100%;
+        min-height: calc(100vw * 0.23);
+    }
+
+    .divTitle.layout10 {
+        position: relative;
+        height: calc(100vw * 0.23);
+        margin-top: calc(-100vw * 0.25);
+        padding-top: calc(100vw * 0.23 / 2);
+        text-align: center;
+        vertical-align: middle;
+        float: left;
+        width: 100%;
+        color: white;
+        font-weight: bold;
+        font-size: x-large;
+        /*-webkit-text-stroke: 1px #555;*/
+
+    }
+
+    .divImage.layout12 {
+        display: none;
+    }
+
+    .divTitle.layout12 {
+        margin-left: 10%;
+        margin-right: 10%;
+        background-color: #000;
+        opacity: .8;
+        text-align: center;
+    }
+</style>
 </body>
 </html>
