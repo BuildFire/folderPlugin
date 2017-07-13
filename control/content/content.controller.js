@@ -51,8 +51,10 @@
                         return;
                     }
 
+                    var firstTimeVisit = false;
                     if (!result.id) {
                         result.data = Utility.getDefaultScopeData();
+                        firstTimeVisit = true;
                     }
 
                     if (result && result.data && !angular.equals({}, result.data)) {
@@ -91,6 +93,13 @@
                             updateMasterItem(updateItem);
                             $scope.data = angular.copy(updateItem);
                         }
+
+                        if(firstTimeVisit){
+                            setTimeout(function () {
+                                saveData($scope.data);
+                            }, 500);
+                        }
+
                         if (tmrDelay) clearTimeout(tmrDelay);
                     }
 
