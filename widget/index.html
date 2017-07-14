@@ -7,13 +7,12 @@
 </head>
 <body>
 <div id="carousel" class="sliderCarousel"></div>
-<div id="txt"></div>
+<div id="txt" class="text-left padded padding-bottom-zero clearfix folder-plugin-text hide-empty"></div>
 <div id="pluginsContainer"></div>
 <script>
     var plugins = [];
 
     function loadData(err, obj) {
-        debugger;
         if (err)return;
 
         var layout = obj.data.design.selectedLayout;
@@ -36,6 +35,7 @@
         document.getElementById("txt").innerHTML = obj.data.content.text;
 
         var pluginsContainer = document.getElementById("pluginsContainer");
+        pluginsContainer.className ="layout" + layout;
         pluginsContainer.innerHTML = '';
 
         getPlugins(obj, function (result) {
@@ -44,27 +44,55 @@
             var options = calcImgOptions(layout);
 
             for (var i = 0; i < plugins.length; i++) {
+                var pluginItem = document.createElement('div');
+                pluginItem.classList.add("pluginItem");
+
                 var p = plugins[i].data || plugins[i];
 
                 if (layout != 12) {
                     var divImg = document.createElement('div');
-                    if (p.iconUrl)
-                        divImg.style.background = "no-repeat url(" + buildfire.imageLib.cropImage(p.iconUrl, options) + ")";
-                    else
-                        divImg.innerHTML = "<h1>loading</h1>";
-                    divImg.classList.add("divImage");
-                    divImg.classList.add("layout" + layout);
+                    divImg.classList.add("media-holder");
+                    divImg.classList.add("media-holder-icon");
                     divImg.setAttribute('index', i);
                     divImg.onclick = onClick;
-                    pluginsContainer.appendChild(divImg);
+
+                    if (p.iconUrl || p.iconClassName)
+                    {
+                        if(p.iconUrl)
+                        {
+                            divImg.classList.add("hasImg");
+                            var img =document.createElement('img')
+                            img.src = buildfire.imageLib.cropImage(p.iconUrl, options) ;
+                            img.alt = "plugin-img";
+                            divImg.appendChild(img);
+                        }
+                        else{
+                            divImg.classList.add("hasIcon");
+                            var span =document.createElement('span');
+                            span.className += " main-icon " +p.iconClassName;
+                            divImg.appendChild(span);
+                        }
+                    }
+                    else{
+                        divImg.classList.add("noImg");
+                        divImg.innerHTML = "<h1>loading</h1>";
+                    }
+
+                    pluginItem.appendChild(divImg);
                 }
                 var divTitle = document.createElement('div');
-                divTitle.innerHTML = p.title;
-                divTitle.classList.add("divTitle");
-                divTitle.classList.add("layout" + layout);
+                divTitle.classList.add("media-holder");
+                divTitle.classList.add("media-holder-text");
                 divTitle.onclick = onClick;
                 divTitle.setAttribute('index', i);
-                pluginsContainer.appendChild(divTitle);
+
+                var paragraph = document.createElement('p');
+                paragraph.innerText = p.title;
+                divTitle.appendChild(paragraph);
+
+                pluginItem.appendChild(divTitle);
+
+                pluginsContainer.appendChild(pluginItem);
             }
         });
     }
@@ -165,8 +193,8 @@
             option.height = 50;
         }
         else if (layout == 2) {
-            option.width = 75;
-            option.height = 50;
+            option.width = 100;
+            option.height = 60;
         }
         else if ([5, 11].indexOf(layout) >= 0) {
             option.width = Math.round(window.innerWidth / 2);
@@ -202,158 +230,79 @@
 
 </script>
 <style>
-
-    .divTitle {
-        padding: 10px;
-        font-size: larger;
+    #pluginsContainer .pluginItem {
+        width:100%;
+        display:block;
+    }
+    /*
+                                                                Layout-1
+    */
+    #pluginsContainer.layout1 .pluginItem {
+        display:inline-block;
+        border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
     }
 
-    .layout1, .layout5, .layout8, .layout6 {
-        display: inline-block;
-    }
-
-    .divImage.layout1, .divImage.layout8 {
-        width: 50px;
-        height: 50px;
-    }
-
-    .divTitle.layout1, .divTitle.layout8 {
-        width: calc(100% - 50px);
-    }
-
-    .divImage.layout8 {
-        border-radius: 50%;
-    }
-
-    .layout2 {
-        display: inline-block;
-    }
-
-    .divImage.layout2 {
-        width: 75px;
-        height: 50px;
-    }
-
-    .divTitle.layout2 {
-        width: calc(100% - 75px);
-
-    }
-
-    .divImage.layout3, .divImage.layout4 {
-        width: 100%;
-        min-height: calc(100vw * 0.5625);
-    }
-
-    .divTitle.layout4 {
-        position: relative;
-        margin-top: -50px;
-        background-color: #000;
-        opacity: .8;
-        height: 50px;
-    }
-
-    .divImage.layout5 {
-        width: 50%;
-        min-height: 50vw;
-        float: left;
-    }
-
-    .divTitle.layout5 {
-        width: 50%;
-        margin-left: -50vw;
-        margin-top: calc(50vw - 50px);
-        height: 50px;
-        position: relative;
-        float: left;
-        background-color: #000;
-        opacity: .8;
-    }
-
-    .divImage.layout11 {
-        width: 50%;
-        min-height: 50vw;
-        float: left;
-    }
-
-    .divTitle.layout11 {
-        display: none;
-    }
-
-    .divImage.layout6 {
-        width: 44vw;
-        height: 44vw;
-        float: left;
-        margin-left: 4vw;
-        margin-bottom: calc(50px + 1vw);
-    }
-
-    .divTitle.layout6 {
-        width: 44vw;
-        margin-left: -44vw;
-        margin-top: 44vw;
-        height: 50px;
-        position: relative;
-        float: left;
-    }
-
-    .divImage.layout7, .divImage.layout9 {
-        width: 100%;
-        min-height: calc(100vw * 0.46);
-    }
-
-    .divTitle.layout7 {
-        position: relative;
-        margin-top: -50px;
-        background-color: #000;
-        opacity: .8;
-        height: 50px;
-    }
-
-    .divTitle.layout9 {
-        position: relative;
-        height: calc(100vw * 0.46);
-        margin-top: calc(-100vw * 0.46);
-        background-color: #000;
+    .layout1 .pluginItem .media-holder.media-holder-icon  {
+        width: 60px;
+        height: 60px;
+        line-height: 58px;
+        margin: inherit;
+        margin-right: 10px;
+        border-radius: 4px;
+        margin: 5px 10px 5px 5px;
         text-align: center;
-        vertical-align: middle;
-        opacity: .8;
-        float: left;
-        width: 100%;
-        padding-top: calc(100vw * 0.46 / 2);
+        float:left;
     }
 
-    .divImage.layout10 {
-        width: 100%;
-        min-height: calc(100vw * 0.23);
-    }
-
-    .divTitle.layout10 {
+    .layout1 .pluginItem .media-holder.media-holder-icon .main-icon  {
+        font-size: 44px;
         position: relative;
-        height: calc(100vw * 0.23);
-        margin-top: calc(-100vw * 0.25);
-        padding-top: calc(100vw * 0.23 / 2);
+        top: 8px;
+    }
+
+    .layout1 .pluginItem .media-holder.media-holder-text p  {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        position: relative;
+        margin-top: 20px !important;
+    }
+
+    /*
+                                                                Layout-2
+    */
+    #pluginsContainer.layout2 .pluginItem {
+        display:inline-block;
+        border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
+    }
+
+    .layout2 .pluginItem .media-holder.media-holder-icon  {
+        width: 110px;
+        height: 60px;
+        line-height: 58px;
+        margin: inherit;
+        margin-right: 10px;
+        border-radius: 4px;
+        margin: 5px 10px 5px 5px;
         text-align: center;
-        vertical-align: middle;
-        float: left;
-        width: 100%;
-        color: white;
-        font-weight: bold;
-        font-size: x-large;
-        /*-webkit-text-stroke: 1px #555;*/
-
+        float:left;
+        overflow: hidden;
     }
 
-    .divImage.layout12 {
-        display: none;
+    .layout2 .pluginItem .media-holder.media-holder-icon .main-icon  {
+        font-size: 44px;
+        position: relative;
+        top: 8px;
     }
 
-    .divTitle.layout12 {
-        margin-left: 10%;
-        margin-right: 10%;
-        background-color: #000;
-        opacity: .8;
-        text-align: center;
+    .layout2 .pluginItem .media-holder.media-holder-text p  {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        position: relative;
+        margin-top: 20px !important;
     }
+
 </style>
 </body>
 </html>
