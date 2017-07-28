@@ -23,18 +23,20 @@
         var carouselContainer = document.getElementById("carousel");
 
         if (layout != 12) {
-            /*carousel.init(carouselImages, carouselContainer);
-             carousel.start();*/
-
             var carousel = new buildfire.components.carousel.view({
                 selector: carouselContainer,
                 items: carouselImages
             });
         }
 
-        if (layout != 12) {
-            document.getElementById("txt").innerHTML = obj.data.content.text;
+        {
+            var txt = document.getElementById("txt");
+            txt.innerHTML = '';
+            if (layout != 12) {
+                txt.innerHTML = obj.data.content.text;
+            }
         }
+
         var pluginsContainer = document.getElementById("pluginsContainer");
         pluginsContainer.className = "layout" + layout;
         pluginsContainer.innerHTML = '';
@@ -99,6 +101,10 @@
                 if ([7].indexOf(layout) > -1)
                     divTitle.classList.add("blackBackgroundTheme");
 
+                if ([4, 5, 6, 7].indexOf(layout) > -1 && obj.data.design.hideText) {
+                    divTitle.classList.add('hide');
+                }
+
                 var spanTitle = document.createElement('span');
                 if ([3, 6].indexOf(layout) > -1) {
                     spanTitle.className = "text-primary";
@@ -108,6 +114,9 @@
                 }
                 if ([7, 9, 10, 11, 12].indexOf(layout) > -1) {
                     spanTitle.className = "whiteTheme";
+                }
+                if ([3, 4, 5, 6, 7, 9, 10, 11].indexOf(layout) > -1 && obj.data.design.hideText) {
+                    spanTitle.classList.add('hide');
                 }
                 spanTitle.innerText = p.title;
                 divTitle.appendChild(spanTitle);
@@ -176,16 +185,13 @@
 
         style = document.createElement('style');
         style.id = "injectedStyle";
-
-
+        
         if (obj.data.design.backgroundImage) {
 
             style.innerHTML += "body { background: no-repeat url('" + buildfire.imageLib.cropImage(obj.data.design.backgroundImage, {
                 width: window.innerWidth,
                 height: window.innerHeight
             }) + "') !Important } ";
-
-
         }
 
         if (obj.data.design.hideText)
@@ -530,6 +536,7 @@
         padding: 5px 15px;
         border-radius: 3px;
     }
+
     .layout12 .pluginItem .media-holder.media-holder-text span {
         display: block;
         text-align: center;
