@@ -13,7 +13,7 @@
     var plugins = [];
 
     function loadData(err, obj) {
-        if (err)return;
+        if (err) return;
 
         var layout = obj.data.design.selectedLayout;
 
@@ -32,10 +32,11 @@
             });
         }
 
-        document.getElementById("txt").innerHTML = obj.data.content.text;
-
+        if (layout != 12) {
+            document.getElementById("txt").innerHTML = obj.data.content.text;
+        }
         var pluginsContainer = document.getElementById("pluginsContainer");
-        pluginsContainer.className ="layout" + layout;
+        pluginsContainer.className = "layout" + layout;
         pluginsContainer.innerHTML = '';
 
         getPlugins(obj, function (result) {
@@ -56,39 +57,60 @@
                     divImg.setAttribute('index', i);
                     divImg.onclick = onClick;
 
-                    if (p.iconUrl || p.iconClassName)
-                    {
-                        if(p.iconUrl)
-                        {
+                    if (p.iconUrl || p.iconClassName) {
+                        if (p.iconUrl) {
                             divImg.classList.add("hasImg");
-                            var img =document.createElement('img')
-                            img.src = buildfire.imageLib.cropImage(p.iconUrl, options) ;
+                            var img = document.createElement('img');
+                            img.src = buildfire.imageLib.cropImage(p.iconUrl, options);
                             img.alt = "plugin-img";
                             divImg.appendChild(img);
                         }
-                        else{
+                        else {
                             divImg.classList.add("hasIcon");
-                            var span =document.createElement('span');
-                            span.className += " main-icon " +p.iconClassName;
+                            var span = document.createElement('span');
+                            span.className += " main-icon " + p.iconClassName;
                             divImg.appendChild(span);
                         }
                     }
-                    else{
+                    else {
                         divImg.classList.add("noImg");
                         divImg.innerHTML = "<h1>loading</h1>";
                     }
 
                     pluginItem.appendChild(divImg);
                 }
+
+                if ([9, 10, 11].indexOf(layout) > -1) {
+                    var divBlackLayer = document.createElement('div');
+                    divBlackLayer.className = "blackLayer";
+                    divBlackLayer.setAttribute('index', i);
+                    divBlackLayer.onclick = onClick;
+                    pluginItem.appendChild(divBlackLayer);
+                }
+
                 var divTitle = document.createElement('div');
                 divTitle.classList.add("media-holder");
                 divTitle.classList.add("media-holder-text");
                 divTitle.onclick = onClick;
                 divTitle.setAttribute('index', i);
 
-                var paragraph = document.createElement('p');
-                paragraph.innerText = p.title;
-                divTitle.appendChild(paragraph);
+                if ([4, 5].indexOf(layout) > -1)
+                    divTitle.classList.add("titleBarBackgroundTheme");
+                if ([7].indexOf(layout) > -1)
+                    divTitle.classList.add("blackBackgroundTheme");
+
+                var spanTitle = document.createElement('span');
+                if ([3, 6].indexOf(layout) > -1) {
+                    spanTitle.className = "text-primary";
+                }
+                if ([4, 5].indexOf(layout) > -1) {
+                    spanTitle.className = "titleBarTextAndIcons";
+                }
+                if ([7, 9, 10, 11, 12].indexOf(layout) > -1) {
+                    spanTitle.className = "whiteTheme";
+                }
+                spanTitle.innerText = p.title;
+                divTitle.appendChild(spanTitle);
 
                 pluginItem.appendChild(divTitle);
 
@@ -159,9 +181,9 @@
         if (obj.data.design.backgroundImage) {
 
             style.innerHTML += "body { background: no-repeat url('" + buildfire.imageLib.cropImage(obj.data.design.backgroundImage, {
-                    width: window.innerWidth,
-                    height: window.innerHeight
-                }) + "') !Important } ";
+                width: window.innerWidth,
+                height: window.innerHeight
+            }) + "') !Important } ";
 
 
         }
@@ -231,18 +253,19 @@
 </script>
 <style>
     #pluginsContainer .pluginItem {
-        width:100%;
-        display:block;
+        width: 100%;
+        display: block;
     }
+
     /*
                                                                 Layout-1
     */
     #pluginsContainer.layout1 .pluginItem {
-        display:inline-block;
+        display: inline-block;
         border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
     }
 
-    .layout1 .pluginItem .media-holder.media-holder-icon  {
+    .layout1 .pluginItem .media-holder.media-holder-icon {
         width: 60px;
         height: 60px;
         line-height: 58px;
@@ -251,32 +274,33 @@
         border-radius: 4px;
         margin: 5px 10px 5px 5px;
         text-align: center;
-        float:left;
+        float: left;
     }
 
-    .layout1 .pluginItem .media-holder.media-holder-icon .main-icon  {
+    .layout1 .pluginItem .media-holder.media-holder-icon .main-icon {
         font-size: 44px;
         position: relative;
         top: 8px;
     }
 
-    .layout1 .pluginItem .media-holder.media-holder-text p  {
+    .layout1 .pluginItem .media-holder.media-holder-text span {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         position: relative;
         margin-top: 20px !important;
+        display: inline-block;
     }
 
     /*
                                                                 Layout-2
     */
     #pluginsContainer.layout2 .pluginItem {
-        display:inline-block;
+        display: inline-block;
         border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
     }
 
-    .layout2 .pluginItem .media-holder.media-holder-icon  {
+    .layout2 .pluginItem .media-holder.media-holder-icon {
         width: 110px;
         height: 60px;
         line-height: 58px;
@@ -285,24 +309,232 @@
         border-radius: 4px;
         margin: 5px 10px 5px 5px;
         text-align: center;
-        float:left;
+        float: left;
         overflow: hidden;
     }
 
-    .layout2 .pluginItem .media-holder.media-holder-icon .main-icon  {
+    .layout2 .pluginItem .media-holder.media-holder-icon .main-icon {
         font-size: 44px;
         position: relative;
         top: 8px;
     }
 
-    .layout2 .pluginItem .media-holder.media-holder-text p  {
+    .layout2 .pluginItem .media-holder.media-holder-text span {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         position: relative;
         margin-top: 20px !important;
+        display: inline-block;
     }
 
+    /*
+                                                                    Layout-3
+        */
+    .layout3 .media-holder-text {
+        padding: 15px;
+    }
+
+    /*
+                                                                    Layout-4
+        */
+    .layout4 .media-holder-text {
+        padding: 15px;
+        position: absolute;
+        width: 100%;
+        opacity: .85;
+    }
+
+    /*
+                                                                    Layout-5
+        */
+    #pluginsContainer.layout5 .pluginItem {
+        width: 50%;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .layout5 .media-holder-text {
+        padding: 10px;
+        position: absolute;
+        width: 50%;
+        opacity: .85;
+    }
+
+    /*
+                                                                    Layout-6
+        */
+    #pluginsContainer.layout6 .pluginItem {
+        width: 50%;
+        display: inline-block;
+        text-align: center;
+        padding-left: 15px;
+    }
+
+    /*
+                                                                    Layout-7
+        */
+    .layout7 .media-holder-text {
+        padding: 15px;
+        position: absolute;
+        width: 100%;
+        opacity: .85;
+    }
+
+    /*
+                                                                    Layout-8
+        */
+    #pluginsContainer.layout8 .pluginItem {
+        display: inline-block;
+        border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
+    }
+
+    .layout8 img {
+        border-radius: 50%;
+    }
+
+    .layout8 .pluginItem .media-holder.media-holder-icon {
+        width: 60px;
+        height: 60px;
+        line-height: 58px;
+        margin: inherit;
+        margin-right: 10px;
+        border-radius: 4px;
+        margin: 5px 10px 5px 5px;
+        text-align: center;
+        float: left;
+    }
+
+    .layout8 .pluginItem .media-holder.media-holder-icon .main-icon {
+        font-size: 44px;
+        position: relative;
+        top: 8px;
+    }
+
+    .layout8 .pluginItem .media-holder.media-holder-text span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        position: relative;
+        margin-top: 20px !important;
+        display: inline-block;
+    }
+
+    /*
+                                                                    Layout-9
+        */
+    #pluginsContainer.layout9 .pluginItem {
+        position: relative;
+    }
+
+    .layout9 .blackLayer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 7;
+        background: rgba(0, 0, 0, 0.35);
+        -webkit-transform: translate3d(0, 0, 0);
+    }
+
+    .layout9 .media-holder-text {
+        position: absolute;
+        top: 50%;
+        margin-top: -10px;
+        left: 0;
+        width: 100%;
+        padding: 0 20px;
+        font-size: 16px;
+        line-height: 24px;
+        color: #fff;
+        z-index: 7;
+        -webkit-transform: translate3d(0, 0, 0);
+        text-align: center;
+    }
+
+    /*
+                                                                    Layout-10
+        */
+    #pluginsContainer.layout10 .pluginItem {
+        position: relative;
+    }
+
+    .layout10 .blackLayer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 7;
+        background: rgba(0, 0, 0, 0.35);
+        -webkit-transform: translate3d(0, 0, 0);
+    }
+
+    .layout10 .media-holder-text {
+        position: absolute;
+        top: 50%;
+        margin-top: -10px;
+        left: 0;
+        width: 100%;
+        padding: 0 20px;
+        font-size: 16px;
+        line-height: 24px;
+        color: #fff;
+        z-index: 7;
+        -webkit-transform: translate3d(0, 0, 0);
+        text-align: center;
+    }
+
+    /*
+                                                                        Layout-11
+            */
+    #pluginsContainer.layout11 .pluginItem {
+        position: relative;
+        width: 50%;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .layout11 .blackLayer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 7;
+        background: rgba(0, 0, 0, 0.35);
+        -webkit-transform: translate3d(0, 0, 0);
+    }
+
+    .layout11 .media-holder-text {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 7;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    /*
+                                                                        Layout-12
+            */
+    #pluginsContainer.layout12 {
+        width: 70%;
+        margin: 0 auto;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 5px 15px;
+        border-radius: 3px;
+    }
+    .layout12 .pluginItem .media-holder.media-holder-text span {
+        display: block;
+        text-align: center;
+        padding: 10px 0;
+    }
 </style>
 </body>
 </html>
