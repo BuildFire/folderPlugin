@@ -344,9 +344,13 @@
     /*
                                                                     Layout-4
         */
+    #pluginsContainer.layout4 .pluginItem {
+        position: relative;
+    }
     .layout4 .media-holder-text {
         padding: 15px;
         position: absolute;
+        bottom: 0px;
         width: 100%;
         opacity: .85;
     }
@@ -358,13 +362,15 @@
         width: 50%;
         display: inline-block;
         text-align: center;
+        position: relative;
     }
 
     .layout5 .media-holder-text {
         padding: 10px;
         position: absolute;
-        width: 50%;
+        width: 100%;
         opacity: .85;
+        bottom: 0;
     }
 
     /*
@@ -380,11 +386,15 @@
     /*
                                                                     Layout-7
         */
+    #pluginsContainer.layout6 .pluginItem {
+        position: relative;
+    }
     .layout7 .media-holder-text {
         padding: 15px;
         position: absolute;
         width: 100%;
         opacity: .85;
+        bottom: 0px;
     }
 
     /*
@@ -541,6 +551,10 @@
         display: block;
         text-align: center;
         padding: 10px 0;
+    }
+    .layout12 .media-holder.media-holder-text {
+        border-bottom: 1px solid rgba(0,0,0,0.15);
+        width: 100%;
     }
 </style>
 </body>
