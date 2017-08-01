@@ -33,7 +33,11 @@
             var txt = document.getElementById("txt");
             txt.innerHTML = '';
             if (layout != 12) {
-                txt.innerHTML = obj.data.content.text;
+                if (obj.data.content.text)
+                    txt.innerHTML = obj.data.content.text.trim();
+            }
+            if (txt.innerHTML == '') {
+                txt.classList.add('hide');
             }
         }
 
