@@ -54,6 +54,10 @@
 
                 if (layout != 12) {
                     var divImg = document.createElement('div');
+                    if ([3, 4, 5, 6, 7, 9, 10, 11].indexOf(layout) > -1) {
+                        divImg.style.minHeight = options.height + "px";
+                        divImg.style.maxHeight = options.height + "px";
+                    }
                     divImg.classList.add("media-holder");
                     divImg.classList.add("media-holder-icon");
                     divImg.setAttribute('index', i);
@@ -70,7 +74,12 @@
                         else {
                             divImg.classList.add("hasIcon");
                             var span = document.createElement('span');
-                            span.className += " main-icon " + p.iconClassName;
+                            var iIcon = document.createElement('i');
+                            iIcon.className += " main-icon " + p.iconClassName;
+                            if ([3, 4, 5, 6, 7, 9, 19, 11].indexOf(layout) > -1) {
+                                iIcon.style.fontSize = calcFontSize(options) + "px";
+                            }
+                            span.append(iIcon);
                             divImg.appendChild(span);
                         }
                     }
@@ -185,7 +194,7 @@
 
         style = document.createElement('style');
         style.id = "injectedStyle";
-        
+
         if (obj.data.design.backgroundImage) {
 
             style.innerHTML += "body { background: no-repeat url('" + buildfire.imageLib.cropImage(obj.data.design.backgroundImage, {
@@ -209,6 +218,10 @@
     buildfire.datastore.onUpdate(function (obj) {
         loadData(null, obj)
     });
+
+    function calcFontSize(options) {
+        return options.height - 15;
+    }
 
     function calcImgOptions(layout) {
         var option = {};
@@ -341,18 +354,29 @@
         padding: 15px;
     }
 
+    .layout3 .media-holder {
+        text-align: center;
+        width: 100%;
+    }
+
     /*
                                                                     Layout-4
         */
     #pluginsContainer.layout4 .pluginItem {
         position: relative;
     }
+
     .layout4 .media-holder-text {
         padding: 15px;
         position: absolute;
         bottom: 0px;
         width: 100%;
         opacity: .85;
+    }
+
+    .layout4 .media-holder {
+        text-align: center;
+        width: 100%;
     }
 
     /*
@@ -363,6 +387,7 @@
         display: inline-block;
         text-align: center;
         position: relative;
+        float: left;
     }
 
     .layout5 .media-holder-text {
@@ -389,12 +414,18 @@
     #pluginsContainer.layout7 .pluginItem {
         position: relative;
     }
+
     .layout7 .media-holder-text {
         padding: 15px;
         position: absolute;
         width: 100%;
         opacity: .85;
         bottom: 0px;
+    }
+
+    .layout7 .media-holder {
+        text-align: center;
+        width: 100%;
     }
 
     /*
@@ -470,6 +501,11 @@
         text-align: center;
     }
 
+    .layout9 .media-holder {
+        text-align: center;
+        width: 100%;
+    }
+
     /*
                                                                     Layout-10
         */
@@ -503,6 +539,11 @@
         text-align: center;
     }
 
+    .layout10 .media-holder {
+        text-align: center;
+        width: 100%;
+    }
+
     /*
                                                                         Layout-11
             */
@@ -511,6 +552,7 @@
         width: 50%;
         display: inline-block;
         text-align: center;
+        float: left;
     }
 
     .layout11 .blackLayer {
@@ -537,6 +579,11 @@
         overflow: hidden;
     }
 
+    .layout11 .media-holder {
+        text-align: center;
+        width: 100%;
+    }
+
     /*
                                                                         Layout-12
             */
@@ -553,8 +600,9 @@
         text-align: center;
         padding: 10px 0;
     }
+
     .layout12 .media-holder.media-holder-text {
-        border-bottom: 1px solid rgba(0,0,0,0.15);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.15);
         width: 100%;
     }
 </style>
