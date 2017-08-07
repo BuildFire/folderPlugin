@@ -81,7 +81,7 @@
                             var iIcon = document.createElement('i');
                             iIcon.className += " main-icon " + p.iconClassName;
                             if ([3, 4, 5, 6, 7, 9, 10, 11].indexOf(layout) > -1) {
-                                iIcon.style.fontSize = calcFontSize(options) + "px";
+                                iIcon.style.fontSize = calcFontSize(options,layout) + "px";
                             }
                             span.append(iIcon);
                             divImg.appendChild(span);
@@ -204,7 +204,7 @@
             style.innerHTML += "body { background: no-repeat url('" + buildfire.imageLib.cropImage(obj.data.design.backgroundImage, {
                 width: window.innerWidth,
                 height: window.innerHeight
-            }) + "') !Important } ";
+            }) + "') !Important; background-size: cover !important; } ";
         }
 
         if (obj.data.design.hideText)
@@ -223,8 +223,18 @@
         loadData(null, obj)
     });
 
-    function calcFontSize(options) {
-        return options.height - 15;
+    function calcFontSize(options,layout) {
+        var fontSize = 0;
+        if ([6].indexOf(layout) >= 0) {
+            fontSize = options.height - 22;
+        }
+        else if ([5].indexOf(layout) >= 0){
+            fontSize = options.height ;
+        }else{
+            fontSize =  options.height - 15;
+        }
+
+        return fontSize;
     }
 
     function calcImgOptions(layout) {
@@ -275,6 +285,16 @@
 
 </script>
 <style>
+    /*
+
+                                        Carousel
+
+
+    */
+
+    #carousel ul{
+        margin-bottom: 0px !important;
+    }
     #pluginsContainer .pluginItem {
         width: 100%;
         display: block;
@@ -312,7 +332,7 @@
         white-space: nowrap;
         position: relative;
         margin-top: 20px !important;
-        display: inline-block;
+        display: block;
     }
 
     /*
@@ -348,7 +368,7 @@
         white-space: nowrap;
         position: relative;
         margin-top: 20px !important;
-        display: inline-block;
+        display: block;
     }
 
     /*
@@ -409,7 +429,7 @@
         width: 50%;
         display: inline-block;
         text-align: center;
-        padding-left: 15px;
+        padding: 0px 15px;
         float: left;
     }
 
