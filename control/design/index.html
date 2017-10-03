@@ -43,12 +43,20 @@
             <div class="main col-md-9 pull-right">
                 <div class="screens clearfix">
                     <div class="screen text-center layouticon pull-left">
-                        <a class="border-grey border-radius-three default-background-hover" ng-click="changeBackground()">
+                        <a class="border-grey border-radius-three default-background-hover" ng-click="changeBackground('small')">
                             <span class="add-icon">+</span>
                             <img ng-src="{{ resizeImage(data.design.backgroundImage) }}" alt="Background Image" ng-show="data.design.backgroundImage" />
                         </a>
                         <label class="secondary">750x1334</label>
-                        <span class="icon btn-icon btn-delete-icon btn-danger transition-third" ng-click="deleteBackground()"></span>
+                        <span class="icon btn-icon btn-delete-icon btn-danger transition-third" ng-click="deleteBackground('small')"></span>
+                    </div>
+                    <div class="screen ipads pull-left text-center">
+                        <a class="border-radius-three default-background-hover" ng-click="changeBackground('large')">
+                            <span ng-hide="data.design.lgBackgroundImage" class="add-icon">+</span>
+                            <img ng-show="data.design.lgBackgroundImage" ng-src="{{resizeImage(data.design.lgBackgroundImage)}}">
+                        </a>
+                        <label class="secondary">1536x2048</label>
+                        <span class="icon btn-icon btn-delete-icon btn-danger transition-third" ng-click="deleteBackground('large')" ng-show="data.design.lgBackgroundImage"></span>
                     </div>
                 </div>
             </div>
