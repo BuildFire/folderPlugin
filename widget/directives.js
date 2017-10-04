@@ -48,7 +48,8 @@
             attrs.$observe('backImg', function (value) {
                 if (value) {
                     var imgUrl = buildfire.imageLib.resizeImage(value, {
-                        width: window.innerWidth
+                        width: window.innerWidth,
+                        disablePixelRation : true
                     });
                     if (imgUrl) {
                         element.attr("style", 'background:url(' + imgUrl + ') !important ; background-size: 100% 100% !important;');
