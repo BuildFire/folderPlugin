@@ -98,12 +98,12 @@
                 /*
                  * Get background image thumbnail
                  * */
-                $scope.resizeImage = function (url) {
+                $scope.resizeImage = function (url,width,height) {
                     if (!url) {
                         return "";
                     }
                     else {
-                        return buildfire.imageLib.resizeImage(url, { width: 88 });
+                        return buildfire.imageLib.resizeImage(url, { width: width || 88, height : height });
                     }
                 };
 
