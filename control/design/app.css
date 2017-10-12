@@ -21,9 +21,9 @@
     position: absolute;
     top: 11px;
     right: 12px;
-    background: #fff url(icons/cancel.png) center center no-repeat;
-    width: 23px;
-    height: 23px;
+    background: #fff url('icons/cancel.png') -2px -2px no-repeat;
+    width: 22px;
+    height: 22px;
     border-radius: 20px;
 }
 
@@ -62,9 +62,9 @@
     position: absolute;
     top: 19px;
     right: 8px;
-    background: #fff url(icons/cancel.png) center center no-repeat;
-    width: 23px;
-    height: 23px;
+    background: #fff url('icons/cancel.png') -2px -2px no-repeat;
+    width: 22px;
+    height: 22px;
     border-radius: 12px;
 }
 
