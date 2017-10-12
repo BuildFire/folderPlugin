@@ -83,11 +83,11 @@
                         var currentCount = Number(data.plugins.length);
                     }
 
+                    $scope.data.design.bgImage = $scope.data.design.backgroundImage || $scope.data.design.lgBackgroundImage;
+
                     if($scope.data.design.lgBackgroundImage && window.innerWidth >= 600){
                         //iPads
                         $scope.data.design.bgImage = $scope.data.design.lgBackgroundImage;
-                    } else {
-                        $scope.data.design.bgImage = $scope.data.design.backgroundImage;
                     }
 
                     preparePluginsData(data.plugins);
