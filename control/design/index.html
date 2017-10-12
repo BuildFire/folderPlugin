@@ -49,7 +49,7 @@
                             <img ng-src="{{ resizeImage(data.design.backgroundImage,80) }}" alt="Background Image" ng-show="data.design.backgroundImage" />
                         </a>
                         <label class="secondary">750x1334</label>
-                        <span class="icon btn-icon btn-delete-icon btn-danger transition-third" ng-click="deleteBackground('small')" ng-show="data.design.backgroundImage"></span>
+                        <span class="icon btn-icon btn-delete-bg btn-danger transition-third" ng-click="deleteBackground('small')" ng-show="data.design.backgroundImage"></span>
                     </div>
                     <div class="devices-screen ipad-device pull-left text-center">
                         <a class="" ng-click="changeBackground('large')">
@@ -57,7 +57,7 @@
                             <img ng-src="{{ resizeImage(data.design.lgBackgroundImage,135) }}"  alt="Background Image" ng-show="data.design.lgBackgroundImage" />
                         </a>
                         <label class="secondary">1536x2048</label>
-                        <span class="icon btn-icon btn-delete-icon btn-danger transition-third" ng-click="deleteBackground('large')" ng-show="data.design.lgBackgroundImage"></span>
+                        <span class="icon btn-icon btn-delete-bg btn-danger transition-third" ng-click="deleteBackground('large')" ng-show="data.design.lgBackgroundImage"></span>
                     </div>
                 </div>
             </div>

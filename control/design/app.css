@@ -17,10 +17,14 @@
     height: 150px;
 }
 
-.devices-screen.ipad-device .btn-delete-icon{
+.devices-screen.ipad-device .btn-delete-bg{
     position: absolute;
     top: 11px;
     right: 12px;
+    background: #fff url(icons/cancel.png) center center no-repeat;
+    width: 23px;
+    height: 23px;
+    border-radius: 20px;
 }
 
 .devices-screen.ipad-device .add-icon {
@@ -54,10 +58,14 @@
     height: 116px;
 }
 
-.devices-screen.mobile-device .btn-delete-icon{
+.devices-screen.mobile-device .btn-delete-bg{
     position: absolute;
     top: 19px;
     right: 8px;
+    background: #fff url(icons/cancel.png) center center no-repeat;
+    width: 23px;
+    height: 23px;
+    border-radius: 12px;
 }
 
 .devices-screen.mobile-device .add-icon {
