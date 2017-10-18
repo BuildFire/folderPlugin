@@ -6,6 +6,7 @@
     <!-- CSS -->
     <link href="../../../../styles/helper.css" rel="stylesheet">
     <link href="../../../../styles/siteIcons.css" rel="stylesheet">
+    <link href="app.css" rel="stylesheet">
     <!-- JS -->
     <script src="../../../../scripts/buildfire.js"></script>
     <script src="../../../../scripts/angular/angular.min.js"></script>
@@ -36,19 +37,27 @@
             </div>
         </div>
         <hr>
-        <div class="item clearfix row margin-bottom-twenty">
+        <div class="item clearfix row padding-bottom-twenty">
             <div class="labels col-md-3 padding-right-zero pull-left">
                 <span>Background Image</span>
             </div>
             <div class="main col-md-9 pull-right">
                 <div class="screens clearfix">
-                    <div class="screen text-center layouticon pull-left">
-                        <a class="border-grey border-radius-three default-background-hover" ng-click="changeBackground()">
-                            <span class="add-icon">+</span>
-                            <img ng-src="{{ resizeImage(data.design.backgroundImage) }}" alt="Background Image" ng-show="data.design.backgroundImage" />
+                    <div class="devices-screen mobile-device text-center pull-left">
+                        <a class="" ng-click="changeBackground('small')">
+                            <span class="add-icon" ng-hide="data.design.backgroundImage">+</span>
+                            <img ng-src="{{ resizeImage(data.design.backgroundImage,80) }}" alt="Background Image" ng-show="data.design.backgroundImage" />
                         </a>
                         <label class="secondary">750x1334</label>
-                        <span class="icon btn-icon btn-delete-icon btn-danger transition-third" ng-click="deleteBackground()"></span>
+                        <span class="icon btn-icon btn-delete-bg btn-danger transition-third" ng-click="deleteBackground('small')" ng-show="data.design.backgroundImage"></span>
+                    </div>
+                    <div class="devices-screen ipad-device pull-left text-center">
+                        <a class="" ng-click="changeBackground('large')">
+                            <span ng-hide="data.design.lgBackgroundImage" class="add-icon" ng-hide="data.design.lgBackgroundImage">+</span>
+                            <img ng-src="{{ resizeImage(data.design.lgBackgroundImage,135) }}"  alt="Background Image" ng-show="data.design.lgBackgroundImage" />
+                        </a>
+                        <label class="secondary">1536x2048</label>
+                        <span class="icon btn-icon btn-delete-bg btn-danger transition-third" ng-click="deleteBackground('large')" ng-show="data.design.lgBackgroundImage"></span>
                     </div>
                 </div>
             </div>

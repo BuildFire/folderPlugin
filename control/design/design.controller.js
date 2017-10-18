@@ -75,13 +75,21 @@
                 /*
                  * Open a dailog to change the background image
                  * */
-                $scope.changeBackground = function () {
+                $scope.changeBackground = function (bgType) {
                     buildfire.imageLib.showDialog({ showIcons: false, multiSelection: false }, function (error, result) {
                         if (result && result.selectedFiles && result.selectedFiles.length > 0) {
                             if (!$scope.data.design) {
                                 $scope.data.design = {};
                             }
-                            $scope.data.design.backgroundImage = result.selectedFiles[0];
+
+                            if(bgType == 'small'){
+
+                                $scope.data.design.backgroundImage = result.selectedFiles[0];
+                            }
+                            else if(bgType == 'large'){
+
+                                $scope.data.design.lgBackgroundImage = result.selectedFiles[0];
+                            }
                             Utility.digest($scope);
                         }
                     });
@@ -90,20 +98,26 @@
                 /*
                  * Get background image thumbnail
                  * */
-                $scope.resizeImage = function (url) {
+                $scope.resizeImage = function (url,width,height) {
                     if (!url) {
                         return "";
                     }
                     else {
-                        return buildfire.imageLib.resizeImage(url, { width: 88 });
+                        return buildfire.imageLib.resizeImage(url, { width: width || 88, height : height });
                     }
                 };
 
                 /*
                  * Delete the background and back to the default white background
                  * */
-                $scope.deleteBackground = function () {
-                    $scope.data.design.backgroundImage = "";
+                $scope.deleteBackground = function (bgType) {
+                    if(bgType == 'small'){
+                        $scope.data.design.backgroundImage = "";
+                    }
+                    else if(bgType == 'large'){
+                        $scope.data.design.lgBackgroundImage = "";
+                    }
+
                     Utility.digest($scope);
                 };
 
