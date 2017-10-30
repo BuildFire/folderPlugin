@@ -1,0 +1,81 @@
+.devices-screen.ipad-device{
+    height: 190px;
+    line-height: 174px;
+    margin-left: 35px;
+    float: left;
+    position: relative;
+    width: 135px;
+    background: url(icons/tablet.png) 100% 100% no-repeat;
+    background-size: 100% 100%;
+}
+
+.devices-screen.ipad-device img{
+    position: absolute;
+    left: 11px;
+    top: 10px;
+    width: 113px;
+    height: 150px;
+}
+
+.devices-screen.ipad-device .btn-delete-bg{
+    position: absolute;
+    top: 11px;
+    right: 12px;
+    background: #fff url('icons/cancel.png') -2px -2px no-repeat;
+    width: 22px;
+    height: 22px;
+    border-radius: 20px;
+}
+
+.devices-screen.ipad-device .add-icon {
+    font-size: 30px;
+}
+.devices-screen.ipad-device label{
+    position: absolute;
+    line-height: initial;
+    font-size: 12px;
+    bottom: -23px;
+    left: 0;
+    right: 0;
+}
+
+.devices-screen.mobile-device{
+    height: 160px;
+    line-height: 153px;
+    margin-left: 35px;
+    float: left;
+    position: relative;
+    width: 80px;
+    background: url("icons/mobile.png") 100% 100% no-repeat;
+    background-size: 100% 100%;
+}
+
+.devices-screen.mobile-device img{
+    position: absolute;
+    left: 7px;
+    top: 18px;
+    width: 66px;
+    height: 116px;
+}
+
+.devices-screen.mobile-device .btn-delete-bg{
+    position: absolute;
+    top: 19px;
+    right: 8px;
+    background: #fff url('icons/cancel.png') -2px -2px no-repeat;
+    width: 22px;
+    height: 22px;
+    border-radius: 12px;
+}
+
+.devices-screen.mobile-device .add-icon {
+    font-size: 30px;
+}
+.devices-screen.mobile-device label{
+    position: absolute;
+    line-height: initial;
+    font-size: 12px;
+    bottom: -22px;
+    left: 0;
+    right: 0;
+}
