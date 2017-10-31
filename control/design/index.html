@@ -6,13 +6,20 @@
     <!-- CSS -->
     <link href="../../../../styles/helper.css" rel="stylesheet">
     <link href="../../../../styles/siteIcons.css" rel="stylesheet">
+
+    <!-- build:bundleCSSFiles  -->
     <link href="app.css" rel="stylesheet">
+    <!-- endbuild -->
+
     <!-- JS -->
     <script src="../../../../scripts/buildfire.js"></script>
     <script src="../../../../scripts/angular/angular.min.js"></script>
-    <script src="../app.services.js"></script>
+
+    <!-- build:bundleJSFiles  -->
+    <script src="app.services.js"></script>
     <script src="app.js"></script>
     <script src="design.controller.js"></script>
+    <!-- endbuild -->
 </head>
 <body ng-controller="folderPluginCtrl" ng-cloak ng-show="datastoreInitialized">
     <div ng-form="frmMain">
@@ -37,7 +44,7 @@
             </div>
         </div>
         <hr>
-        <div class="item clearfix row margin-bottom-twenty">
+        <div class="item clearfix row padding-bottom-twenty">
             <div class="labels col-md-3 padding-right-zero pull-left">
                 <span>Background Image</span>
             </div>

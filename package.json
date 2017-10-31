@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "gulp build",
     "postinstall": "./node_modules/.bin/bower install",
     "test": "./node_modules/.bin/karma start karma.conf.js"
   },
@@ -31,6 +32,17 @@
     "karma-safari-launcher": "^0.1.1",
     "karma-phantomjs-launcher": "^0.2.1",
     "mocha": "^2.3.3",
-    "phantomjs": "^1.9.17"
+    "phantomjs": "^1.9.17",
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-csso": "^3.0.0",
+    "gulp-eslint": "^4.0.0",
+    "gulp-html-replace": "^1.6.2",
+    "gulp-htmlmin": "^3.0.0",
+    "gulp-imagemin": "^3.3.0",
+    "gulp-sequence": "^0.4.6",
+    "gulp-strip-comments": "^2.5.1",
+    "gulp-uglify": "^3.0.0"
   }
 }

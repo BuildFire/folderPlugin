@@ -130,7 +130,7 @@
                 if ([7].indexOf(layout) > -1)
                     divTitle.classList.add("blackBackgroundTheme");
 
-                if ([4, 5, 6, 7].indexOf(layout) > -1 && obj.data.design.hideText) {
+                if ([3, 4, 5, 6, 7, 9, 10, 11].indexOf(layout) > -1 && obj.data.design.hideText) {
                     divTitle.classList.add('hide');
                 }
 
@@ -144,9 +144,7 @@
                 if ([7, 9, 10, 11, 12].indexOf(layout) > -1) {
                     spanTitle.className = "whiteTheme";
                 }
-                if ([3, 4, 5, 6, 7, 9, 10, 11].indexOf(layout) > -1 && obj.data.design.hideText) {
-                    spanTitle.classList.add('hide');
-                }
+
                 spanTitle.innerText = p.title;
                 divTitle.appendChild(spanTitle);
 

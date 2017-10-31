@@ -1,9 +1,9 @@
 (function (angular, buildfire) {
-    'use strict';
+    "use strict";
 
     angular
-        .module('folderPluginServices', [])
-        .service('Utility', function () {
+        .module("folderPluginServices", [])
+        .service("Utility", function () {
             return {
                 getPluginDetails: function (pluginsInfo, pluginIds) {
                     var returnPlugins = [];
@@ -84,10 +84,10 @@
 
                 getEditorOptions: function () {
                     return {
-                        plugins: 'advlist autolink link image lists charmap print preview',
-                        skin: 'lightgray',
+                        plugins: "advlist autolink link image lists charmap print preview",
+                        skin: "lightgray",
                         trusted: true,
-                        theme: 'modern'
+                        theme: "modern"
                     };
                 },
                 getLayouts: function () {
@@ -109,10 +109,10 @@
                 save: function (newObj) {
                     buildfire.datastore.save(newObj, function (err, result) {
                         if (err || !result) {
-                            console.error('Error saving the widget details: ', err);
+                            console.error("Error saving the widget details: ", err);
                         }
                         else {
-                            console.info('Widget details saved');
+                            console.info("Widget details saved");
                         }
                     });
                 },
@@ -121,6 +121,6 @@
                         $scope.$apply();
                     }
                 }
-            }
+            };
         });
 })(window.angular, window.buildfire);
