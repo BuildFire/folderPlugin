@@ -3,9 +3,8 @@
 <head lang="en">
     <script src="../../../scripts/buildfire.js"></script>
     <script src="../../../scripts/buildfire/components/carouselLight/carouselLight.js"></script>
-    <script src="../../../scripts/buildfire/components/pluginInstance/sortableList.js"></script>
 </head>
-<body>
+<body id="light-folder-body">
 <div id="carousel" class="sliderCarousel"></div>
 <div id="txt" class="text-left folder-plugin-text clearfix hide-empty"></div>
 <div id="pluginsContainer"></div>
@@ -70,11 +69,16 @@
                 var pluginItem = document.createElement('div');
                 pluginItem.classList.add("pluginItem");
 
+                var pluginItemDetails = document.createElement('div');
+                pluginItemDetails.classList.add("pluginItemDetails");
+
+                pluginItem.appendChild(pluginItemDetails);
+
                 var p = plugins[i].data || plugins[i];
 
                 if (layout != 12) {
                     var divImg = document.createElement('div');
-                    if ([3, 4, 5, 6, 7, 9, 10, 11].indexOf(layout) > -1) {
+                    if ([6,11].indexOf(layout) > -1) {
                         divImg.style.minHeight = options.height + "px";
                         divImg.style.maxHeight = options.height + "px";
                     }
@@ -88,8 +92,6 @@
                             divImg.classList.add("hasImg");
                             var img = document.createElement('img');
                             img.src = buildfire.imageLib.cropImage(p.iconUrl, options);
-                            img.style.minHeight = options.height + "px";
-                            img.style.maxHeight = options.height + "px";
                             img.alt = "plugin-img";
                             divImg.appendChild(img);
                         }
@@ -110,7 +112,7 @@
                         divImg.innerHTML = "<h1>loading</h1>";
                     }
 
-                    pluginItem.appendChild(divImg);
+                    pluginItemDetails.appendChild(divImg);
                 }
 
                 if ([9, 10, 11].indexOf(layout) > -1) {
@@ -118,7 +120,7 @@
                     divBlackLayer.className = "blackLayer";
                     divBlackLayer.setAttribute('index', i);
                     divBlackLayer.onclick = onClick;
-                    pluginItem.appendChild(divBlackLayer);
+                    pluginItemDetails.appendChild(divBlackLayer);
                 }
 
                 var divTitle = document.createElement('div');
@@ -150,7 +152,7 @@
                 spanTitle.innerText = p.title;
                 divTitle.appendChild(spanTitle);
 
-                pluginItem.appendChild(divTitle);
+                pluginItemDetails.appendChild(divTitle);
 
                 if (layout != 12) {
                     pluginsContainer.appendChild(pluginItem);
@@ -194,10 +196,42 @@
     function getPlugins(obj, callback) {
         var plugins = [];
         if (obj.data.content.loadAllPlugins) {
+            function _mapFromSearch(data) {
+                var result = [], dataResult = [], dataResultLength = 0, currentPlugin = null, tempObj = null;
+                if (data.result && data.result instanceof Array) {
+                    dataResult = data.result;
+                    dataResultLength = dataResult.length;
+                    for (var i = 0; i < dataResultLength; i++) {
+
+                        currentPlugin = dataResult[i];
+                        if (currentPlugin.data && currentPlugin.data._buildfire) {
+                            tempObj = {};
+
+                            tempObj.folderName = currentPlugin.data._buildfire.pluginType.result[0].folderName;
+                            tempObj.instanceId = currentPlugin.data.instanceId;
+                            tempObj.iconUrl = currentPlugin.data.iconUrl;
+                            tempObj.pluginTypeId = currentPlugin.data._buildfire.pluginType.data;
+                            tempObj.pluginTypeName = currentPlugin.data._buildfire.pluginType.result[0].name;
+                            tempObj.title = currentPlugin.data.title;
+                            tempObj.iconClassName = currentPlugin.data.iconClassName;
+                            result.push(tempObj);
+                            tempObj = null;
+                            currentPlugin = null;
+                        }
+                    }
+                }
+                return result;
+            }
+
             var searchOptions = {pageIndex: 0, pageSize: 100};
-            buildfire.components.pluginInstance.getAllPlugins(searchOptions, function (err, res) {
-                plugins = res.data;
-                callback(res.data);
+
+            buildfire.pluginInstance.search(searchOptions, function (err, result) {
+                if (err) {
+                    console.error("Error searching plugins: ", err);
+                }
+                var data = _mapFromSearch(result);
+                plugins = data;
+                callback(data);
             });
         }
         else {
@@ -300,19 +334,19 @@
             option.height = option.width * 9 / 16;
         }
         else if ([1, 8].indexOf(layout) >= 0) {
-            option.width = 50;
-            option.height = 50;
+            option.width = window.innerWidth * (0.15);
+            option.height = option.width;
         }
         else if (layout == 2) {
-            option.width = 100;
-            option.height = 60;
+            option.width = window.innerWidth * (0.32);
+            option.height = window.innerWidth * (0.18);
         }
         else if ([5, 11].indexOf(layout) >= 0) {
             option.width = Math.round(window.innerWidth / 2);
             option.height = option.width;
         }
         else if (layout == 6) {
-            option.width = Math.round(window.innerWidth / 2.1);
+            option.width = Math.round(window.innerWidth / 2.4);
             option.height = option.width;
         }
         else if (layout == 7) {
@@ -341,6 +375,11 @@
 
 </script>
 <style>
+    #light-folder-body span,#light-folder-body p{
+        font-size: 2.5vh;
+        line-height: 3vh;
+    }
+
     .folder-plugin-text {
         padding: 15px 15px 0px 15px;
     }
@@ -382,11 +421,15 @@
         border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
     }
 
+    #pluginsContainer.layout1 .pluginItem .pluginItemDetails{
+        display: inline-block;
+        width:100%;
+        height:100%;
+    }
+
     .layout1 .pluginItem .media-holder.media-holder-icon {
-        width: 60px;
-        height: 60px;
-        line-height: 58px;
-        margin: inherit;
+        width: 15vw;
+        height: 15vw;
         margin-right: 10px;
         border-radius: 4px;
         margin: 5px 10px 5px 5px;
@@ -394,10 +437,19 @@
         float: left;
     }
 
+    .layout1 .pluginItem .media-holder.media-holder-icon img{
+       width: 100%;
+       height: 100%;
+    }
+
     .layout1 .pluginItem .media-holder.media-holder-icon .main-icon {
-        font-size: 44px;
+        font-size: 15vw !important;
         position: relative;
-        top: 8px;
+        top: -1px;
+    }
+
+    .layout1 .pluginItem .media-holder.media-holder-icon .main-icon:before{
+        display: inline-block;
     }
 
     .layout1 .media-holder-text span {
@@ -405,7 +457,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         position: relative;
-        margin-top: 20px !important;
+        margin-top: 4vh !important;
         display: block;
     }
 
@@ -417,10 +469,15 @@
         border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
     }
 
+    #pluginsContainer.layout2 .pluginItem .pluginItemDetails{
+        display: inline-block;
+        width:100%;
+        height:100%;
+    }
+
     .layout2 .pluginItem .media-holder.media-holder-icon {
-        width: 110px;
-        height: 60px;
-        line-height: 58px;
+        width: 32vw;
+        height: 18vw;
         margin: inherit;
         margin-right: 10px;
         border-radius: 4px;
@@ -430,10 +487,19 @@
         overflow: hidden;
     }
 
+    .layout2 .pluginItem .media-holder.media-holder-icon img{
+        width: 100%;
+        height: 100%;
+    }
+
     .layout2 .pluginItem .media-holder.media-holder-icon .main-icon {
-        font-size: 44px;
+        font-size: 18vw !important;
         position: relative;
-        top: 8px;
+        top: -1px;
+    }
+
+    .layout2 .pluginItem .media-holder.media-holder-icon .main-icon:before {
+        display: inline-block;
     }
 
     .layout2 .media-holder-text span {
@@ -441,7 +507,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         position: relative;
-        margin-top: 20px !important;
+        margin-top: 5vh !important;
         display: block;
     }
 
@@ -512,6 +578,15 @@
         bottom: 0;
     }
 
+    .layout5 .pluginItem .media-holder.media-holder-icon .main-icon {
+        font-size: 48.8vw !important;
+        position: relative;
+        top: -1px;
+    }
+    .layout5 .pluginItem .media-holder.media-holder-icon .main-icon:before {
+        display: inline-block;
+    }
+
     .layout5 .media-holder-text span {
         overflow: hidden;
         text-overflow: ellipsis;
@@ -530,8 +605,21 @@
         float: left;
     }
 
+    .layout6 .pluginItem .media-holder.media-holder-icon{
+        overflow: hidden;
+    }
+
+    .layout6 .pluginItem .media-holder.media-holder-icon .main-icon {
+        font-size: 42.4vw !important;
+        position: relative;
+        top: -1px;
+    }
+    .layout6 .pluginItem .media-holder.media-holder-icon .main-icon:before {
+        display: inline-block;
+    }
+
     .layout6 .media-holder-text {
-        padding-bottom: 20px;
+        padding: 15px 0px;
     }
 
     .layout6 .media-holder-text span {
@@ -573,9 +661,14 @@
                                                                     Layout-8
         */
     #pluginsContainer.layout8 .pluginItem {
-        min-height: 70px;
         display: block;
         border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
+    }
+
+    #pluginsContainer.layout8 .pluginItem .pluginItemDetails{
+        display: inline-block;
+        width:100%;
+        height:100%;
     }
 
     .layout8 img {
@@ -583,9 +676,8 @@
     }
 
     .layout8 .pluginItem .media-holder.media-holder-icon {
-        width: 60px;
-        height: 60px;
-        line-height: 58px;
+        width: 15vw;
+        height: 15vw;
         margin: inherit;
         margin-right: 10px;
         border-radius: 4px;
@@ -595,9 +687,12 @@
     }
 
     .layout8 .pluginItem .media-holder.media-holder-icon .main-icon {
-        font-size: 44px;
+        font-size: 15vw !important;
         position: relative;
-        top: 8px;
+        top: -1px;
+    }
+    .layout8 .pluginItem .media-holder.media-holder-icon .main-icon:before {
+        display: inline-block;
     }
 
     .layout8 .media-holder-text span {
@@ -605,7 +700,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         position: relative;
-        margin-top: 20px !important;
+        margin-top: 4.5vh !important;
         display: block;
     }
 
@@ -659,7 +754,11 @@
         */
     #pluginsContainer.layout10 .pluginItem {
         position: relative;
-        margin-bottom: 1px;
+        padding-bottom: 1px;
+    }
+
+    #pluginsContainer.layout10 .pluginItem .pluginItemDetails{
+        position: relative;
     }
 
     .layout10 .blackLayer {
@@ -705,19 +804,17 @@
             */
     #pluginsContainer.layout11 .pluginItem {
         position: relative;
-        width: 49%;
+        width: 50%;
         display: inline-block;
         text-align: center;
         float: left;
-        margin-bottom:1px;
-        margin-top:1px;
+        padding: 1px;
+        overflow: hidden;
     }
 
-    #pluginsContainer.layout11 .pluginItem:nth-child(odd) {
-        margin-right:1px;
-    }
-    #pluginsContainer.layout11 .pluginItem:nth-child(even) {
-        margin-left:1px;
+    #pluginsContainer.layout11 .pluginItem .pluginItemDetails{
+        position: relative;
+        height: 100%;
     }
 
     .layout11 .blackLayer {
@@ -747,6 +844,30 @@
     .layout11 .media-holder {
         text-align: center;
         width: 100%;
+    }
+
+    .layout11 .pluginItem .media-holder.media-holder-icon{
+        position: relative;
+        overflow: hidden;
+    }
+
+    .layout11 .pluginItem .media-holder.media-holder-icon img{
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        min-height: 100%;
+        min-width: 100%;
+        transform: translate(-50%, -50%);
+    }
+
+    .layout11 .pluginItem .media-holder.media-holder-icon .main-icon {
+        font-size: 48vw !important;
+        position: relative;
+        top: -1px;
+    }
+    .layout11 .pluginItem .media-holder.media-holder-icon .main-icon:before {
+        display: inline-block;
     }
 
     /*
