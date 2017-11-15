@@ -4,12 +4,6 @@
 
 xdescribe('folderPlugin widget: controller', function () {
 
-    beforeEach(module('folderPluginWidget'));
-
-    beforeEach(inject(function(_$controller_){
-        $controller = _$controller_;
-    }));
-
     describe('Buildfire service', function () {
 
         it('Buildfire should exists', function () {
@@ -85,21 +79,6 @@ xdescribe('folderPlugin widget: controller', function () {
     });
 
     describe('folderPluginCtrl', function() {
-        var $scope, widgetController;
-
-        beforeEach(function() {
-            $scope = {
-                $on:function(){
-
-                }
-            };
-            widgetController = $controller('folderPluginCtrl', { $scope: $scope });
-        });
-
-        it('widgetController should be defined', function() {
-            expect(widgetController).toBeDefined();
-        });
-
 
         it('resizeImage should return background image thumbnail', function() {
             var thumbnail = $scope.resizeImage('https://www.google.com/images/srpr/logo11w.png', {width:100,height:150});

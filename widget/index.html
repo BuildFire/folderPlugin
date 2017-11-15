@@ -1,49 +1,96 @@
 ﻿<!DOCTYPE html>
 <html>
 <head lang="en">
-    <script src="../../../scripts/buildfire.js"></script>
-    <script src="../../../scripts/buildfire/components/carouselLight/carouselLight.js"></script>
+    <meta name="buildfire" content="disableBootstrap,disableAppStyles"/>
+    <script src="../../../scripts/buildfire.min.js"></script>
+    <!--this css is important to be loaded first for the first paint-->
+    <style>
+        #carousel {
+            max-height: 62vw;
+            overflow-y: hidden;
+        }
+    </style>
 </head>
 <body id="light-folder-body">
-<div id="carousel" class="sliderCarousel"></div>
+<div id="carousel" class="sliderCarousel">
+</div>
 <div id="txt" class="text-left folder-plugin-text clearfix hide-empty"></div>
 <div id="pluginsContainer"></div>
 <script>
     var plugins = [];
 
+    var lazyLoad = {
+        loadImage: function (item) {
+            if (item.hasAttribute('data-src')) {
+                item.classList.remove("lazy-img");
+                // load image
+                var img = new Image();
+                img.src = item.getAttribute('data-src');
+                img.className = 'reveal-img';
+                if (img.complete) _addImg();
+                else img.onload = _addImg;
+            }
+
+            // replace image
+            function _addImg() {
+                // disable click
+                item.addEventListener('click', function (e) {
+                    e.preventDefault();
+                }, false);
+
+                // add full image
+                item.appendChild(img).addEventListener('animationend', function (e) {
+                    // remove preview image
+                    var pImg = item.querySelector && item.querySelector('img.blur-effect');
+
+                    if (pImg) {
+                        e.target.alt = pImg.alt || '';
+                        item.removeChild(pImg);
+                        e.target.classList.remove('reveal-img');
+                    }
+                    item.removeAttribute('data-src');
+                });
+            }
+        },
+        isInViewport: function (element) {
+            var _elementHeight = 0;
+            if(element.parentElement && element.parentElement.parentElement){
+                _elementHeight = element.parentElement.parentElement.clientHeight;
+            }
+
+            var wT = window.pageYOffset, wB = wT + window.innerHeight + (_elementHeight * 1), cRect, pT, pB, p = 0;
+            cRect = element.getBoundingClientRect();
+            pT = wT + cRect.top;
+            pB = pT + cRect.height;
+            return wT < pB && wB > pT;
+        },
+        processLazyImages: function () {
+            var lazyImgs = document.querySelectorAll('.lazy-img');
+            for (var i = 0; i < lazyImgs.length; i++) {
+                if (lazyLoad.isInViewport(lazyImgs[i])) {
+                    console.log('lazy img loaded');
+                    lazyLoad.loadImage(lazyImgs[i]);
+                }
+            }
+        }
+    };
+
     function loadData(err, obj) {
         if (err) return;
+        layout = obj.data.design.selectedLayout;
 
-        var layout = obj.data.design.selectedLayout;
-
-        initStyle(obj, layout);
-
-        var carouselImages = obj.data.content.carouselImages;
-        var carouselContainer = document.getElementById("carousel");
-
-        if (layout != 12 && carouselImages && carouselImages.length > 0) {
-            var carousel = new buildfire.components.carousel.view({
-                selector: carouselContainer,
-                items: carouselImages
-            });
-            carouselContainer.classList.remove('hide');
+        var txt = document.getElementById("txt");
+        txt.innerHTML = '';
+        if (layout != 12) {
+            if (obj.data.content.text)
+                txt.innerHTML = obj.data.content.text.trim();
+        }
+        if (txt.innerHTML == '') {
+            txt.classList.add('hide');
         } else {
-            carouselContainer.classList.add('hide');
+            txt.classList.remove('hide');
         }
 
-        {
-            var txt = document.getElementById("txt");
-            txt.innerHTML = '';
-            if (layout != 12) {
-                if (obj.data.content.text)
-                    txt.innerHTML = obj.data.content.text.trim();
-            }
-            if (txt.innerHTML == '') {
-                txt.classList.add('hide');
-            } else {
-                txt.classList.remove('hide');
-            }
-        }
 
         var pluginsContainer = document.getElementById("pluginsContainer");
         pluginsContainer.className = "layout" + layout;
@@ -78,7 +125,7 @@
 
                 if (layout != 12) {
                     var divImg = document.createElement('div');
-                    if ([6,11].indexOf(layout) > -1) {
+                    if ([6, 11].indexOf(layout) > -1) {
                         divImg.style.minHeight = options.height + "px";
                         divImg.style.maxHeight = options.height + "px";
                     }
@@ -89,9 +136,18 @@
 
                     if (p.iconUrl || p.iconClassName) {
                         if (p.iconUrl) {
+                            var _croppedImg = buildfire.imageLib.cropImage(p.iconUrl, options);
+
                             divImg.classList.add("hasImg");
+                            divImg.setAttribute("data-src", _croppedImg);
+                            divImg.classList.add('lazy-img');
+
                             var img = document.createElement('img');
-                            img.src = buildfire.imageLib.cropImage(p.iconUrl, options);
+                            img.setAttribute("src", buildfire.imageLib.resizeImage(_croppedImg, {
+                                width: 30,
+                                disablePixelRation: true
+                            }));
+                            img.classList.add('blur-effect');
                             img.alt = "plugin-img";
                             divImg.appendChild(img);
                         }
@@ -134,7 +190,7 @@
                 if ([7].indexOf(layout) > -1)
                     divTitle.classList.add("blackBackgroundTheme");
 
-                if ([3, 4, 5, 6, 7, 9, 10, 11].indexOf(layout) > -1 && obj.data.design.hideText) {
+                if ([4, 5, 6, 7, 9, 10, 11].indexOf(layout) > -1 && obj.data.design.hideText) {
                     divTitle.classList.add('hide');
                 }
 
@@ -150,6 +206,11 @@
                 }
 
                 spanTitle.innerText = p.title;
+
+                if (layout == 3 && obj.data.design.hideText) {
+                    spanTitle.classList.add('hide');
+                }
+
                 divTitle.appendChild(spanTitle);
 
                 pluginItemDetails.appendChild(divTitle);
@@ -177,20 +238,20 @@
 
             if (layout == 12) {
                 pluginItemFrame.appendChild(pluginItemSlidesContainer);
-
                 pluginsContainer.appendChild(pluginItemFrame);
 
-                var carouselLayout12 = new buildfire.components.carousel.view({
-                    selector: pluginsContainer,
-                    classNameFrame: 'pluginItemFrame',
-                    classNameSlideContainer: 'pluginItemSlidesContainer',
-                    classNamePrevCtrl: '',
-                    classNameNextCtrl: '',
-                    infinite: 1,
-                    slideToScroll: 1
-                });
+                renderCarousel(null, layout);
             }
+
+            //load image in first render
+            lazyLoad.processLazyImages();
         });
+        initStyle(obj, layout);
+
+        if (layout != 12) {
+            //Render Carousel
+            renderCarousel(obj.data.content.carouselImages, layout);
+        }
     }
 
     function getPlugins(obj, callback) {
@@ -285,7 +346,7 @@
 
         var bgImage = obj.data.design.backgroundImage || obj.data.design.lgBackgroundImage;
 
-        if(obj.data.design.lgBackgroundImage && window.innerWidth >= 600){
+        if (obj.data.design.lgBackgroundImage && window.innerWidth >= 600) {
             //iPads
             bgImage = obj.data.design.lgBackgroundImage;
         }
@@ -309,6 +370,7 @@
     }
 
     buildfire.datastore.getWithDynamicData(loadData);
+
     buildfire.datastore.onUpdate(function (obj) {
         loadData(null, obj)
     });
@@ -373,34 +435,233 @@
         });
     }
 
+    function renderCarousel(carouselImages, layout) {
+        function _injectCarouselScript() {
+            //check if script exists to avoid adding it multiple times when you do changes on control side
+            if (!document.getElementById('lightCarouselScript')) {
+                var script = document.createElement('script');
+                script.id = "lightCarouselScript";
+                script.src = '../../../scripts/buildfire/components/carouselLight/carouselLight.js';
+                document.head.appendChild(script);
+            } else {
+                //reload slider
+                _lightCarouselLoaded();
+            }
+        }
+
+        if (layout == 12) {
+            _injectCarouselScript()
+        } else {
+            var carouselContainer = document.getElementById("carousel");
+            if (carouselImages && carouselImages.length > 0) {
+                /*
+                 if more than one image add carousel else add image directly to the carousel container
+                 */
+                if (carouselImages.length > 1) {
+                    carouselContainer.setAttribute('data-images', JSON.stringify(carouselImages));
+                    _injectCarouselScript()
+                } else {
+                    //add image directly to carousel container without adding the carousel lib
+                    carouselContainer.innerHTML = '';
+                    //append image tag
+                    var img = document.createElement('img');
+                    img.setAttribute("src", buildfire.imageLib.cropImage(carouselImages[0].iconUrl, {
+                        width: window.innerWidth,
+                        height: Math.ceil(9 * (window.innerWidth) / 16)
+                    }));
+                    img.alt = "Carousel Image";
+                    carouselContainer.appendChild(img);
+                }
+
+                carouselContainer.classList.remove('hide');
+            } else {
+                carouselContainer.classList.add('hide');
+            }
+        }
+    }
+
+    //this function is called by light carousel when it's loaded
+    function _lightCarouselLoaded() {
+        if (window.layout == 12) {
+            var pluginsContainer = document.getElementById("pluginsContainer");
+            var carouselLayout12 = new buildfire.components.carousel.view({
+                selector: pluginsContainer,
+                classNameFrame: 'pluginItemFrame',
+                classNameSlideContainer: 'pluginItemSlidesContainer',
+                classNamePrevCtrl: '',
+                classNameNextCtrl: '',
+                infinite: 1,
+                slideToScroll: 1
+            });
+        } else {
+            var carouselContainer = document.getElementById("carousel");
+            var carouselImagesStr = carouselContainer.getAttribute('data-images');
+            var carouselImages = [];
+            if (carouselImagesStr) {
+                carouselImages = JSON.parse(carouselImagesStr);
+            }
+            var carousel = new buildfire.components.carousel.view({
+                selector: carouselContainer,
+                items: carouselImages,
+                speed: 1000
+            });
+        }
+    }
+
+    //attach scroll event for lazy load images
+    document.getElementsByTagName('body')[0].addEventListener("scroll", lazyLoad.processLazyImages, false);
 </script>
 <style>
-    #light-folder-body span,#light-folder-body p{
+    * {
+        outline: none;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        font-family: Helvetica, Sans-Serif, Arial;
+    }
+
+    .hide {
+        display: none !important;
+    }
+
+    .show {
+        display: block !important;
+    }
+
+    /* iFrame */
+    /* Plugin iFrame */
+    img,
+    iframe,
+    object {
+        max-width: 100%;
+        vertical-align: top;
+    }
+
+    section .pluginPage,
+    section .pluginPage #pluginContentPanel,
+    #iframeControl,
+    #iframeControl body,
+    #controlIFrame,
+    #controlIFrame body,
+    .pluginFrame,
+    #pluginFrame,
+    #launcherPlugin,
+    html[buildfire] {
+        width: 100%;
+        min-width: 100%;
+        max-width: 100%;
+        height: 100%;
+        background: none;
+        overflow: hidden !important;
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+    }
+
+    html[buildfire] body {
+        height: 100% !important;
+        width: 100% !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        margin: 0;
+        font-size: 14px;
+        line-height: 22px;
+        color: #5f5f5f;
+        overflow-x: hidden;
+    }
+
+    html[buildfire] body.no-scroll {
+        overflow: hidden !important;
+        -webkit-overflow-scrolling: inherit !important;
+    }
+
+    html[buildfire] body.no-scroll .scrollable {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        height: 100% !important;
+        width: 100% !important;
+    }
+
+    /* Smaller Mobile Screens */
+    @media (max-height: 540px) {
+        .login-holder .moreoptions {
+            margin-top: 0 !important;
+        }
+    }
+
+    /* Mobile Landscape Mode */
+    @media (max-height: 470px) {
+        .login-holder .login.content.padded {
+            padding-top: 60px !important;
+        }
+    }
+
+    /* END iFrame */
+    /* END Plugin iFrame */
+
+    img.blur-effect {
+        filter: blur(2vw);
+        /*transform: scale(1.05);*/
+    }
+
+    .media-holder.media-holder-icon.hasImg {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .media-holder.media-holder-icon img.reveal-img {
+        position: absolute;
+        left: 0;
+        top: 0;
+        will-change: opacity;
+        animation: reveal 1s ease-out;
+    }
+
+    .media-holder.media-holder-icon.hasImg img {
+        width: 100%;
+    }
+
+    @keyframes reveal {
+        0% {
+            opacity: 0;
+        }
+        50% {
+            opacity: 0.5;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    #light-folder-body {
+        overflow-x: hidden;
+    }
+
+    #light-folder-body span, #light-folder-body p {
         font-size: 2.5vh;
         line-height: 3vh;
     }
 
     .folder-plugin-text {
-        padding: 15px 15px 0px 15px;
+        padding: 4vw 4vw 0px 4vw;
     }
 
     .folder-plugin-text p {
-        margin-bottom: 0px !important;
+        margin-top: 0px !important;
+        /*margin-bottom: 0px !important;*/
     }
 
     #pluginsContainer {
-        padding-top: 15px;
+        /*padding-top: 15px;*/
         display: block;
     }
 
-    #txt.hide + #pluginsContainer{
+    #txt.hide + #pluginsContainer {
         padding-top: 0px;
     }
 
     /*
-
                                         Carousel
-
 
     */
 
@@ -419,12 +680,13 @@
     #pluginsContainer.layout1 .pluginItem {
         display: inline-block;
         border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
+        min-height: 15vw;
     }
 
-    #pluginsContainer.layout1 .pluginItem .pluginItemDetails{
+    #pluginsContainer.layout1 .pluginItem .pluginItemDetails {
         display: inline-block;
-        width:100%;
-        height:100%;
+        width: 100%;
+        height: 100%;
     }
 
     .layout1 .pluginItem .media-holder.media-holder-icon {
@@ -437,9 +699,9 @@
         float: left;
     }
 
-    .layout1 .pluginItem .media-holder.media-holder-icon img{
-       width: 100%;
-       height: 100%;
+    .layout1 .pluginItem .media-holder.media-holder-icon img {
+        width: 100%;
+        height: 100%;
     }
 
     .layout1 .pluginItem .media-holder.media-holder-icon .main-icon {
@@ -448,7 +710,7 @@
         top: -1px;
     }
 
-    .layout1 .pluginItem .media-holder.media-holder-icon .main-icon:before{
+    .layout1 .pluginItem .media-holder.media-holder-icon .main-icon:before {
         display: inline-block;
     }
 
@@ -469,10 +731,11 @@
         border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
     }
 
-    #pluginsContainer.layout2 .pluginItem .pluginItemDetails{
+    #pluginsContainer.layout2 .pluginItem .pluginItemDetails {
         display: inline-block;
-        width:100%;
-        height:100%;
+        width: 100%;
+        height: 100%;
+        min-height: 20vw;
     }
 
     .layout2 .pluginItem .media-holder.media-holder-icon {
@@ -487,7 +750,7 @@
         overflow: hidden;
     }
 
-    .layout2 .pluginItem .media-holder.media-holder-icon img{
+    .layout2 .pluginItem .media-holder.media-holder-icon img {
         width: 100%;
         height: 100%;
     }
@@ -514,6 +777,11 @@
     /*
                                                                     Layout-3
         */
+
+    #pluginsContainer.layout3 .pluginItem {
+        min-height: 60vw;
+    }
+
     .layout3 .media-holder-text {
         padding: 15px;
     }
@@ -536,6 +804,7 @@
         */
     #pluginsContainer.layout4 .pluginItem {
         position: relative;
+        min-height: 50vw;
     }
 
     .layout4 .media-holder-text {
@@ -568,6 +837,7 @@
         text-align: center;
         position: relative;
         float: left;
+        min-height: 45vw;
     }
 
     .layout5 .media-holder-text {
@@ -583,6 +853,7 @@
         position: relative;
         top: -1px;
     }
+
     .layout5 .pluginItem .media-holder.media-holder-icon .main-icon:before {
         display: inline-block;
     }
@@ -603,9 +874,10 @@
         text-align: center;
         padding: 0px 15px;
         float: left;
+        min-height: 35vw;
     }
 
-    .layout6 .pluginItem .media-holder.media-holder-icon{
+    .layout6 .pluginItem .media-holder.media-holder-icon {
         overflow: hidden;
     }
 
@@ -614,6 +886,7 @@
         position: relative;
         top: -1px;
     }
+
     .layout6 .pluginItem .media-holder.media-holder-icon .main-icon:before {
         display: inline-block;
     }
@@ -634,6 +907,7 @@
         */
     #pluginsContainer.layout7 .pluginItem {
         position: relative;
+        min-height: 40vw;
     }
 
     .layout7 .media-holder-text {
@@ -663,12 +937,13 @@
     #pluginsContainer.layout8 .pluginItem {
         display: block;
         border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
+        min-height: 15vw;
     }
 
-    #pluginsContainer.layout8 .pluginItem .pluginItemDetails{
+    #pluginsContainer.layout8 .pluginItem .pluginItemDetails {
         display: inline-block;
-        width:100%;
-        height:100%;
+        width: 100%;
+        height: 100%;
     }
 
     .layout8 img {
@@ -691,6 +966,7 @@
         position: relative;
         top: -1px;
     }
+
     .layout8 .pluginItem .media-holder.media-holder-icon .main-icon:before {
         display: inline-block;
     }
@@ -709,6 +985,7 @@
         */
     #pluginsContainer.layout9 .pluginItem {
         position: relative;
+        min-height: 48vw;
     }
 
     .layout9 .blackLayer {
@@ -755,9 +1032,10 @@
     #pluginsContainer.layout10 .pluginItem {
         position: relative;
         padding-bottom: 1px;
+        min-height: 15vw;
     }
 
-    #pluginsContainer.layout10 .pluginItem .pluginItemDetails{
+    #pluginsContainer.layout10 .pluginItem .pluginItemDetails {
         position: relative;
     }
 
@@ -810,9 +1088,10 @@
         float: left;
         padding: 1px;
         overflow: hidden;
+        min-height: 45vw;
     }
 
-    #pluginsContainer.layout11 .pluginItem .pluginItemDetails{
+    #pluginsContainer.layout11 .pluginItem .pluginItemDetails {
         position: relative;
         height: 100%;
     }
@@ -846,19 +1125,19 @@
         width: 100%;
     }
 
-    .layout11 .pluginItem .media-holder.media-holder-icon{
+    .layout11 .pluginItem .media-holder.media-holder-icon {
         position: relative;
         overflow: hidden;
     }
 
-    .layout11 .pluginItem .media-holder.media-holder-icon img{
+    .layout11 .pluginItem .media-holder.media-holder-icon img {
         display: block;
-        position: absolute;
-        top: 50%;
-        left: 50%;
+        /*position: absolute;*/
+        /*top: 50%;*/
+        /*left: 50%;*/
         min-height: 100%;
         min-width: 100%;
-        transform: translate(-50%, -50%);
+        /*transform: translate(-50%, -50%);*/
     }
 
     .layout11 .pluginItem .media-holder.media-holder-icon .main-icon {
@@ -866,6 +1145,7 @@
         position: relative;
         top: -1px;
     }
+
     .layout11 .pluginItem .media-holder.media-holder-icon .main-icon:before {
         display: inline-block;
     }
@@ -913,5 +1193,8 @@
         vertical-align: top;
     }
 </style>
+<!-- build:bundleCSSFiles  -->
+<link href="glyphicons.css" rel="stylesheet"/>
+<!-- endbuild -->
 </body>
 </html>

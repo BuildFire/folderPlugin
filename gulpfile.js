@@ -9,6 +9,7 @@ const uglify = require('gulp-uglify');
 const eslint = require('gulp-eslint');
 const imagemin = require('gulp-imagemin');
 const gulpSequence = require('gulp-sequence');
+const minifyInline = require('gulp-minify-inline');
 
 const destinationFolder= releaseFolder();
 
@@ -136,12 +137,16 @@ gulp.task('html', function(){
         /// then strip the html from any comments
         .pipe(minHTML({removeComments:true,collapseWhitespace:true}))
 
+        .pipe(minifyInline())
+
         /// write results to the 'build' folder
         .pipe(gulp.dest(destinationFolder));
 });
 
+
+
 gulp.task('resources', function(){
-    return gulp.src(['resources/*','plugin.json'],{base: '.'})
+    return gulp.src(['resources/*','widget/fonticons/**','plugin.json'],{base: '.'})
         .pipe(gulp.dest(destinationFolder ));
 });
 
