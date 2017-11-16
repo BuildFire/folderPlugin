@@ -43,6 +43,7 @@
     "gulp-imagemin": "^3.3.0",
     "gulp-sequence": "^0.4.6",
     "gulp-strip-comments": "^2.5.1",
-    "gulp-uglify": "^3.0.0"
+    "gulp-uglify": "^3.0.0",
+    "gulp-minify-inline": "^1.0.0"
   }
 }
