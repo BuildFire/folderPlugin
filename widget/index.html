@@ -1,18 +1,101 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head lang="en">
     <meta name="buildfire" content="disableBootstrap,disableAppStyles"/>
-    <script src="../../../scripts/buildfire.min.js"></script>
+    <script src="../../../scripts/_bundles/buildfire_lightcarousel.min.js"></script>
     <!--this css is important to be loaded first for the first paint-->
     <style>
+        .hide {
+            display: none !important;
+        }
+
+        .show {
+            display: block !important;
+        }
         #carousel {
-            max-height: 62vw;
+            width: 100%;
+            min-width:100%;
+            max-height: 56vw;
+            min-height: 56vw;
             overflow-y: hidden;
+        }
+
+        #pluginsContainer .pluginItem{
+            position: relative;
+        }
+
+        #pluginsContainer:not(.layout12) .pluginItem .pluginItemDetails {
+            position:absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .media-holder.media-holder-icon.hasImg {
+            position: relative;
+            overflow: hidden;
+            height:100%;
+        }
+
+        .media-holder.media-holder-icon.hasImg img {
+            width: 100%;
+        }
+
+        img.blur-effect {
+            filter: blur(2vw);
+        }
+
+        .media-holder.media-holder-icon img.reveal-img {
+            position: absolute;
+            left: 0;
+            top: 0;
+            will-change: opacity;
+            animation: reveal 1s ease-out;
+        }
+
+        @keyframes reveal {
+            0% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        #light-folder-body {
+            overflow-x: hidden;
+        }
+
+        #light-folder-body span, #light-folder-body p {
+            font-size: 2.5vh;
+            line-height: 3vh;
+        }
+
+        .folder-plugin-text {
+            padding: 4vw 4vw 0px 4vw;
+        }
+
+        .folder-plugin-text p {
+            margin-top: 0px !important;
+            /*margin-bottom: 0px !important;*/
+        }
+
+        #pluginsContainer {
+            /*padding-top: 15px;*/
+            display: block;
+        }
+
+        #txt.hide + #pluginsContainer {
+            padding-top: 0px;
         }
     </style>
 </head>
 <body id="light-folder-body">
-<div id="carousel" class="sliderCarousel">
+<div id="carousel" class="sliderCarousel hide">
 </div>
 <div id="txt" class="text-left folder-plugin-text clearfix hide-empty"></div>
 <div id="pluginsContainer"></div>
@@ -21,14 +104,42 @@
 
     var lazyLoad = {
         loadImage: function (item) {
+            // load image
+            var img = new Image();
+
             if (item.hasAttribute('data-src')) {
                 item.classList.remove("lazy-img");
-                // load image
-                var img = new Image();
+                _initImg(item);
+            }
+            
+            function _initImg(item) {
                 img.src = item.getAttribute('data-src');
                 img.className = 'reveal-img';
                 if (img.complete) _addImg();
                 else img.onload = _addImg;
+
+                img.onerror=function (e) {
+                    /*
+                    *  Sometimes Image IO doesn't crop image with certain width & height
+                    *  So this for changes the dimensions and try to do another crop using image IO
+                    *  to avoid showing only the blurred image
+                    * */
+
+                    img = new Image();
+                    var originalImg = item.getAttribute('data-original-img');
+                    var cropWidth = parseInt(item.getAttribute('data-crop-width'));
+                    cropWidth +=5;
+                    var cropHeight = parseInt(item.getAttribute('data-crop-height'));
+                    cropHeight+=5;
+
+                    item.setAttribute('data-crop-width',cropWidth);
+                    item.setAttribute('data-crop-height',cropHeight);
+
+                    var _newCroppedImg = buildfire.imageLib.cropImage(originalImg, {width:cropWidth,height: cropHeight});
+                    item.setAttribute('data-src',_newCroppedImg);
+
+                    _initImg(item);
+                };
             }
 
             // replace image
@@ -78,6 +189,11 @@
     function loadData(err, obj) {
         if (err) return;
         layout = obj.data.design.selectedLayout;
+
+        if(obj.data.content && obj.data.content.carouselImages && obj.data.content.carouselImages.length > 0){
+            var carouselContainer = document.getElementById("carousel");
+            carouselContainer.classList.remove('hide');
+        }
 
         var txt = document.getElementById("txt");
         txt.innerHTML = '';
@@ -140,11 +256,14 @@
 
                             divImg.classList.add("hasImg");
                             divImg.setAttribute("data-src", _croppedImg);
+                            divImg.setAttribute("data-original-img", p.iconUrl);
+                            divImg.setAttribute("data-crop-width", options.width);
+                            divImg.setAttribute("data-crop-height", options.height);
                             divImg.classList.add('lazy-img');
 
                             var img = document.createElement('img');
                             img.setAttribute("src", buildfire.imageLib.resizeImage(_croppedImg, {
-                                width: 30,
+                                width: 10,
                                 disablePixelRation: true
                             }));
                             img.classList.add('blur-effect');
@@ -436,21 +555,18 @@
     }
 
     function renderCarousel(carouselImages, layout) {
-        function _injectCarouselScript() {
-            //check if script exists to avoid adding it multiple times when you do changes on control side
-            if (!document.getElementById('lightCarouselScript')) {
-                var script = document.createElement('script');
-                script.id = "lightCarouselScript";
-                script.src = '../../../scripts/buildfire/components/carouselLight/carouselLight.js';
-                document.head.appendChild(script);
-            } else {
-                //reload slider
-                _lightCarouselLoaded();
-            }
-        }
-
         if (layout == 12) {
-            _injectCarouselScript()
+
+            var pluginsContainer = document.getElementById("pluginsContainer");
+            var carouselLayout12 = new buildfire.components.carousel.view({
+                selector: pluginsContainer,
+                classNameFrame: 'pluginItemFrame',
+                classNameSlideContainer: 'pluginItemSlidesContainer',
+                classNamePrevCtrl: '',
+                classNameNextCtrl: '',
+                infinite: 1,
+                slideToScroll: 1
+            });
         } else {
             var carouselContainer = document.getElementById("carousel");
             if (carouselImages && carouselImages.length > 0) {
@@ -458,8 +574,13 @@
                  if more than one image add carousel else add image directly to the carousel container
                  */
                 if (carouselImages.length > 1) {
-                    carouselContainer.setAttribute('data-images', JSON.stringify(carouselImages));
-                    _injectCarouselScript()
+
+                    var carousel = new buildfire.components.carousel.view({
+                        selector: carouselContainer,
+                        items: carouselImages,
+                        speed: 1000
+                    });
+
                 } else {
                     //add image directly to carousel container without adding the carousel lib
                     carouselContainer.innerHTML = '';
@@ -480,34 +601,6 @@
         }
     }
 
-    //this function is called by light carousel when it's loaded
-    function _lightCarouselLoaded() {
-        if (window.layout == 12) {
-            var pluginsContainer = document.getElementById("pluginsContainer");
-            var carouselLayout12 = new buildfire.components.carousel.view({
-                selector: pluginsContainer,
-                classNameFrame: 'pluginItemFrame',
-                classNameSlideContainer: 'pluginItemSlidesContainer',
-                classNamePrevCtrl: '',
-                classNameNextCtrl: '',
-                infinite: 1,
-                slideToScroll: 1
-            });
-        } else {
-            var carouselContainer = document.getElementById("carousel");
-            var carouselImagesStr = carouselContainer.getAttribute('data-images');
-            var carouselImages = [];
-            if (carouselImagesStr) {
-                carouselImages = JSON.parse(carouselImagesStr);
-            }
-            var carousel = new buildfire.components.carousel.view({
-                selector: carouselContainer,
-                items: carouselImages,
-                speed: 1000
-            });
-        }
-    }
-
     //attach scroll event for lazy load images
     document.getElementsByTagName('body')[0].addEventListener("scroll", lazyLoad.processLazyImages, false);
 </script>
@@ -518,14 +611,6 @@
         -moz-box-sizing: border-box;
         box-sizing: border-box;
         font-family: Helvetica, Sans-Serif, Arial;
-    }
-
-    .hide {
-        display: none !important;
-    }
-
-    .show {
-        display: block !important;
     }
 
     /* iFrame */
@@ -563,9 +648,6 @@
         overflow-y: auto !important;
         -webkit-overflow-scrolling: touch !important;
         margin: 0;
-        font-size: 14px;
-        line-height: 22px;
-        color: #5f5f5f;
         overflow-x: hidden;
     }
 
@@ -599,66 +681,6 @@
     /* END iFrame */
     /* END Plugin iFrame */
 
-    img.blur-effect {
-        filter: blur(2vw);
-        /*transform: scale(1.05);*/
-    }
-
-    .media-holder.media-holder-icon.hasImg {
-        position: relative;
-        overflow: hidden;
-    }
-
-    .media-holder.media-holder-icon img.reveal-img {
-        position: absolute;
-        left: 0;
-        top: 0;
-        will-change: opacity;
-        animation: reveal 1s ease-out;
-    }
-
-    .media-holder.media-holder-icon.hasImg img {
-        width: 100%;
-    }
-
-    @keyframes reveal {
-        0% {
-            opacity: 0;
-        }
-        50% {
-            opacity: 0.5;
-        }
-        100% {
-            opacity: 1;
-        }
-    }
-
-    #light-folder-body {
-        overflow-x: hidden;
-    }
-
-    #light-folder-body span, #light-folder-body p {
-        font-size: 2.5vh;
-        line-height: 3vh;
-    }
-
-    .folder-plugin-text {
-        padding: 4vw 4vw 0px 4vw;
-    }
-
-    .folder-plugin-text p {
-        margin-top: 0px !important;
-        /*margin-bottom: 0px !important;*/
-    }
-
-    #pluginsContainer {
-        /*padding-top: 15px;*/
-        display: block;
-    }
-
-    #txt.hide + #pluginsContainer {
-        padding-top: 0px;
-    }
 
     /*
                                         Carousel
@@ -680,23 +702,19 @@
     #pluginsContainer.layout1 .pluginItem {
         display: inline-block;
         border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
-        min-height: 15vw;
-    }
-
-    #pluginsContainer.layout1 .pluginItem .pluginItemDetails {
-        display: inline-block;
-        width: 100%;
-        height: 100%;
+        min-height: 20vw;
+        max-height: 20vw;
+        overflow: hidden;
     }
 
     .layout1 .pluginItem .media-holder.media-holder-icon {
         width: 15vw;
         height: 15vw;
-        margin-right: 10px;
         border-radius: 4px;
-        margin: 5px 10px 5px 5px;
+        margin: 3vw;
         text-align: center;
         float: left;
+        margin-right: 4vw;
     }
 
     .layout1 .pluginItem .media-holder.media-holder-icon img {
@@ -719,7 +737,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         position: relative;
-        margin-top: 4vh !important;
+        margin-top: 8vw !important;
         display: block;
     }
 
@@ -729,13 +747,9 @@
     #pluginsContainer.layout2 .pluginItem {
         display: inline-block;
         border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
-    }
-
-    #pluginsContainer.layout2 .pluginItem .pluginItemDetails {
-        display: inline-block;
-        width: 100%;
-        height: 100%;
-        min-height: 20vw;
+        min-height: 21vw;
+        max-height: 21vw;
+        overflow: hidden;
     }
 
     .layout2 .pluginItem .media-holder.media-holder-icon {
@@ -744,7 +758,7 @@
         margin: inherit;
         margin-right: 10px;
         border-radius: 4px;
-        margin: 5px 10px 5px 5px;
+        margin: 2vw;
         text-align: center;
         float: left;
         overflow: hidden;
@@ -770,7 +784,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         position: relative;
-        margin-top: 5vh !important;
+        margin-top: 9vw !important;
         display: block;
     }
 
@@ -779,7 +793,9 @@
         */
 
     #pluginsContainer.layout3 .pluginItem {
-        min-height: 60vw;
+        min-height: 70vw;
+        max-height: 70vw;
+        overflow: hidden;
     }
 
     .layout3 .media-holder-text {
@@ -799,12 +815,18 @@
         width: 100%;
     }
 
+    .layout3 .media-holder.media-holder-icon.hasImg {
+        max-height: 56vw;
+    }
+
     /*
                                                                     Layout-4
         */
     #pluginsContainer.layout4 .pluginItem {
         position: relative;
-        min-height: 50vw;
+        min-height: 56vw;
+        max-height: 56vw;
+        overflow: hidden;
     }
 
     .layout4 .media-holder-text {
@@ -837,7 +859,9 @@
         text-align: center;
         position: relative;
         float: left;
-        min-height: 45vw;
+        min-height: 50vw;
+        max-height: 50vw;
+        overflow: hidden;
     }
 
     .layout5 .media-holder-text {
@@ -872,9 +896,14 @@
         width: 50%;
         display: inline-block;
         text-align: center;
-        padding: 0px 15px;
         float: left;
-        min-height: 35vw;
+        min-height: 56vw;
+        max-height: 56vw;
+        overflow: hidden;
+    }
+
+    #pluginsContainer.layout6 .pluginItem .pluginItemDetails{
+        padding: 0px 15px;
     }
 
     .layout6 .pluginItem .media-holder.media-holder-icon {
@@ -907,7 +936,9 @@
         */
     #pluginsContainer.layout7 .pluginItem {
         position: relative;
-        min-height: 40vw;
+        min-height: 45vw;
+        max-height: 45vw;
+        overflow: hidden;
     }
 
     .layout7 .media-holder-text {
@@ -937,17 +968,13 @@
     #pluginsContainer.layout8 .pluginItem {
         display: block;
         border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
-        min-height: 15vw;
-    }
-
-    #pluginsContainer.layout8 .pluginItem .pluginItemDetails {
-        display: inline-block;
-        width: 100%;
-        height: 100%;
+        min-height: 18vw;
+        max-height: 18vw;
+        overflow: hidden;
     }
 
     .layout8 img {
-        border-radius: 50%;
+        border-radius: 50% !important;
     }
 
     .layout8 .pluginItem .media-holder.media-holder-icon {
@@ -956,7 +983,7 @@
         margin: inherit;
         margin-right: 10px;
         border-radius: 4px;
-        margin: 5px 10px 5px 5px;
+        margin: 2vw;
         text-align: center;
         float: left;
     }
@@ -976,7 +1003,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         position: relative;
-        margin-top: 4.5vh !important;
+        margin-top: 7.5vw !important;
         display: block;
     }
 
@@ -985,7 +1012,9 @@
         */
     #pluginsContainer.layout9 .pluginItem {
         position: relative;
-        min-height: 48vw;
+        min-height: 56vw;
+        max-height: 56vw;
+        overflow: hidden;
     }
 
     .layout9 .blackLayer {
@@ -1031,12 +1060,10 @@
         */
     #pluginsContainer.layout10 .pluginItem {
         position: relative;
-        padding-bottom: 1px;
-        min-height: 15vw;
-    }
-
-    #pluginsContainer.layout10 .pluginItem .pluginItemDetails {
-        position: relative;
+        margin-bottom: 1px;
+        min-height: 23.5vw;
+        max-height: 23.5vw;
+        overflow: hidden;
     }
 
     .layout10 .blackLayer {
@@ -1087,12 +1114,13 @@
         text-align: center;
         float: left;
         padding: 1px;
+        min-height: 50vw;
+        max-height: 50vw;
         overflow: hidden;
-        min-height: 45vw;
     }
 
     #pluginsContainer.layout11 .pluginItem .pluginItemDetails {
-        position: relative;
+        position: relative !important;
         height: 100%;
     }
 
