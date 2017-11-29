@@ -53,32 +53,18 @@
                     <div class="devices-screen mobile-device text-center pull-left">
                         <a class="" ng-click="changeBackground('small')">
                             <span class="add-icon" ng-hide="data.design.backgroundImage">+</span>
-<<<<<<< HEAD
-                            <img ng-src="{{ resizeImage(data.design.backgroundImage,80) }}" alt="Background Image" ng-show="data.design.backgroundImage" />
-                        </a>
-                        <label class="secondary">750x1334</label>
-                        <span class="icon btn-icon btn-delete-bg btn-danger transition-third" ng-click="deleteBackground('small')" ng-show="data.design.backgroundImage"></span>
-=======
                             <img ng-src="{{ cropImage(data.design.backgroundImage,66,116) }}" alt="Background Image" ng-show="data.design.backgroundImage" />
                         </a>
                         <label class="secondary">750x1334</label>
                         <span class="icon btn-icon btn-delete-bg btn-delete-icon btn-danger transition-third" ng-click="deleteBackground('small')" ng-show="data.design.backgroundImage"></span>
->>>>>>> e64dd6870c8f8b1740b101e6072b31eea5b99c93
                     </div>
                     <div class="devices-screen ipad-device pull-left text-center">
                         <a class="" ng-click="changeBackground('large')">
                             <span ng-hide="data.design.lgBackgroundImage" class="add-icon" ng-hide="data.design.lgBackgroundImage">+</span>
-<<<<<<< HEAD
-                            <img ng-src="{{ resizeImage(data.design.lgBackgroundImage,135) }}"  alt="Background Image" ng-show="data.design.lgBackgroundImage" />
-                        </a>
-                        <label class="secondary">1536x2048</label>
-                        <span class="icon btn-icon btn-delete-bg btn-danger transition-third" ng-click="deleteBackground('large')" ng-show="data.design.lgBackgroundImage"></span>
-=======
                             <img ng-src="{{ cropImage(data.design.lgBackgroundImage,113,150) }}"  alt="Background Image" ng-show="data.design.lgBackgroundImage" />
                         </a>
                         <label class="secondary">1536x2048</label>
                         <span class="icon btn-icon btn-delete-bg btn-delete-icon btn-danger transition-third" ng-click="deleteBackground('large')" ng-show="data.design.lgBackgroundImage"></span>
->>>>>>> e64dd6870c8f8b1740b101e6072b31eea5b99c93
                     </div>
                 </div>
             </div>
