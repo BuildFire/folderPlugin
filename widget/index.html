@@ -104,6 +104,8 @@
 
     var lazyLoad = {
         loadImage: function (item) {
+            var _failAttempts = 0;
+
             // load image
             var img = new Image();
 
@@ -119,6 +121,12 @@
                 else img.onload = _addImg;
 
                 img.onerror=function (e) {
+                    if(_failAttempts >= 1){
+                        return;
+                    }
+
+                    _failAttempts++;
+
                     /*
                     *  Sometimes Image IO doesn't crop image with certain width & height
                     *  So this for changes the dimensions and try to do another crop using image IO
@@ -128,9 +136,9 @@
                     img = new Image();
                     var originalImg = item.getAttribute('data-original-img');
                     var cropWidth = parseInt(item.getAttribute('data-crop-width'));
-                    cropWidth +=5;
+                    cropWidth +=1;
                     var cropHeight = parseInt(item.getAttribute('data-crop-height'));
-                    cropHeight+=5;
+                    cropHeight+=1;
 
                     item.setAttribute('data-crop-width',cropWidth);
                     item.setAttribute('data-crop-height',cropHeight);
