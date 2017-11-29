@@ -6,19 +6,23 @@
     <!-- CSS -->
     <link href="../../../../styles/helper.css" rel="stylesheet">
     <link href="../../../../styles/siteIcons.css" rel="stylesheet">
+
     <!-- JS -->
-    <script src="../../../../scripts/buildfire.js"></script>
+    <script src="../../../../scripts/buildfire.min.js"></script>
     <script src="../../../../scripts/angular/angular.min.js"></script>
     <script src="../../../../scripts/tinymce/tinymce.min.js"></script>
     <script src="../../../../scripts/tinymce/ui-tinymce.js"></script>
     <script src="../../../../scripts/jquery/jquery-1.11.2.min.js"></script>
     <script src="../../../../scripts/sortable.min.js"></script>
-    <script src="../../../../scripts/buildfire/components/carousel/carousel.js"></script>
+    <script src="../../../../scripts/buildfire/components/carouselLight/carouselLightEditor.js"></script>
     <script src="../../../../scripts/buildfire/components/notifications/notifications.js"></script>
     <script src="../../../../scripts/buildfire/components/pluginInstance/sortableList.js"></script>
-    <script src="../app.services.js"></script>
+
+    <!-- build:bundleJSFiles  -->
+    <script src="app.services.js"></script>
     <script src="app.js"></script>
     <script src="content.controller.js"></script>
+    <!-- endbuild -->
 </head>
 <body ng-controller="folderPluginCtrl" ng-cloak ng-show="datastoreInitialized">
     <div ng-form="frmMain">

@@ -1,328 +1,1236 @@
 ﻿<!DOCTYPE html>
-<html ng-app="folderPluginWidget">
+<html>
 <head lang="en">
-    <title>widget</title>
-    <meta charset="UTF-8">
-    <!-- CSS -->
-    <link href="../../../scripts/owlCarousel/owlCarousel.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../../../styles/helper.css">
-    <link rel="stylesheet" href="../../../styles/siteIcons.css">
-    <link rel="stylesheet" href="css/style.css">
-    <!-- JS -->
-    <script src="../../../scripts/jquery/jquery-1.11.2.min.js"></script>
-    <script src="../../../scripts/smartcrop.js"></script>
-    <script src="../../../scripts/angular/angular.min.js"></script>
-    <script src="js/angular-owl-carousel.js"></script>
-    <script type="text/javascript" src="../../../scripts/buildfire.js"></script>
-    <script type="text/javascript" src="../../../scripts/owlCarousel/owlCarousel.js"></script>
-    <script src="../../../scripts/buildfire/components/carousel/carousel.js"></script>
-    <script src="../../../scripts/buildfire/components/pluginInstance/sortableList.js"></script>
-    <script src="../../../scripts/angular/ng-infinite-scroll.custom.js " type="application/javascript"></script>
-    <script type="text/javascript" src="app.js"></script>
-    <script type="text/javascript" src="app.services.js"></script>
-    <script type="text/javascript" src="directives.js"></script>
-    <script type="text/javascript" src="widget.controller.js"></script>
-</head>
-<body ng-controller="folderPluginCtrl" ng-cloak data-back-img="{{ data.design.bgImage}}" class="infinite-scroll-parent">
+    <meta name="buildfire" content="disableBootstrap,disableAppStyles"/>
+    <script src="../../../scripts/_bundles/buildfire_lightcarousel.min.js"></script>
+    <!--this css is important to be loaded first for the first paint-->
     <style>
-        .layout-6 .list-item-media {
-            background-color: transparent !important;
+        .hide {
+            display: none !important;
         }
 
-        .folder-plugin-text:empty + div .layout3 .list-layout {
-            border-top: 0;
+        .show {
+            display: block !important;
+        }
+        #carousel {
+            width: 100%;
+            min-width:100%;
+            max-height: 56vw;
+            min-height: 56vw;
+            overflow-y: hidden;
         }
 
-        #mainContainer {
+        #pluginsContainer .pluginItem{
             position: relative;
         }
 
-        .icon3, .icon4 {
-            font-size: 140px;
-        }
-
-        .icon5 {
-            font-size: 130px;
-            position: relative;
-            top: 22px;
-        }
-
-        .icon6 {
-            font-size: 120px;
-            position: relative;
-            top: 15px;
-        }
-
-        .fullHeight {
+        #pluginsContainer:not(.layout12) .pluginItem .pluginItemDetails {
+            position:absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
             height: 100%;
         }
 
-        .marginTop {
-            margin-top: 1px;
+        .media-holder.media-holder-icon.hasImg {
+            position: relative;
+            overflow: hidden;
+            height:100%;
         }
 
-        .owl-dots {
-            visibility: hidden;
+        .media-holder.media-holder-icon.hasImg img {
+            width: 100%;
         }
-    </style>
-    <script type="text/javascript" charset="utf-8">
-        window.onload = function () {
-            var slides = $('.plugin-slider .plugin-slide').length;
 
-            // Slider needs at least 2 slides or you'll get an error.
-            if (slides > 1) {
-                var renderSlider=function () {
-                    $('.plugin-slider').owlCarousel({
-                        loop: false,
-                        nav: false,
-                        items: 1
-                    });
-                };
-                renderSlider();
-                buildfire.getContext(function (err, result) {
-                    if (result && result.device && result.device.platform && result.device.platform.toLowerCase() == 'ios') {
-                        buildfire.navigation.onAppLauncherActive(function () {
-                            renderSlider();
-                        }, true);
-                        buildfire.navigation.onAppLauncherInactive(function () {
-                            $('.plugin-slider').trigger('destroy.owl.carousel').removeClass('owl-carousel owl-loaded');
-                            $('.plugin-slider').find('.owl-stage-outer').children().unwrap();
-                        }, true);
-                    }
-                });
+        img.blur-effect {
+            filter: blur(2vw);
+        }
+
+        .media-holder.media-holder-icon img.reveal-img {
+            position: absolute;
+            left: 0;
+            top: 0;
+            will-change: opacity;
+            animation: reveal 1s ease-out;
+        }
+
+        @keyframes reveal {
+            0% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 1;
             }
         }
 
-    </script>
-    <div data-ng-init="setWidth()" class="holder padding-zero hasBackground fullHeight" id="mainContainer">
-        <div class="folder-plugin list-layout fullHeight">
-            <div ng-class="{ 'hidden': data.content.carouselImages.length == 0 }" class="plugin-banner clearfix" ng-hide="data.design.selectedLayout == 12">
-                <div id="carousel" class="plugin-slider text-center" ng-style="data.content.carouselImages.length > 0 ? {'min-height': (9 * deviceWidth / 16) + 'px' } : {}"></div>
-            </div>
-            <div class="text-left padded padding-bottom-zero clearfix folder-plugin-text hide-empty " ng-bind-html="safeHtml(data.content.text)" ng-hide="data.design.selectedLayout == 12"></div>
-            <div ng-if="data.design.selectedLayout && data.plugins.length > 0" ng-class="{'marginTop': data.design.selectedLayout == 11, 'fullHeight': data.design.selectedLayout == 12}" infinite-scroll="paging()"
-                 data-infinite-container=".infinite-scroll-parent">
-                <!-- Layout 1 -->
-                <div class="media-center-plugin layout3" ng-if="data.design.selectedLayout == 1">
-                    <div class=" list-layout">
-                        <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
-                            <div class="list-item-media text-left overflow-hidden">
-                                <div class="list-media-holder square-icon pull-left">
-                                    <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="180" crop-height="180" crop-type="crop" ng-if="plugin.iconUrl">
-                                    <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
-                                </div>
-                                <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                                    <p class="ellipsis margin-zero margin-top-twenty">{{ plugin.title }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End layout 1 -->
-                <!-- Layout 2 -->
-                <div class="holder padding-zero" ng-if="data.design.selectedLayout == 2">
-                    <div class="media-center-plugin layout3">
-                        <div class="list-layout">
-                            <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
-                                <div class="list-item-media text-left overflow-hidden">
-                                    <div class="list-media-holder pull-left">
-                                        <img load-image="16x9" data-final-src="{{ plugin.iconUrl }}" crop-width="220" crop-height="120" crop-type="crop" ng-if="plugin.iconUrl">
-                                        <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
-                                    </div>
-                                    <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                                        <p class="ellipsis margin-zero bodyTextTheme margin-top-twenty">{{ plugin.title }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End layout 2 -->
-                <!-- Layout 3 -->
-                <div>
-                    <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 3">
-                        <div class="plugin-banner clearfix border-bottom-grey">
-                            <div class="plugin-slide text-center">
-                                <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-16x9.png', {width: 450, height: 254}) }}');"></div>
-                                <img load-image="16x9" data-final-src="{{ plugin.iconUrl }}" crop-width="450" crop-height="254" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (9 * deviceWidth / 16)-12 + 'px' }" />
-                                <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName" ng-style="{'font-size': (9 * deviceWidth / 16)-12 + 'px' }"></span>
-                            </div>
-                        </div>
-                        <div class="padded text-left">
-                            <a class="text-primary" ng-if="data.design.hideText!==undefined? !data.design.hideText : '' ">{{ plugin.title }}</a>
-                            <a class="text-primary" ng-if="data.design.hideText===undefined ? true : false ">{{ plugin.title }}</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- End layout 3 -->
-                <!-- Layout 4 -->
-                <div>
-                    <div class="plugin-banner has-info-bar clearfix" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 4">
-                        <div class="plugin-slide text-center">
-                            <img load-image="16x9" data-final-src="{{ plugin.iconUrl }}" crop-width="450" crop-height="254" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (9 * deviceWidth / 16)-12 + 'px' }" />
-                            <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName" ng-style="{'font-size': (9 * deviceWidth / 16)-12 + 'px' }"></span>
-                        </div>
-                        <div class="info-bar titleBarBackgroundTheme" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">
-                            <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">{{ plugin.title }}</p>
-                        </div>
-                        <div class="info-bar titleBarBackgroundTheme" ng-if="data.design.hideText===undefined ? true : false ">
-                            <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">{{ plugin.title }}</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- End layout 4 -->
-                <!-- Layout 5 -->
-                <div class="padded padding-top-zero padding-bottom-zero" ng-if="data.design.selectedLayout == 5">
-                    <div class="list-layout layout5">
-                        <div ng-repeat="pluginRow in data.plugins" class="row">
-                            <div class="list-item col-xs-6 padding-zero has-info-bar pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
-                                <div class="list-item-media text-center">
-                                    <div class="list-media-holder">
-                                        <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="320" crop-height="320" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': ((1 * deviceWidth / 1)/2)-12 + 'px' }" />
-                                        <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName" ng-style="{'font-size': ((1 * deviceWidth / 1)/2)-4 + 'px' }"></span>
-                                    </div>
-                                    <div class="info-bar titleBarBackgroundTheme" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">
-                                        <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">
-                                            {{ plugin.title }}
-                                        </p>
-                                    </div>
-                                    <div class="info-bar titleBarBackgroundTheme" ng-if="data.design.hideText===undefined ? true : false ">
-                                        <p class="margin-bottom-zero col-md-12 ellipsis titleBarTextAndIcons">
-                                            {{ plugin.title }}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End layout 5 -->
-                <!-- Layout 6 -->
-                <div class="padded padding-top-zero padding-bottom-zero" ng-if="data.design.selectedLayout == 6" style=" padding-top: 10px; ">
-                    <div class="list-layout layout-6" ng-class="data.content.text?'':'margin-top-fifteen'">
-                        <div ng-repeat="pluginRow in data.plugins" class="row">
-                            <div class="list-item col-xs-6 pull-left" ng-repeat="plugin in pluginRow" ng-click="navigateToPlugin(plugin)">
-                                <div class="list-item-media text-center overflow-hidden">
-                                    <div class="list-media-holder">
-                                        <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="200" crop-height="200" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': ((1 * deviceWidth / 1)/2)-45 + 'px' }" />
-                                        <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName" ng-style="{'font-size': ((1 * deviceWidth / 1)/2)-45 + 'px' }"></span>
-                                    </div>
-                                    <div class="list-item-copy text-center" ng-class="data.design.hideText==false?'with-text':'without-text'">
-                                        <p class="ellipsis margin-zero text-primary">
-                                            <a class="text-primary" ng-show="data.design.hideText==false">
-                                                {{ plugin.title }}
-                                            </a>
-                                            <a class="text-primary" ng-if="data.design.hideText===undefined ? true : false ">
-                                                {{ plugin.title }}
-                                            </a>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End layout 6 -->
-                <!-- Layout 7 -->
-                <div>
-                    <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 7">
-                        <div class="plugin-banner clearfix">
-                            <div class="plugin-slide text-center">
-                                <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-239x1.png', {width: 512, height: 210}) }}');"></div>
-                                <img load-image="239x1" data-final-src="{{plugin.iconUrl}}" crop-width="512" crop-height="210" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (1 * deviceWidth / 4)-12 + 'px' }">
-                                <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName" ng-style="{'font-size': (1 * deviceWidth / 17)-1 + 'vh' }"></span>
-                            </div>
-                            <div class="info-bar blackBackgroundTheme" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">
-                                <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme">{{ plugin.title }}</p>
-                            </div>
-                            <div class="info-bar blackBackgroundTheme" ng-if="data.design.hideText===undefined ? true : false ">
-                                <p class="margin-bottom-zero col-md-12 ellipsis whiteTheme">{{ plugin.title }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--End Layout 7 -->
-                <!-- Layout 8 -->
-                <div class="media-center-plugin layout3" ng-if="data.design.selectedLayout == 8">
-                    <div class=" list-layout">
-                        <div class="list-item" ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)">
-                            <div class="list-item-media text-left overflow-hidden">
-                                <div class="list-media-holder square-icon pull-left">
-                                    <img load-image="1x1" data-final-src="{{plugin.iconUrl}}" crop-width="180" crop-height="180" crop-type="crop" ng-if="plugin.iconUrl" style="border-radius:50%;">
-                                    <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName"></span>
-                                </div>
-                                <div class="list-item-copy text-left padding-left-ten padding-right-ten">
-                                    <p class="ellipsis margin-zero margin-top-twenty">{{ plugin.title }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--End Layout 8 -->
-                <!-- Layout 9 -->
-                <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 9">
-                    <div class="plugin-banner clearfix">
-                        <div class="plugin-banner clearfix">
-                            <div class="plugin-slide text-center">
-                                <div class="blackLayer"></div>
-                                <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-16x9.png', {width: 640, height: 360}) }}');"></div>
-                                <img load-image="16x9" data-final-src="{{plugin.iconUrl}}" crop-width="640" crop-height="360" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (9 * deviceWidth / 16)-12 + 'px' }" />
-                                <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName" ng-style="{'font-size': (9 * deviceWidth / 16)-12 + 'px' }"></span>
-                                <p class="ellipsis item-text whiteTheme text-center" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">{{ plugin.title }}</p>
-                                <p class="ellipsis item-text whiteTheme text-center" ng-if="data.design.hideText===undefined ? true : false ">{{ plugin.title }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--End Layout 9 -->
-                <!-- Layout 10 -->
-                <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 10" style="margin-top:2px;">
-                    <div class="plugin-banner clearfix">
-                        <div class="plugin-slide text-center">
-                            <div class="blackLayer"></div>
-                            <div class="backgroundLayer" style="background:url('{{ cropImage(plugin.iconUrl? plugin.iconUrl : '../../../styles/media/holder-4x1.png', {width: 640, height: 160}) }}');"></div>
-                            <img load-image="4x1" data-final-src="{{plugin.iconUrl }}" crop-width="640" crop-height="160" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': (1 * deviceWidth / 4)-12 + 'px' }" />
-                            <img load-image="4x1" data-final-src="../../../styles/media/holder-4x1.png" ng-if="plugin.iconClassName" ng-style="{'min-height': (1 * deviceWidth / 4) + 'px' }" />
-                            <p class="ellipsis item-text whiteTheme text-center" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">{{ plugin.title }}</p>
-                            <p class="ellipsis item-text whiteTheme text-center" ng-if="data.design.hideText===undefined ? true : false ">{{ plugin.title }}</p>
-                        </div>
-                    </div>
-                </div>
-                <!--End Layout 10 -->
-                <!-- Layout 11 -->
-                <div ng-repeat="plugin in data.plugins" ng-click="navigateToPlugin(plugin)" ng-if="data.design.selectedLayout == 11" class="col-md-4 col-sm-6 col-xs-6" style="padding:1px;">
-                    <div class="item-block clearfix pull-left" style="padding:0 !important;">
-                        <div class="text-center">
-                            <div class="blackLayer"></div>
-                            <img load-image="1x1" data-final-src="{{ plugin.iconUrl }}" crop-width="400" crop-height="400" crop-type="crop" ng-if="plugin.iconUrl" ng-style="{'min-height': ((1 * deviceWidth / 1)/2)-12 + 'px' }" />
-                            <span class="main-icon {{ plugin.iconClassName }}" ng-if="plugin.iconClassName" ng-style="{'font-size': ((1 * deviceWidth / 1)/2)-12 + 'px' }"></span>
-                            <div class="text-holder">
-                                <p class="item-text whiteTheme text-center" ng-if="data.design.hideText!==undefined? !data.design.hideText: '' ">{{ plugin.title }}</p>
-                                <p class="item-text whiteTheme text-center" ng-if="data.design.hideText===undefined ? true : false ">{{ plugin.title }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--End Layout 11 -->
-                <!-- Layout 12 -->
-                <div class="holder padding-zero" style="height:100%;" ng-if="data.design.selectedLayout == 12">
-                    <div class="folder-plugin layout12" style="height:100%;">
-                        <div class="plugin-banner clearfix">
-                            <div class="plugin-slider text-center" image-carousel="{{ layout12TotalItem}}">
-                                <div class="plugin-slide" ng-repeat="rows in data.plugins">
-                                    <div class="link-holder" ng-style="data.plugins.length>1 ? {'height': layout12Height}  : {} ">
-                                        <p ng-repeat="plugin in rows" ng-click="navigateToPlugin(plugin)" class="ellipsis whiteTheme" emit-last-repeater-element>
-                                            <a class="whiteTheme ellipsis">{{ plugin.title }}</a>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--End Layout 12 -->
-            </div>
-        </div>
-    </div>
+        #light-folder-body {
+            overflow-x: hidden;
+        }
+
+        #light-folder-body span, #light-folder-body p {
+            font-size: 2.5vh;
+            line-height: 3vh;
+        }
+
+        .folder-plugin-text {
+            padding: 4vw 4vw 0px 4vw;
+        }
+
+        .folder-plugin-text p {
+            margin-top: 0px !important;
+            /*margin-bottom: 0px !important;*/
+        }
+
+        #pluginsContainer {
+            /*padding-top: 15px;*/
+            display: block;
+        }
+
+        #txt.hide + #pluginsContainer {
+            padding-top: 0px;
+        }
+    </style>
+</head>
+<body id="light-folder-body">
+<div id="carousel" class="sliderCarousel hide">
+</div>
+<div id="txt" class="text-left folder-plugin-text clearfix hide-empty"></div>
+<div id="pluginsContainer"></div>
+<script>
+    var plugins = [];
+
+    var lazyLoad = {
+        loadImage: function (item) {
+            var _failAttempts = 0;
+
+            // load image
+            var img = new Image();
+
+            if (item.hasAttribute('data-src')) {
+                item.classList.remove("lazy-img");
+                _initImg(item);
+            }
+            
+            function _initImg(item) {
+                img.src = item.getAttribute('data-src');
+                img.className = 'reveal-img';
+                if (img.complete) _addImg();
+                else img.onload = _addImg;
+
+                img.onerror=function (e) {
+                    if(_failAttempts >= 1){
+                        return;
+                    }
+
+                    _failAttempts++;
+
+                    /*
+                    *  Sometimes Image IO doesn't crop image with certain width & height
+                    *  So this for changes the dimensions and try to do another crop using image IO
+                    *  to avoid showing only the blurred image
+                    * */
+
+                    img = new Image();
+                    var originalImg = item.getAttribute('data-original-img');
+                    var cropWidth = parseInt(item.getAttribute('data-crop-width'));
+                    cropWidth +=1;
+                    var cropHeight = parseInt(item.getAttribute('data-crop-height'));
+                    cropHeight+=1;
+
+                    item.setAttribute('data-crop-width',cropWidth);
+                    item.setAttribute('data-crop-height',cropHeight);
+
+                    var _newCroppedImg = buildfire.imageLib.cropImage(originalImg, {width:cropWidth,height: cropHeight});
+                    item.setAttribute('data-src',_newCroppedImg);
+
+                    _initImg(item);
+                };
+            }
+
+            // replace image
+            function _addImg() {
+                // disable click
+                item.addEventListener('click', function (e) {
+                    e.preventDefault();
+                }, false);
+
+                // add full image
+                item.appendChild(img).addEventListener('animationend', function (e) {
+                    // remove preview image
+                    var pImg = item.querySelector && item.querySelector('img.blur-effect');
+
+                    if (pImg) {
+                        e.target.alt = pImg.alt || '';
+                        item.removeChild(pImg);
+                        e.target.classList.remove('reveal-img');
+                    }
+                    item.removeAttribute('data-src');
+                });
+            }
+        },
+        isInViewport: function (element) {
+            var _elementHeight = 0;
+            if(element.parentElement && element.parentElement.parentElement){
+                _elementHeight = element.parentElement.parentElement.clientHeight;
+            }
+
+            var wT = window.pageYOffset, wB = wT + window.innerHeight + (_elementHeight * 1), cRect, pT, pB, p = 0;
+            cRect = element.getBoundingClientRect();
+            pT = wT + cRect.top;
+            pB = pT + cRect.height;
+            return wT < pB && wB > pT;
+        },
+        processLazyImages: function () {
+            var lazyImgs = document.querySelectorAll('.lazy-img');
+            for (var i = 0; i < lazyImgs.length; i++) {
+                if (lazyLoad.isInViewport(lazyImgs[i])) {
+                    console.log('lazy img loaded');
+                    lazyLoad.loadImage(lazyImgs[i]);
+                }
+            }
+        }
+    };
+
+    function loadData(err, obj) {
+        if (err) return;
+        layout = obj.data.design.selectedLayout;
+
+        if(obj.data.content && obj.data.content.carouselImages && obj.data.content.carouselImages.length > 0){
+            var carouselContainer = document.getElementById("carousel");
+            carouselContainer.classList.remove('hide');
+        }
+
+        var txt = document.getElementById("txt");
+        txt.innerHTML = '';
+        if (layout != 12) {
+            if (obj.data.content.text)
+                txt.innerHTML = obj.data.content.text.trim();
+        }
+        if (txt.innerHTML == '') {
+            txt.classList.add('hide');
+        } else {
+            txt.classList.remove('hide');
+        }
+
+
+        var pluginsContainer = document.getElementById("pluginsContainer");
+        pluginsContainer.className = "layout" + layout;
+        pluginsContainer.innerHTML = '';
+
+        getPlugins(obj, function (result) {
+            plugins = result;
+
+            var options = calcImgOptions(layout);
+
+            if (layout == 12) {
+                var pluginItemFrame = document.createElement('div');
+                pluginItemFrame.classList.add("pluginItemFrame");
+
+                var pluginItemSlidesContainer = document.createElement('div');
+                pluginItemSlidesContainer.classList.add("pluginItemSlidesContainer");
+
+                var pluginsWrapper = document.createElement('div');
+                pluginsWrapper.classList.add("pluginsWrapper");
+            }
+
+            for (var i = 0; i < plugins.length; i++) {
+                var pluginItem = document.createElement('div');
+                pluginItem.classList.add("pluginItem");
+
+                var pluginItemDetails = document.createElement('div');
+                pluginItemDetails.classList.add("pluginItemDetails");
+
+                pluginItem.appendChild(pluginItemDetails);
+
+                var p = plugins[i].data || plugins[i];
+
+                if (layout != 12) {
+                    var divImg = document.createElement('div');
+                    if ([6, 11].indexOf(layout) > -1) {
+                        divImg.style.minHeight = options.height + "px";
+                        divImg.style.maxHeight = options.height + "px";
+                    }
+                    divImg.classList.add("media-holder");
+                    divImg.classList.add("media-holder-icon");
+                    divImg.setAttribute('index', i);
+                    divImg.onclick = onClick;
+
+                    if (p.iconUrl || p.iconClassName) {
+                        if (p.iconUrl) {
+                            var _croppedImg = buildfire.imageLib.cropImage(p.iconUrl, options);
+
+                            divImg.classList.add("hasImg");
+                            divImg.setAttribute("data-src", _croppedImg);
+                            divImg.setAttribute("data-original-img", p.iconUrl);
+                            divImg.setAttribute("data-crop-width", options.width);
+                            divImg.setAttribute("data-crop-height", options.height);
+                            divImg.classList.add('lazy-img');
+
+                            var img = document.createElement('img');
+                            img.setAttribute("src", buildfire.imageLib.resizeImage(_croppedImg, {
+                                width: 10,
+                                disablePixelRation: true
+                            }));
+                            img.classList.add('blur-effect');
+                            img.alt = "plugin-img";
+                            divImg.appendChild(img);
+                        }
+                        else {
+                            divImg.classList.add("hasIcon");
+                            var span = document.createElement('span');
+                            var iIcon = document.createElement('i');
+                            iIcon.className += " main-icon " + p.iconClassName;
+                            if ([3, 4, 5, 6, 7, 9, 10, 11].indexOf(layout) > -1) {
+                                iIcon.style.fontSize = calcFontSize(options, layout) + "px";
+                            }
+                            span.append(iIcon);
+                            divImg.appendChild(span);
+                        }
+                    }
+                    else {
+                        divImg.classList.add("noImg");
+                        divImg.innerHTML = "<h1>loading</h1>";
+                    }
+
+                    pluginItemDetails.appendChild(divImg);
+                }
+
+                if ([9, 10, 11].indexOf(layout) > -1) {
+                    var divBlackLayer = document.createElement('div');
+                    divBlackLayer.className = "blackLayer";
+                    divBlackLayer.setAttribute('index', i);
+                    divBlackLayer.onclick = onClick;
+                    pluginItemDetails.appendChild(divBlackLayer);
+                }
+
+                var divTitle = document.createElement('div');
+                divTitle.classList.add("media-holder");
+                divTitle.classList.add("media-holder-text");
+                divTitle.onclick = onClick;
+                divTitle.setAttribute('index', i);
+
+                if ([4, 5].indexOf(layout) > -1)
+                    divTitle.classList.add("titleBarBackgroundTheme");
+                if ([7].indexOf(layout) > -1)
+                    divTitle.classList.add("blackBackgroundTheme");
+
+                if ([4, 5, 6, 7, 9, 10, 11].indexOf(layout) > -1 && obj.data.design.hideText) {
+                    divTitle.classList.add('hide');
+                }
+
+                var spanTitle = document.createElement('span');
+                if ([3, 6].indexOf(layout) > -1) {
+                    spanTitle.className = "text-primary";
+                }
+                if ([4, 5].indexOf(layout) > -1) {
+                    spanTitle.className = "titleBarTextAndIcons";
+                }
+                if ([7, 9, 10, 11, 12].indexOf(layout) > -1) {
+                    spanTitle.className = "whiteTheme";
+                }
+
+                spanTitle.innerText = p.title;
+
+                if (layout == 3 && obj.data.design.hideText) {
+                    spanTitle.classList.add('hide');
+                }
+
+                divTitle.appendChild(spanTitle);
+
+                pluginItemDetails.appendChild(divTitle);
+
+                if (layout != 12) {
+                    pluginsContainer.appendChild(pluginItem);
+
+                } else {
+                    if ((i + 1) % 8 == 0) {
+                        pluginsWrapper.appendChild(pluginItem);
+                        pluginItemSlidesContainer.appendChild(pluginsWrapper);
+                        //create new wrapper
+                        pluginsWrapper = document.createElement('div');
+                        pluginsWrapper.classList.add("pluginsWrapper");
+
+                    } else {
+                        pluginsWrapper.appendChild(pluginItem);
+
+                        if ((i + 1 ) == plugins.length) {
+                            pluginItemSlidesContainer.appendChild(pluginsWrapper);
+                        }
+                    }
+                }
+            }
+
+            if (layout == 12) {
+                pluginItemFrame.appendChild(pluginItemSlidesContainer);
+                pluginsContainer.appendChild(pluginItemFrame);
+
+                renderCarousel(null, layout);
+            }
+
+            //load image in first render
+            lazyLoad.processLazyImages();
+        });
+        initStyle(obj, layout);
+
+        if (layout != 12) {
+            //Render Carousel
+            renderCarousel(obj.data.content.carouselImages, layout);
+        }
+    }
+
+    function getPlugins(obj, callback) {
+        var plugins = [];
+        if (obj.data.content.loadAllPlugins) {
+            function _mapFromSearch(data) {
+                var result = [], dataResult = [], dataResultLength = 0, currentPlugin = null, tempObj = null;
+                if (data.result && data.result instanceof Array) {
+                    dataResult = data.result;
+                    dataResultLength = dataResult.length;
+                    for (var i = 0; i < dataResultLength; i++) {
+
+                        currentPlugin = dataResult[i];
+                        if (currentPlugin.data && currentPlugin.data._buildfire) {
+                            tempObj = {};
+
+                            tempObj.folderName = currentPlugin.data._buildfire.pluginType.result[0].folderName;
+                            tempObj.instanceId = currentPlugin.data.instanceId;
+                            tempObj.iconUrl = currentPlugin.data.iconUrl;
+                            tempObj.pluginTypeId = currentPlugin.data._buildfire.pluginType.data;
+                            tempObj.pluginTypeName = currentPlugin.data._buildfire.pluginType.result[0].name;
+                            tempObj.title = currentPlugin.data.title;
+                            tempObj.iconClassName = currentPlugin.data.iconClassName;
+                            result.push(tempObj);
+                            tempObj = null;
+                            currentPlugin = null;
+                        }
+                    }
+                }
+                return result;
+            }
+
+            var searchOptions = {pageIndex: 0, pageSize: 100};
+
+            buildfire.pluginInstance.search(searchOptions, function (err, result) {
+                if (err) {
+                    console.error("Error searching plugins: ", err);
+                }
+                var data = _mapFromSearch(result);
+                plugins = data;
+                callback(data);
+            });
+        }
+        else {
+            if (obj.data._buildfire && obj.data._buildfire.plugins &&
+                obj.data._buildfire.plugins.result && obj.data._buildfire.plugins.data) {
+                plugins = getPluginDetails(obj.data._buildfire.plugins.result, obj.data._buildfire.plugins.data);
+            }
+            callback(plugins);
+        }
+    }
+
+    function getPluginDetails(pluginsInfo, pluginIds) {
+        var returnPlugins = [];
+        var tempPlugin = null;
+        for (var id = 0; id < pluginIds.length; id++) {
+            for (var i = 0; i < pluginsInfo.length; i++) {
+                tempPlugin = {};
+                var obj = pluginsInfo[i].data ? pluginsInfo[i].data : pluginsInfo[i];
+                if (pluginIds[id] == obj.instanceId) {
+                    tempPlugin.instanceId = obj.instanceId;
+                    if (obj) {
+                        tempPlugin.iconUrl = obj.iconUrl;
+                        tempPlugin.iconClassName = obj.iconClassName;
+                        tempPlugin.title = obj.title;
+                        if (obj.pluginType) {
+                            tempPlugin.pluginTypeId = obj.pluginType.token;
+                            tempPlugin.folderName = obj.pluginType.folderName;
+                        }
+                        else {
+                            tempPlugin.pluginTypeId = obj.pluginTypeId;
+                            tempPlugin.folderName = obj.folderName;
+                        }
+                    } else {
+                        tempPlugin.iconUrl = "";
+                        tempPlugin.title = "[No title]";
+                    }
+                    returnPlugins.push(tempPlugin);
+                }
+                tempPlugin = null;
+            }
+        }
+        return returnPlugins;
+    }
+
+    function initStyle(obj, layout) {
+        var style = document.getElementById("injectedStyle");
+        if (style) document.head.removeChild(style);
+
+        style = document.createElement('style');
+        style.id = "injectedStyle";
+
+        var bgImage = obj.data.design.backgroundImage || obj.data.design.lgBackgroundImage;
+
+        if (obj.data.design.lgBackgroundImage && window.innerWidth >= 600) {
+            //iPads
+            bgImage = obj.data.design.lgBackgroundImage;
+        }
+
+        if (bgImage) {
+            style.innerHTML += "body { background: no-repeat url('" + buildfire.imageLib.cropImage(bgImage, {
+                    width: window.innerWidth,
+                    height: window.innerHeight
+                }) + "') !Important; background-size: cover !important; } ";
+        }
+
+        if (obj.data.design.hideText)
+            style.innerHTML += " .divTitle { display:none !Important} ";
+
+        if (layout == 12) {
+            style.innerHTML += " #carousel { display:none !Important} ";
+        }
+
+        if (style.innerHTML.length > 0)
+            document.head.appendChild(style);
+    }
+
+    buildfire.datastore.getWithDynamicData(loadData);
+
+    buildfire.datastore.onUpdate(function (obj) {
+        loadData(null, obj)
+    });
+
+    function calcFontSize(options, layout) {
+        var fontSize = 0;
+        if ([6].indexOf(layout) >= 0) {
+            fontSize = options.height - 22;
+        }
+        else if ([5].indexOf(layout) >= 0) {
+            fontSize = options.height;
+        } else {
+            fontSize = options.height - 15;
+        }
+
+        return fontSize;
+    }
+
+    function calcImgOptions(layout) {
+        var option = {};
+        if ([3, 4, 9].indexOf(layout) >= 0) {
+            option.width = window.innerWidth;
+            option.height = option.width * 9 / 16;
+        }
+        else if ([1, 8].indexOf(layout) >= 0) {
+            option.width = window.innerWidth * (0.15);
+            option.height = option.width;
+        }
+        else if (layout == 2) {
+            option.width = window.innerWidth * (0.32);
+            option.height = window.innerWidth * (0.18);
+        }
+        else if ([5, 11].indexOf(layout) >= 0) {
+            option.width = Math.round(window.innerWidth / 2);
+            option.height = option.width;
+        }
+        else if (layout == 6) {
+            option.width = Math.round(window.innerWidth / 2.4);
+            option.height = option.width;
+        }
+        else if (layout == 7) {
+            option.width = window.innerWidth;
+            option.height = Math.round(window.innerWidth / 2.2);
+        }
+        else if (layout == 10) {
+            option.width = window.innerWidth;
+            option.height = Math.round(window.innerWidth * 0.23);
+        }
+        return option;
+    }
+
+    function onClick(e) {
+
+        var i = parseInt(this.getAttribute('index'));
+        var p = plugins[i];
+
+        buildfire.navigation.navigateTo({
+            pluginId: p.pluginTypeId
+            , folderName: p.folderName
+            , instanceId: p.instanceId
+            , title: p.title
+        });
+    }
+
+    function renderCarousel(carouselImages, layout) {
+        if (layout == 12) {
+
+            var pluginsContainer = document.getElementById("pluginsContainer");
+            var carouselLayout12 = new buildfire.components.carousel.view({
+                selector: pluginsContainer,
+                classNameFrame: 'pluginItemFrame',
+                classNameSlideContainer: 'pluginItemSlidesContainer',
+                classNamePrevCtrl: '',
+                classNameNextCtrl: '',
+                infinite: 1,
+                slideToScroll: 1
+            });
+        } else {
+            var carouselContainer = document.getElementById("carousel");
+            if (carouselImages && carouselImages.length > 0) {
+                /*
+                 if more than one image add carousel else add image directly to the carousel container
+                 */
+                if (carouselImages.length > 1) {
+
+                    var carousel = new buildfire.components.carousel.view({
+                        selector: carouselContainer,
+                        items: carouselImages,
+                        speed: 1000
+                    });
+
+                } else {
+                    //add image directly to carousel container without adding the carousel lib
+                    carouselContainer.innerHTML = '';
+                    //append image tag
+                    var img = document.createElement('img');
+                    img.setAttribute("src", buildfire.imageLib.cropImage(carouselImages[0].iconUrl, {
+                        width: window.innerWidth,
+                        height: Math.ceil(9 * (window.innerWidth) / 16)
+                    }));
+                    img.alt = "Carousel Image";
+                    carouselContainer.appendChild(img);
+                }
+
+                carouselContainer.classList.remove('hide');
+            } else {
+                carouselContainer.classList.add('hide');
+            }
+        }
+    }
+
+    //attach scroll event for lazy load images
+    document.getElementsByTagName('body')[0].addEventListener("scroll", lazyLoad.processLazyImages, false);
+</script>
+<style>
+    * {
+        outline: none;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        font-family: Helvetica, Sans-Serif, Arial;
+    }
+
+    /* iFrame */
+    /* Plugin iFrame */
+    img,
+    iframe,
+    object {
+        max-width: 100%;
+        vertical-align: top;
+    }
+
+    section .pluginPage,
+    section .pluginPage #pluginContentPanel,
+    #iframeControl,
+    #iframeControl body,
+    #controlIFrame,
+    #controlIFrame body,
+    .pluginFrame,
+    #pluginFrame,
+    #launcherPlugin,
+    html[buildfire] {
+        width: 100%;
+        min-width: 100%;
+        max-width: 100%;
+        height: 100%;
+        background: none;
+        overflow: hidden !important;
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+    }
+
+    html[buildfire] body {
+        height: 100% !important;
+        width: 100% !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        margin: 0;
+        overflow-x: hidden;
+    }
+
+    html[buildfire] body.no-scroll {
+        overflow: hidden !important;
+        -webkit-overflow-scrolling: inherit !important;
+    }
+
+    html[buildfire] body.no-scroll .scrollable {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        height: 100% !important;
+        width: 100% !important;
+    }
+
+    /* Smaller Mobile Screens */
+    @media (max-height: 540px) {
+        .login-holder .moreoptions {
+            margin-top: 0 !important;
+        }
+    }
+
+    /* Mobile Landscape Mode */
+    @media (max-height: 470px) {
+        .login-holder .login.content.padded {
+            padding-top: 60px !important;
+        }
+    }
+
+    /* END iFrame */
+    /* END Plugin iFrame */
+
+
+    /*
+                                        Carousel
+
+    */
+
+    #carousel ul {
+        margin-bottom: 0px !important;
+    }
+
+    #pluginsContainer .pluginItem {
+        width: 100%;
+        display: block;
+    }
+
+    /*
+                                                                Layout-1
+    */
+    #pluginsContainer.layout1 .pluginItem {
+        display: inline-block;
+        border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
+        min-height: 20vw;
+        max-height: 20vw;
+        overflow: hidden;
+    }
+
+    .layout1 .pluginItem .media-holder.media-holder-icon {
+        width: 15vw;
+        height: 15vw;
+        border-radius: 4px;
+        margin: 3vw;
+        text-align: center;
+        float: left;
+        margin-right: 4vw;
+    }
+
+    .layout1 .pluginItem .media-holder.media-holder-icon img {
+        width: 100%;
+        height: 100%;
+    }
+
+    .layout1 .pluginItem .media-holder.media-holder-icon .main-icon {
+        font-size: 15vw !important;
+        position: relative;
+        top: -1px;
+    }
+
+    .layout1 .pluginItem .media-holder.media-holder-icon .main-icon:before {
+        display: inline-block;
+    }
+
+    .layout1 .media-holder-text span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        position: relative;
+        margin-top: 8vw !important;
+        display: block;
+    }
+
+    /*
+                                                                Layout-2
+    */
+    #pluginsContainer.layout2 .pluginItem {
+        display: inline-block;
+        border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
+        min-height: 21vw;
+        max-height: 21vw;
+        overflow: hidden;
+    }
+
+    .layout2 .pluginItem .media-holder.media-holder-icon {
+        width: 32vw;
+        height: 18vw;
+        margin: inherit;
+        margin-right: 10px;
+        border-radius: 4px;
+        margin: 2vw;
+        text-align: center;
+        float: left;
+        overflow: hidden;
+    }
+
+    .layout2 .pluginItem .media-holder.media-holder-icon img {
+        width: 100%;
+        height: 100%;
+    }
+
+    .layout2 .pluginItem .media-holder.media-holder-icon .main-icon {
+        font-size: 18vw !important;
+        position: relative;
+        top: -1px;
+    }
+
+    .layout2 .pluginItem .media-holder.media-holder-icon .main-icon:before {
+        display: inline-block;
+    }
+
+    .layout2 .media-holder-text span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        position: relative;
+        margin-top: 9vw !important;
+        display: block;
+    }
+
+    /*
+                                                                    Layout-3
+        */
+
+    #pluginsContainer.layout3 .pluginItem {
+        min-height: 70vw;
+        max-height: 70vw;
+        overflow: hidden;
+    }
+
+    .layout3 .media-holder-text {
+        padding: 15px;
+    }
+
+    .layout3 .media-holder-text span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+        text-align: left;
+    }
+
+    .layout3 .media-holder {
+        text-align: center;
+        width: 100%;
+    }
+
+    .layout3 .media-holder.media-holder-icon.hasImg {
+        max-height: 56vw;
+    }
+
+    /*
+                                                                    Layout-4
+        */
+    #pluginsContainer.layout4 .pluginItem {
+        position: relative;
+        min-height: 56vw;
+        max-height: 56vw;
+        overflow: hidden;
+    }
+
+    .layout4 .media-holder-text {
+        padding: 15px;
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+        opacity: .85;
+    }
+
+    .layout4 .media-holder-text span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+        text-align: left;
+    }
+
+    .layout4 .media-holder {
+        text-align: center;
+        width: 100%;
+    }
+
+    /*
+                                                                    Layout-5
+        */
+    #pluginsContainer.layout5 .pluginItem {
+        width: 50%;
+        display: inline-block;
+        text-align: center;
+        position: relative;
+        float: left;
+        min-height: 50vw;
+        max-height: 50vw;
+        overflow: hidden;
+    }
+
+    .layout5 .media-holder-text {
+        padding: 10px;
+        position: absolute;
+        width: 100%;
+        opacity: .85;
+        bottom: 0;
+    }
+
+    .layout5 .pluginItem .media-holder.media-holder-icon .main-icon {
+        font-size: 48.8vw !important;
+        position: relative;
+        top: -1px;
+    }
+
+    .layout5 .pluginItem .media-holder.media-holder-icon .main-icon:before {
+        display: inline-block;
+    }
+
+    .layout5 .media-holder-text span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+    }
+
+    /*
+                                                                    Layout-6
+        */
+    #pluginsContainer.layout6 .pluginItem {
+        width: 50%;
+        display: inline-block;
+        text-align: center;
+        float: left;
+        min-height: 56vw;
+        max-height: 56vw;
+        overflow: hidden;
+    }
+
+    #pluginsContainer.layout6 .pluginItem .pluginItemDetails{
+        padding: 0px 15px;
+    }
+
+    .layout6 .pluginItem .media-holder.media-holder-icon {
+        overflow: hidden;
+    }
+
+    .layout6 .pluginItem .media-holder.media-holder-icon .main-icon {
+        font-size: 42.4vw !important;
+        position: relative;
+        top: -1px;
+    }
+
+    .layout6 .pluginItem .media-holder.media-holder-icon .main-icon:before {
+        display: inline-block;
+    }
+
+    .layout6 .media-holder-text {
+        padding: 15px 0px;
+    }
+
+    .layout6 .media-holder-text span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+    }
+
+    /*
+                                                                    Layout-7
+        */
+    #pluginsContainer.layout7 .pluginItem {
+        position: relative;
+        min-height: 45vw;
+        max-height: 45vw;
+        overflow: hidden;
+    }
+
+    .layout7 .media-holder-text {
+        padding: 15px;
+        position: absolute;
+        width: 100%;
+        opacity: .85;
+        bottom: 0px;
+    }
+
+    .layout7 .media-holder-text span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+        text-align: left;
+    }
+
+    .layout7 .media-holder {
+        text-align: center;
+        width: 100%;
+    }
+
+    /*
+                                                                    Layout-8
+        */
+    #pluginsContainer.layout8 .pluginItem {
+        display: block;
+        border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
+        min-height: 18vw;
+        max-height: 18vw;
+        overflow: hidden;
+    }
+
+    .layout8 img {
+        border-radius: 50% !important;
+    }
+
+    .layout8 .pluginItem .media-holder.media-holder-icon {
+        width: 15vw;
+        height: 15vw;
+        margin: inherit;
+        margin-right: 10px;
+        border-radius: 4px;
+        margin: 2vw;
+        text-align: center;
+        float: left;
+    }
+
+    .layout8 .pluginItem .media-holder.media-holder-icon .main-icon {
+        font-size: 15vw !important;
+        position: relative;
+        top: -1px;
+    }
+
+    .layout8 .pluginItem .media-holder.media-holder-icon .main-icon:before {
+        display: inline-block;
+    }
+
+    .layout8 .media-holder-text span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        position: relative;
+        margin-top: 7.5vw !important;
+        display: block;
+    }
+
+    /*
+                                                                    Layout-9
+        */
+    #pluginsContainer.layout9 .pluginItem {
+        position: relative;
+        min-height: 56vw;
+        max-height: 56vw;
+        overflow: hidden;
+    }
+
+    .layout9 .blackLayer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 7;
+        background: rgba(0, 0, 0, 0.35);
+        -webkit-transform: translate3d(0, 0, 0);
+    }
+
+    .layout9 .media-holder-text {
+        position: absolute;
+        top: 50%;
+        margin-top: -10px;
+        left: 0;
+        width: 100%;
+        padding: 0 20px;
+        font-size: 16px;
+        line-height: 24px;
+        color: #fff;
+        z-index: 7;
+        -webkit-transform: translate3d(0, 0, 0);
+        text-align: center;
+    }
+
+    .layout9 .media-holder-text span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+    }
+
+    .layout9 .media-holder {
+        text-align: center;
+        width: 100%;
+    }
+
+    /*
+                                                                    Layout-10
+        */
+    #pluginsContainer.layout10 .pluginItem {
+        position: relative;
+        margin-bottom: 1px;
+        min-height: 23.5vw;
+        max-height: 23.5vw;
+        overflow: hidden;
+    }
+
+    .layout10 .blackLayer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 7;
+        background: rgba(0, 0, 0, 0.35);
+        -webkit-transform: translate3d(0, 0, 0);
+    }
+
+    .layout10 .media-holder-text {
+        position: absolute;
+        top: 50%;
+        margin-top: -10px;
+        left: 0;
+        width: 100%;
+        padding: 0 20px;
+        font-size: 16px;
+        line-height: 24px;
+        color: #fff;
+        z-index: 7;
+        -webkit-transform: translate3d(0, 0, 0);
+        text-align: center;
+    }
+
+    .layout10 .media-holder-text span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+    }
+
+    .layout10 .media-holder {
+        text-align: center;
+        width: 100%;
+    }
+
+    /*
+                                                                        Layout-11
+            */
+    #pluginsContainer.layout11 .pluginItem {
+        position: relative;
+        width: 50%;
+        display: inline-block;
+        text-align: center;
+        float: left;
+        padding: 1px;
+        min-height: 50vw;
+        max-height: 50vw;
+        overflow: hidden;
+    }
+
+    #pluginsContainer.layout11 .pluginItem .pluginItemDetails {
+        position: relative !important;
+        height: 100%;
+    }
+
+    .layout11 .blackLayer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 7;
+        background: rgba(0, 0, 0, 0.35);
+        -webkit-transform: translate3d(0, 0, 0);
+    }
+
+    .layout11 .media-holder-text {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 7;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .layout11 .media-holder {
+        text-align: center;
+        width: 100%;
+    }
+
+    .layout11 .pluginItem .media-holder.media-holder-icon {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .layout11 .pluginItem .media-holder.media-holder-icon img {
+        display: block;
+        /*position: absolute;*/
+        /*top: 50%;*/
+        /*left: 50%;*/
+        min-height: 100%;
+        min-width: 100%;
+        /*transform: translate(-50%, -50%);*/
+    }
+
+    .layout11 .pluginItem .media-holder.media-holder-icon .main-icon {
+        font-size: 48vw !important;
+        position: relative;
+        top: -1px;
+    }
+
+    .layout11 .pluginItem .media-holder.media-holder-icon .main-icon:before {
+        display: inline-block;
+    }
+
+    /*
+                                                                        Layout-12
+            */
+    #pluginsContainer.layout12 {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 70%;
+        margin: 0 auto;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 5px 15px;
+        border-radius: 3px;
+    }
+
+    .layout12 .pluginItemFrame {
+        position: relative;
+        width: 100%;
+        margin: 0 auto;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .layout12 .media-holder-text span {
+        display: block;
+        text-align: center;
+        padding: 10px 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .layout12 .media-holder.media-holder-text {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+        width: 100%;
+    }
+
+    .layout12 .pluginsWrapper {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        vertical-align: top;
+    }
+</style>
+<!-- build:bundleCSSFiles  -->
+<link href="glyphicons.css" rel="stylesheet"/>
+<!-- endbuild -->
 </body>
 </html>

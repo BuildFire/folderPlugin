@@ -107,6 +107,15 @@
                     }
                 };
 
+                $scope.cropImage = function (url,width,height) {
+                    if (!url) {
+                        return "";
+                    }
+                    else {
+                        return buildfire.imageLib.cropImage(url, { width: width || 88, height : height, disablePixelRatio : true });
+                    }
+                };
+
                 /*
                  * Delete the background and back to the default white background
                  * */
