@@ -600,6 +600,13 @@
                     }));
                     img.alt = "Carousel Image";
                     carouselContainer.appendChild(img);
+                    img.addEventListener("click", function () {
+                        buildfire.actionItems.execute(carouselImages[0], function (err, result) {
+                            if (err) {
+                                console.warn('Error openning slider action: ', err);
+                            }
+                        });
+                    });
                 }
 
                 carouselContainer.classList.remove('hide');
