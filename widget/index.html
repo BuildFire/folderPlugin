@@ -501,6 +501,28 @@
     buildfire.datastore.onUpdate(function (obj) {
         loadData(null, obj)
     });
+    
+    buildfire.messaging.onReceivedMessage = function (event) {
+        if (event) {
+            var plugin = event.message.data;
+            switch (event.name) {
+                case 'OPEN_PLUGIN':
+                    var fName = '';
+                    if (plugin && plugin.pluginType && plugin.pluginType.folderName)
+                        fName = plugin.pluginType.folderName;
+                    else if (plugin && plugin.folderName)
+                        fName = plugin.folderName;
+
+                    buildfire.navigation.navigateTo({
+                        pluginId: plugin.pluginId,
+                        instanceId: plugin.instanceId,
+                        title: plugin.title,
+                        folderName: fName
+                    });
+                    break;
+            }
+        }
+    };
 
     function calcFontSize(options, layout) {
         var fontSize = 0;
