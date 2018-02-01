@@ -127,6 +127,10 @@
                     }
 
                     if (newObj._buildfire && newObj._buildfire.plugins) {
+                        newObj._buildfire.plugins.data = [];
+                        for(var i = 0; i < plugins.items.length; i++) {
+                            newObj._buildfire.plugins.data.push(plugins.items[i].instanceId);
+                        }
                         newObj._buildfire.plugins.result = plugins.items;
                     }
 
