@@ -127,10 +127,6 @@
                     }
 
                     if (newObj._buildfire && newObj._buildfire.plugins) {
-                        newObj._buildfire.plugins.data = [];
-                        for(var i = 0; i < plugins.items.length; i++) {
-                            newObj._buildfire.plugins.data.push(plugins.items[i].instanceId);
-                        }
                         newObj._buildfire.plugins.result = plugins.items;
                     }
 
@@ -149,7 +145,9 @@
                         return;
                     }
                     if (newObj.default) {
+                        var instanceIds = newObj._buildfire.plugins.data;
                         newObj = Utility.getDefaultScopeBlankData();
+                        newObj._buildfire.plugins.data = instanceIds;
                         if (tmpCarousalData) {
                             editor.loadItems(tmpCarousalData);
                             newObj.content.carouselImages = tmpCarousalData;
