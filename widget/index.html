@@ -585,19 +585,7 @@
     }
 
     function renderCarousel(carouselImages, layout) {
-        if (layout == 12) {
-
-            var pluginsContainer = document.getElementById("pluginsContainer");
-            var carouselLayout12 = new buildfire.components.carousel.view({
-                selector: pluginsContainer,
-                classNameFrame: 'pluginItemFrame',
-                classNameSlideContainer: 'pluginItemSlidesContainer',
-                classNamePrevCtrl: '',
-                classNameNextCtrl: '',
-                infinite: 1,
-                slideToScroll: 1
-            });
-        } else {
+        if (layout != 12) {
             var carouselContainer = document.getElementById("carousel");
             if (carouselImages && carouselImages.length > 0) {
                 /*
