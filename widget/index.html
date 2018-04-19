@@ -347,6 +347,8 @@
 
                 } else {
                     if ((i + 1) % 8 == 0) {
+                        var span=pluginItem.getElementsByTagName("span");
+                        span[0].innerText='...';
                         pluginsWrapper.appendChild(pluginItem);
                         pluginItemSlidesContainer.appendChild(pluginsWrapper);
                         //create new wrapper
