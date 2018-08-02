@@ -5,6 +5,10 @@
     <script src="../../../scripts/_bundles/buildfire_lightcarousel.min.js"></script>
     <!--this css is important to be loaded first for the first paint-->
     <style>
+        .item-disabled {
+            cursor: not-allowed;
+            opacity: 0.4;
+        }
         .hide {
             display: none !important;
         }
@@ -198,6 +202,9 @@
         if (err) return;
         layout = obj.data.design.selectedLayout;
 
+        if(!obj.data.design.securedFeaturesOption)
+            obj.data.design.securedFeaturesOption="Enable";
+
         if(obj.data.content && obj.data.content.carouselImages && obj.data.content.carouselImages.length > 0){
             var carouselContainer = document.getElementById("carousel");
             carouselContainer.classList.remove('hide');
@@ -237,7 +244,12 @@
             }
 
             for (var i = 0; i < plugins.length; i++) {
+                if(!plugins[i].hasAccess && obj.data.design.securedFeaturesOption=="Hide")
+                    continue;
                 var pluginItem = document.createElement('div');
+                if(!plugins[i].hasAccess && obj.data.design.securedFeaturesOption=="Disable")
+                    pluginItem.classList.add("item-disabled");
+
                 pluginItem.classList.add("pluginItem");
 
                 var pluginItemDetails = document.createElement('div');
@@ -256,7 +268,7 @@
                     divImg.classList.add("media-holder");
                     divImg.classList.add("media-holder-icon");
                     divImg.setAttribute('index', i);
-                    divImg.onclick = onClick;
+                    divImg.onclick = plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable"? onClick : null;
 
                     if (p.iconUrl || p.iconClassName) {
                         if (p.iconUrl) {
@@ -302,14 +314,14 @@
                     var divBlackLayer = document.createElement('div');
                     divBlackLayer.className = "blackLayer";
                     divBlackLayer.setAttribute('index', i);
-                    divBlackLayer.onclick = onClick;
+                    divBlackLayer.onclick = plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable" ? onClick : null;
                     pluginItemDetails.appendChild(divBlackLayer);
                 }
 
                 var divTitle = document.createElement('div');
                 divTitle.classList.add("media-holder");
                 divTitle.classList.add("media-holder-text");
-                divTitle.onclick = onClick;
+                divTitle.onclick = plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable" ? onClick : null;
                 divTitle.setAttribute('index', i);
 
                 if ([4, 5].indexOf(layout) > -1)
@@ -440,6 +452,13 @@
             for (var i = 0; i < pluginsInfo.length; i++) {
                 tempPlugin = {};
                 var obj = pluginsInfo[i].data ? pluginsInfo[i].data : pluginsInfo[i];
+
+
+                if(pluginsInfo[i].hasAccess === undefined)
+                    tempPlugin.hasAccess=true ;
+                else
+                    tempPlugin.hasAccess=pluginsInfo[i].hasAccess;
+
                 if (pluginIds[id] == obj.instanceId) {
                     tempPlugin.instanceId = obj.instanceId;
                     if (obj) {

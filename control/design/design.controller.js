@@ -36,8 +36,12 @@
                                 backgroundImage: null,
                                 selectedLayout: 1,
                                 backgroundblur: 0,
-                                hideText: false
+                                hideText: false,
+                                securedFeaturesOption:"Enable"
                             };
+                        }
+                        if (!$scope.data.design.securedFeaturesOption){
+                            $scope.data.design.securedFeaturesOption = "Enable";
                         }
                     }
 
