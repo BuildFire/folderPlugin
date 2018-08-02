@@ -15,6 +15,7 @@
     <script src="../../../../scripts/buildfire.min.js"></script>
     <script src="../../../../scripts/angular/angular.min.js"></script>
 
+    <script src="../../../../scripts/angular/ui-bootstrap.min.js"></script>
     <!-- build:bundleJSFiles  -->
     <script src="app.services.js"></script>
     <script src="app.js"></script>
@@ -23,6 +24,38 @@
 </head>
 <body ng-controller="folderPluginCtrl" ng-cloak ng-show="datastoreInitialized">
     <div ng-form="frmMain">
+        <div class="padded padding-top-ten clearfix" >
+                <div class="item clearfix row">
+                <div class="labels col-md-3 padding-right-zero pull-left">
+                    <span>Feature Security</span>
+                </div>
+                <div class="main pull-left col-md-4">
+                    <div class="dropdown" dropdown>
+                        <button class="btn btn-default text-left dropdown-toggle"
+                                data-toggle="dropdown" dropdown-toggle aria-expanded="true">
+                            <span class="pull-left text-capitalize">{{data.design.securedFeaturesOption}}</span>
+                            <span class="chevron icon-chevron-down pull-right"></span>
+                        </button>
+                        <ul class="dropdown-menu extended" role="menu">
+                            <li class="text-capitalize">
+                                <a ng-click="data.design.securedFeaturesOption='Enable';">Enable</a>
+                            </li>
+                            <li class="text-capitalize">
+                                <a ng-click="data.design.securedFeaturesOption='Disable';">Disable</a>
+                            </li>
+                            <li class="text-capitalize">
+                                <a ng-click="data.design.securedFeaturesOption='Hide';">Hide</a>
+                            </li>
+                        </ul>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+        <hr>
         <div class="item row margin-bottom-twenty clearfix">
             <div class="labels col-md-3 padding-right-zero pull-left">
                 <span>Layout Style</span>

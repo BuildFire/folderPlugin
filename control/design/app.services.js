@@ -55,7 +55,8 @@
                             "backgroundImage": null,
                             "selectedLayout": 1,
                             "backgroundblur": 0,
-                            "hideText": false
+                            "hideText": false,
+                            "securedFeaturesOption":"Enable"
                         },
                         "default": true
                     };
@@ -77,7 +78,8 @@
                             "backgroundImage": null,
                             "selectedLayout": 1,
                             "backgroundblur": 0,
-                            "hideText": false
+                            "hideText": false,
+                            "securedFeaturesOption":"Enable"
                         }
                     };
                 },
