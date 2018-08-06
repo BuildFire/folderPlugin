@@ -198,6 +198,18 @@
         }
     };
 
+    buildfire.auth.onLogin(function (user) {
+        console.log('New user loggedIN reload data to apply security', user);
+        if (user && user._id) {
+            buildfire.datastore.getWithDynamicData(loadData);
+        }
+    });
+    // On Logout
+    buildfire.auth.onLogout(function () {
+        console.log('User loggedOut reload data to apply security');
+        buildfire.datastore.getWithDynamicData(loadData);
+    });
+
     function loadData(err, obj) {
         if (err) return;
         layout = obj.data.design.selectedLayout;
