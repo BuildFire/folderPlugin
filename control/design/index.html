@@ -24,38 +24,7 @@
 </head>
 <body ng-controller="folderPluginCtrl" ng-cloak ng-show="datastoreInitialized">
     <div ng-form="frmMain">
-        <div class="padded padding-top-ten clearfix" >
-                <div class="item clearfix row">
-                <div class="labels col-md-3 padding-right-zero pull-left">
-                    <span>Feature Security</span>
-                </div>
-                <div class="main pull-left col-md-4">
-                    <div class="dropdown" dropdown>
-                        <button class="btn btn-default text-left dropdown-toggle"
-                                data-toggle="dropdown" dropdown-toggle aria-expanded="true">
-                            <span class="pull-left text-capitalize">{{data.design.securedFeaturesOption}}</span>
-                            <span class="chevron icon-chevron-down pull-right"></span>
-                        </button>
-                        <ul class="dropdown-menu extended" role="menu">
-                            <li class="text-capitalize">
-                                <a ng-click="data.design.securedFeaturesOption='Enable';">Enable</a>
-                            </li>
-                            <li class="text-capitalize">
-                                <a ng-click="data.design.securedFeaturesOption='Disable';">Disable</a>
-                            </li>
-                            <li class="text-capitalize">
-                                <a ng-click="data.design.securedFeaturesOption='Hide';">Hide</a>
-                            </li>
-                        </ul>
-                    </div>
 
-
-
-
-                </div>
-            </div>
-        </div>
-        <hr>
         <div class="item row margin-bottom-twenty clearfix">
             <div class="labels col-md-3 padding-right-zero pull-left">
                 <span>Layout Style</span>
@@ -122,7 +91,39 @@
                 </div>
             </div>
         </div>
+        <hr>
+        <div class="padded padding-top-ten clearfix" >
+            <div class="item clearfix row">
+                <div class="labels col-md-3 padding-right-zero pull-left">
+                    <span>Feature Security</span>
+                </div>
+                <div class="main pull-left col-md-7">
+                    <div class="dropdown" dropdown>
+                        <button class="btn btn-default text-left dropdown-toggle"
+                                data-toggle="dropdown" dropdown-toggle aria-expanded="true">
+                            <span class="pull-left text-capitalize">{{data.design.securedFeaturesOption}}</span>
+                            <span class="chevron icon-chevron-down pull-right"></span>
+                        </button>
+                        <ul class="dropdown-menu extended" role="menu">
+                            <li class="text-capitalize">
+                                <a ng-click="data.design.securedFeaturesOption='Enable';">Enable</a>
+                            </li>
+                            <li class="text-capitalize">
+                                <a ng-click="data.design.securedFeaturesOption='Disable';">Disable</a>
+                            </li>
+                            <li class="text-capitalize">
+                                <a ng-click="data.design.securedFeaturesOption='Hide';">Hide</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <p class="info margin-top-fifteen">Note: This allows you to control how features are displayed based
+                        on their Security Settings. If you require login or set up required tags, you can keep
+                        the feature "Enable" to all users, show them in the list but make them read-only with "Disable", or hide them entirely with "Hide".</p>
+                    <p class="info margin-top-fifteen">Note: This feature will only work in the app, and is disabled in the control panel.</p>
+                </div>
 
+            </div>
+        </div>
 
     </div>
 </body>
