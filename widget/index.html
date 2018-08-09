@@ -428,7 +428,7 @@
                             tempObj.pluginTypeName = currentPlugin.data._buildfire.pluginType.result[0].name;
                             tempObj.title = currentPlugin.data.title;
                             tempObj.iconClassName = currentPlugin.data.iconClassName;
-                            tempObj.hasAccess = true;
+                            tempObj.hasAccess = currentPlugin.hasAccess === undefined?true:currentPlugin.hasAccess;
                             result.push(tempObj);
                             tempObj = null;
                             currentPlugin = null;
