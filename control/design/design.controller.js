@@ -6,9 +6,17 @@
         .controller('folderPluginCtrl', ['$scope', 'Utility',
             function ($scope, Utility) {
                 $scope.availableLayouts = Utility.getLayouts();
+                $scope.enterpriseApp = false;
                 $scope.data = Utility.getDefaultScopeData();
                 $scope.datastoreInitialized = false;
-
+                buildfire.getContext(function(error,result){
+                    if(error)
+                        console.error(error);
+                    else {
+                        if (result && result.configType && result.configType == "enterprise")
+                            $scope.enterpriseApp = true;
+                    }
+                });
                 //Go pull any previously saved data
                 buildfire.datastore.getWithDynamicData(function (err, result) {
                     if (!err) {
