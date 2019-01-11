@@ -6,7 +6,8 @@
   "scripts": {
     "start": "gulp build",
     "postinstall": "./node_modules/.bin/bower install",
-    "test": "./node_modules/.bin/karma start karma.conf.js"
+    "test": "./node_modules/.bin/karma start karma.conf.js",
+    "build": "cd .. && rm -rf folderPlugin.zip && zip -r folderPlugin.zip folderPlugin/"
   },
   "dependencies": {
     "bower": "^1.5.3",

@@ -146,7 +146,12 @@
                     }
                     if (newObj.default) {
                         var instanceIds = newObj._buildfire.plugins.data;
-                        newObj = Utility.getDefaultScopeBlankData();
+                        if (newObj.content.loadAllPlugins) {
+                            newObj = Utility.getDefaultScopeBlankData();
+                            newObj.content.loadAllPlugins = true;
+                        } else {
+                            newObj = Utility.getDefaultScopeBlankData();
+                        }
                         newObj._buildfire.plugins.data = instanceIds;
                         if (tmpCarousalData) {
                             editor.loadItems(tmpCarousalData);
