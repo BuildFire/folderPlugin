@@ -146,12 +146,11 @@
                     }
                     if (newObj.default) {
                         var instanceIds = newObj._buildfire.plugins.data;
-                        if (newObj.content.loadAllPlugins) {
-                            newObj = Utility.getDefaultScopeBlankData();
-                            newObj.content.loadAllPlugins = true;
-                        } else {
-                            newObj = Utility.getDefaultScopeBlankData();
-                        }
+                        var loadAllPlugins = newObj.content.loadAllPlugins;
+
+                        newObj = Utility.getDefaultScopeBlankData();
+                        newObj.content.loadAllPlugins = loadAllPlugins;
+                        
                         newObj._buildfire.plugins.data = instanceIds;
                         if (tmpCarousalData) {
                             editor.loadItems(tmpCarousalData);
