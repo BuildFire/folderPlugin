@@ -212,6 +212,7 @@
 
     function loadData(err, obj) {
         if (err) return;
+        if (!obj.data.design) return;
         layout = obj.data.design.selectedLayout;
 
         if(!obj.data.design.securedFeaturesOption)
