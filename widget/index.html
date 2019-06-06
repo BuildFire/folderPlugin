@@ -105,11 +105,13 @@
 <div id="pluginsContainer"></div>
 <script>
     var plugins = [];
-
+    
     var lazyLoad = {
         loadImage: function (item) {
+            var start = Date.now();
+            
             var _failAttempts = 0;
-
+            
             // load image
             var img = new Image();
 
@@ -119,6 +121,7 @@
             }
             
             function _initImg(item) {
+                console.warn('init', Date.now() - start);
                 img.src = item.getAttribute('data-src');
                 img.className = 'reveal-img';
                 if (img.complete) _addImg();
@@ -162,19 +165,24 @@
                 }, false);
 
                 // add full image
-                item.appendChild(img).addEventListener('animationend', function (e) {
-                    // remove preview image
-                    var pImg = item.querySelector && item.querySelector('img.blur-effect');
+                // window.requestAnimationFrame(function () {
+                    console.warn('done', Date.now() - start);
+                    
+                    item.appendChild(img).addEventListener('animationend', function (e) {
+                        // remove preview image
+                        var pImg = item.querySelector && item.querySelector('.placeholder');
 
-                    if (pImg) {
-                        e.target.alt = pImg.alt || '';
-                        e.target.classList.remove('reveal-img');
-                        window.requestAnimationFrame(function () {
-                            item.removeChild(pImg);
-                        });
-                    }
-                    item.removeAttribute('data-src');
-                });
+                        if (pImg) {
+                            e.target.alt = pImg.alt || '';
+                            e.target.classList.remove('reveal-img');
+                            // window.requestAnimationFrame(function () {
+                                pImg.classList.remove('animated');
+                                pImg.style.display = 'none';
+                            // });
+                        }
+                        item.removeAttribute('data-src');
+                    });
+                // });
             }
         },
         isInViewport: function (element) {
@@ -288,7 +296,6 @@
                     if (p.iconUrl || p.iconClassName) {
                         if (p.iconUrl) {
                             var _croppedImg = buildfire.imageLib.cropImage(p.iconUrl, options);
-
                             divImg.classList.add("hasImg");
                             divImg.setAttribute("data-src", _croppedImg);
                             divImg.setAttribute("data-original-img", p.iconUrl);
@@ -296,16 +303,19 @@
                             divImg.setAttribute("data-crop-height", options.height);
                             divImg.classList.add('lazy-img');
 
-                            var img = document.createElement('img');
-                            img.setAttribute("src", buildfire.imageLib.resizeImage(_croppedImg, {
-                                width: 10,
-                                disablePixelRation: true
-                            }));
-                            img.classList.add('blur-effect');
-                            img.alt = "plugin-img";
-                            window.requestAnimationFrame(function () {
-                                divImg.appendChild(img);
-                            });
+                            // var img = document.createElement('img');
+                            // img.setAttribute("src", buildfire.imageLib.resizeImage(_croppedImg, {
+                            //     width: 10,
+                            //     disablePixelRation: true
+                            // }));
+                            // img.classList.add('blur-effect');
+                            // img.alt = "plugin-img";
+                            var placeholder = document.createElement('div');
+                            placeholder.classList = 'placeholder animated bodyTextBackgroundTheme';
+                            placeholder.style.minHeight = options.height + "px";
+                            placeholder.style.maxHeight = options.height + "px";
+                            
+                            divImg.appendChild(placeholder);
                         }
                         else {
                             divImg.classList.add("hasIcon");
@@ -686,6 +696,30 @@
         vertical-align: top;
     }
 
+    @keyframes placeHolderShimmer{
+        0%{
+            background-position: -100vw 0
+        }
+        100%{
+            background-position: 100vw 0
+        }
+    }
+
+    .placeholder.animated {
+        height: 100% !important;
+        width: 100%;
+        opacity: 0.9;
+        animation-duration: 2s;
+        animation-fill-mode: forwards;
+        animation-iteration-count: infinite;
+        animation-name: placeHolderShimmer;
+        animation-timing-function: linear;
+        background: #f6f7f8 !important;
+        background: linear-gradient(to right, #eeeeee52 8%, #dddddd52 18%, #eeeeee52 33%) !important;
+        background-size: 100vw !important;
+        position: relative;
+    }
+
     section .pluginPage,
     section .pluginPage #pluginContentPanel,
     #iframeControl,
@@ -1037,7 +1071,7 @@
         overflow: hidden;
     }
 
-    .layout8 img {
+    .layout8 img, .layout8 .placeholder {
         border-radius: 50% !important;
     }
 
