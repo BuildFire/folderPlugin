@@ -55,7 +55,7 @@
             left: 0;
             top: 0;
             will-change: opacity;
-            animation: reveal 1s ease-out;
+            animation: reveal 0.1s ease-out;
         }
 
         @keyframes reveal {
@@ -168,8 +168,10 @@
 
                     if (pImg) {
                         e.target.alt = pImg.alt || '';
-                        item.removeChild(pImg);
                         e.target.classList.remove('reveal-img');
+                        window.requestAnimationFrame(function () {
+                            item.removeChild(pImg);
+                        });
                     }
                     item.removeAttribute('data-src');
                 });
@@ -212,7 +214,6 @@
 
     function loadData(err, obj) {
         if (err) return;
-        if (!obj.data.design) return;
         layout = obj.data.design.selectedLayout;
 
         if(!obj.data.design.securedFeaturesOption)
@@ -242,6 +243,7 @@
 
         getPlugins(obj, function (result) {
             plugins = result;
+            pluginsContainer.innerHTML = '';
 
             var options = calcImgOptions(layout);
 
@@ -301,7 +303,9 @@
                             }));
                             img.classList.add('blur-effect');
                             img.alt = "plugin-img";
-                            divImg.appendChild(img);
+                            window.requestAnimationFrame(function () {
+                                divImg.appendChild(img);
+                            });
                         }
                         else {
                             divImg.classList.add("hasIcon");
