@@ -108,7 +108,6 @@
     
     var lazyLoad = {
         loadImage: function (item) {
-            var start = Date.now();
             
             var _failAttempts = 0;
             
@@ -121,7 +120,6 @@
             }
             
             function _initImg(item) {
-                console.warn('init', Date.now() - start);
                 img.src = item.getAttribute('data-src');
                 img.className = 'reveal-img';
                 if (img.complete) _addImg();
@@ -150,7 +148,7 @@
                     item.setAttribute('data-crop-width',cropWidth);
                     item.setAttribute('data-crop-height',cropHeight);
 
-                    var _newCroppedImg = buildfire.imageLib.cropImage(originalImg, {width:cropWidth,height: cropHeight});
+                    var _newCroppedImg = optimizeImg(buildfire.imageLib.cropImage(originalImg, {width:cropWidth,height: cropHeight}));
                     item.setAttribute('data-src',_newCroppedImg);
 
                     _initImg(item);
@@ -163,26 +161,22 @@
                 item.addEventListener('click', function (e) {
                     e.preventDefault();
                 }, false);
+                
+                // item.appendChild(img).addEventListener('animationend', function (e) {
+                //     // remove preview image
+                //     var pImg = item.querySelector && item.querySelector('.placeholder');
 
-                // add full image
-                // window.requestAnimationFrame(function () {
-                    console.warn('done', Date.now() - start);
-                    
-                    item.appendChild(img).addEventListener('animationend', function (e) {
-                        // remove preview image
-                        var pImg = item.querySelector && item.querySelector('.placeholder');
+                //     if (pImg) {
+                //         e.target.alt = pImg.alt || '';
+                //         e.target.classList.remove('reveal-img');
 
-                        if (pImg) {
-                            e.target.alt = pImg.alt || '';
-                            e.target.classList.remove('reveal-img');
-                            // window.requestAnimationFrame(function () {
-                                pImg.classList.remove('animated');
-                                pImg.style.display = 'none';
-                            // });
-                        }
-                        item.removeAttribute('data-src');
-                    });
+                //         pImg.classList.remove('animated');
+                //         pImg.style.display = 'none';
+
+                //     }
+                //     item.removeAttribute('data-src');
                 // });
+
             }
         },
         isInViewport: function (element) {
@@ -295,7 +289,7 @@
 
                     if (p.iconUrl || p.iconClassName) {
                         if (p.iconUrl) {
-                            var _croppedImg = buildfire.imageLib.cropImage(p.iconUrl, options);
+                            var _croppedImg = optimizeImg(buildfire.imageLib.cropImage(p.iconUrl, options));
                             divImg.classList.add("hasImg");
                             divImg.setAttribute("data-src", _croppedImg);
                             divImg.setAttribute("data-original-img", p.iconUrl);
@@ -303,17 +297,22 @@
                             divImg.setAttribute("data-crop-height", options.height);
                             divImg.classList.add('lazy-img');
 
-                            // var img = document.createElement('img');
-                            // img.setAttribute("src", buildfire.imageLib.resizeImage(_croppedImg, {
-                            //     width: 10,
-                            //     disablePixelRation: true
-                            // }));
-                            // img.classList.add('blur-effect');
-                            // img.alt = "plugin-img";
-                            var placeholder = document.createElement('div');
-                            placeholder.classList = 'placeholder animated bodyTextBackgroundTheme';
-                            placeholder.style.minHeight = options.height + "px";
-                            placeholder.style.maxHeight = options.height + "px";
+                            var placeholder = document.createElement('img');
+                            var baseUrl = '../../../styles/media/holder-';
+
+                            if (layout === 10) {
+                                placeholder.src = baseUrl + '4x1.gif';
+                            } else if (layout === 7) {
+                                placeholder.src = baseUrl + '16x9.gif';                                
+                            } else if ([2, 3, 4, 9].indexOf(layout) > -1) {
+                                placeholder.src = baseUrl + '2x1.gif';
+                            } else {
+                                placeholder.src = baseUrl + '1x1.gif';
+                            }
+                            placeholder.setAttribute('width', options.width);
+                            placeholder.setAttribute('height', options.height);
+                            placeholder.style.height = options.height + "px !important";
+                            placeholder.style.width = options.width + "px !important";
                             
                             divImg.appendChild(placeholder);
                         }
@@ -572,6 +571,28 @@
             }
         }
     };
+
+    function optimizeImg(url) {
+        /**
+         * Use image compression:
+         *      png-lossy-50: compresses PNGs
+         *      q80: compresses JPEG
+         *  
+         * These can be concatinated, as each
+         * compression filter only effects
+         * it's respective file type
+         */
+        var size = url.match(/\/\d+\D\d+\//g);
+        // ********* return the original url if *********
+        // cloudimg has gone down, or the provider has changed
+        // the image is already compressed
+        // size could not be determined
+        if (url.indexOf('cloudimg.io') < 0 || !size || url.indexOf('png-lossy-50') > 0 || url.indexOf('q80') > 0) {
+            return url;
+        }
+        // add light compression and return
+        return url.replace(/\/s\/crop\/\d+\D\d+\//g, '/crop' + size[0] + 'png-lossy-50.q80.i1/');
+    }
 
     function calcFontSize(options, layout) {
         var fontSize = 0;
