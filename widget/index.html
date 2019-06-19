@@ -55,7 +55,7 @@
             left: 0;
             top: 0;
             will-change: opacity;
-            animation: reveal 0.1s ease-out;
+            animation: reveal 1s ease-out;
         }
 
         @keyframes reveal {
@@ -105,12 +105,12 @@
 <div id="pluginsContainer"></div>
 <script>
     var plugins = [];
-    
+
     var lazyLoad = {
         loadImage: function (item) {
-            
+
             var _failAttempts = 0;
-            
+
             // load image
             var img = new Image();
 
@@ -715,30 +715,6 @@
     object {
         max-width: 100%;
         vertical-align: top;
-    }
-
-    @keyframes placeHolderShimmer{
-        0%{
-            background-position: -100vw 0
-        }
-        100%{
-            background-position: 100vw 0
-        }
-    }
-
-    .placeholder.animated {
-        height: 100% !important;
-        width: 100%;
-        opacity: 0.9;
-        animation-duration: 2s;
-        animation-fill-mode: forwards;
-        animation-iteration-count: infinite;
-        animation-name: placeHolderShimmer;
-        animation-timing-function: linear;
-        background: #f6f7f8 !important;
-        background: linear-gradient(to right, #eeeeee52 8%, #dddddd52 18%, #eeeeee52 33%) !important;
-        background-size: 100vw !important;
-        position: relative;
     }
 
     section .pluginPage,
