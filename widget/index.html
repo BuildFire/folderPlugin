@@ -55,7 +55,7 @@
             left: 0;
             top: 0;
             will-change: opacity;
-            animation: reveal 1s ease-out;
+            animation: reveal 0.1s ease-out;
         }
 
         @keyframes reveal {
@@ -108,7 +108,6 @@
 
     var lazyLoad = {
         loadImage: function (item) {
-
             var _failAttempts = 0;
 
             // load image
@@ -161,6 +160,19 @@
                 item.addEventListener('click', function (e) {
                     e.preventDefault();
                 }, false);
+                
+                item.appendChild(img).addEventListener('animationend', function (e) {
+                    // remove preview image
+                    var pImg = item.querySelector && item.querySelector('.placeholder');
+
+                    if (pImg) {
+                        e.target.alt = pImg.alt || '';
+                        e.target.classList.remove('reveal-img');
+                        pImg.style.display = 'none';
+                    }
+                    item.removeAttribute('data-src');
+                });
+
             }
         },
         isInViewport: function (element) {
@@ -200,6 +212,7 @@
 
     function loadData(err, obj) {
         if (err) return;
+        if (!obj.data.design) return;
         layout = obj.data.design.selectedLayout;
 
         if(!obj.data.design.securedFeaturesOption)
@@ -284,15 +297,8 @@
                             var placeholder = document.createElement('img');
                             var baseUrl = '../../../styles/media/holder-';
 
-                            if (layout === 10) {
-                                placeholder.src = baseUrl + '4x1.gif';
-                            } else if (layout === 7) {
-                                placeholder.src = baseUrl + '16x9.gif';                                
-                            } else if ([2, 3, 4, 9].indexOf(layout) > -1) {
-                                placeholder.src = baseUrl + '2x1.gif';
-                            } else {
-                                placeholder.src = baseUrl + '1x1.gif';
-                            }
+                            placeholder.src = getPlaceholderImage(layout);
+                            placeholder.classList.add("placeholder");
                             placeholder.setAttribute('width', options.width);
                             placeholder.setAttribute('height', options.height);
                             placeholder.style.height = options.height + "px !important";
@@ -576,6 +582,29 @@
         }
         // add light compression and return
         return url.replace(/\/s\/crop\/\d+\D\d+\//g, '/crop' + size[0] + 'png-lossy-50.q80.i1/');
+    }
+
+    function getPlaceholderImage(layout) {
+        var baseUrl = '../../../styles/media/holder-';
+        var placeholderSrc = '';
+
+        if (layout === 10) {
+            placeholderSrc = baseUrl + '4x1.gif';
+        } 
+
+        else if (layout === 7) {
+            placeholderSrc = baseUrl + '16x9.gif';                                
+        }
+
+        else if ([2, 3, 4, 9].indexOf(layout) > -1) {
+            placeholderSrc = baseUrl + '2x1.gif';
+        }
+
+        else {
+            placeholderSrc = baseUrl + '1x1.gif';
+        }
+
+        return placeholderSrc;
     }
 
     function calcFontSize(options, layout) {
