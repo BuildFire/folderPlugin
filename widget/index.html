@@ -55,7 +55,7 @@
             left: 0;
             top: 0;
             will-change: opacity;
-            animation: reveal 1s ease-out;
+            animation: reveal 0.1s ease-out;
         }
 
         @keyframes reveal {
@@ -147,7 +147,7 @@
                     item.setAttribute('data-crop-width',cropWidth);
                     item.setAttribute('data-crop-height',cropHeight);
 
-                    var _newCroppedImg = buildfire.imageLib.cropImage(originalImg, {width:cropWidth,height: cropHeight});
+                    var _newCroppedImg = optimizeImg(buildfire.imageLib.cropImage(originalImg, {width:cropWidth,height: cropHeight}));
                     item.setAttribute('data-src',_newCroppedImg);
 
                     _initImg(item);
@@ -160,19 +160,19 @@
                 item.addEventListener('click', function (e) {
                     e.preventDefault();
                 }, false);
-
-                // add full image
+                
                 item.appendChild(img).addEventListener('animationend', function (e) {
                     // remove preview image
-                    var pImg = item.querySelector && item.querySelector('img.blur-effect');
+                    var pImg = item.querySelector && item.querySelector('.placeholder');
 
                     if (pImg) {
                         e.target.alt = pImg.alt || '';
-                        item.removeChild(pImg);
                         e.target.classList.remove('reveal-img');
+                        pImg.style.display = 'none';
                     }
                     item.removeAttribute('data-src');
                 });
+
             }
         },
         isInViewport: function (element) {
@@ -242,6 +242,7 @@
 
         getPlugins(obj, function (result) {
             plugins = result;
+            pluginsContainer.innerHTML = '';
 
             var options = calcImgOptions(layout);
 
@@ -285,8 +286,7 @@
 
                     if (p.iconUrl || p.iconClassName) {
                         if (p.iconUrl) {
-                            var _croppedImg = buildfire.imageLib.cropImage(p.iconUrl, options);
-
+                            var _croppedImg = optimizeImg(buildfire.imageLib.cropImage(p.iconUrl, options));
                             divImg.classList.add("hasImg");
                             divImg.setAttribute("data-src", _croppedImg);
                             divImg.setAttribute("data-original-img", p.iconUrl);
@@ -294,14 +294,17 @@
                             divImg.setAttribute("data-crop-height", options.height);
                             divImg.classList.add('lazy-img');
 
-                            var img = document.createElement('img');
-                            img.setAttribute("src", buildfire.imageLib.resizeImage(_croppedImg, {
-                                width: 10,
-                                disablePixelRation: true
-                            }));
-                            img.classList.add('blur-effect');
-                            img.alt = "plugin-img";
-                            divImg.appendChild(img);
+                            var placeholder = document.createElement('img');
+                            var baseUrl = '../../../styles/media/holder-';
+
+                            placeholder.src = getPlaceholderImage(layout);
+                            placeholder.classList.add("placeholder");
+                            placeholder.setAttribute('width', options.width);
+                            placeholder.setAttribute('height', options.height);
+                            placeholder.style.height = options.height + "px !important";
+                            placeholder.style.width = options.width + "px !important";
+                            
+                            divImg.appendChild(placeholder);
                         }
                         else {
                             divImg.classList.add("hasIcon");
@@ -558,6 +561,51 @@
             }
         }
     };
+
+    function optimizeImg(url) {
+        /**
+         * Use image compression:
+         *      png-lossy-50: compresses PNGs
+         *      q80: compresses JPEG
+         *  
+         * These can be concatinated, as each
+         * compression filter only effects
+         * it's respective file type
+         */
+        var size = url.match(/\/\d+\D\d+\//g);
+        // ********* return the original url if *********
+        // cloudimg has gone down, or the provider has changed
+        // the image is already compressed
+        // size could not be determined
+        if (url.indexOf('cloudimg.io') < 0 || !size || url.indexOf('png-lossy-50') > 0 || url.indexOf('q80') > 0) {
+            return url;
+        }
+        // add light compression and return
+        return url.replace(/\/s\/crop\/\d+\D\d+\//g, '/crop' + size[0] + 'png-lossy-50.q80.i1/');
+    }
+
+    function getPlaceholderImage(layout) {
+        var baseUrl = '../../../styles/media/holder-';
+        var placeholderSrc = '';
+
+        if (layout === 10) {
+            placeholderSrc = baseUrl + '4x1.gif';
+        } 
+
+        else if (layout === 7) {
+            placeholderSrc = baseUrl + '16x9.gif';                                
+        }
+
+        else if ([2, 3, 4, 9].indexOf(layout) > -1) {
+            placeholderSrc = baseUrl + '2x1.gif';
+        }
+
+        else {
+            placeholderSrc = baseUrl + '1x1.gif';
+        }
+
+        return placeholderSrc;
+    }
 
     function calcFontSize(options, layout) {
         var fontSize = 0;
@@ -1033,7 +1081,7 @@
         overflow: hidden;
     }
 
-    .layout8 img {
+    .layout8 img, .layout8 .placeholder {
         border-radius: 50% !important;
     }
 
