@@ -169,6 +169,7 @@
                         e.target.alt = pImg.alt || '';
                         e.target.classList.remove('reveal-img');
                         pImg.style.display = 'none';
+                        pImg.removeAttribute('src');
                     }
                     item.removeAttribute('data-src');
                 });
@@ -181,7 +182,7 @@
                 _elementHeight = element.parentElement.parentElement.clientHeight;
             }
 
-            var wT = window.pageYOffset, wB = wT + window.innerHeight + (_elementHeight * 1), cRect, pT, pB, p = 0;
+            var wT = window.pageYOffset, wB = wT + window.innerHeight + (_elementHeight * 3), cRect, pT, pB, p = 0;
             cRect = element.getBoundingClientRect();
             pT = wT + cRect.top;
             pB = pT + cRect.height;
@@ -577,11 +578,11 @@
         // cloudimg has gone down, or the provider has changed
         // the image is already compressed
         // size could not be determined
-        if (url.indexOf('cloudimg.io') < 0 || !size || url.indexOf('png-lossy-50') > 0 || url.indexOf('q80') > 0) {
+        if (url.indexOf('cloudimg.io') < 0 || !size || url.indexOf('png-lossy-80') > 0 || url.indexOf('q80') > 0) {
             return url;
         }
         // add light compression and return
-        return url.replace(/\/s\/crop\/\d+\D\d+\//g, '/crop' + size[0] + 'png-lossy-50.q80.i1/');
+        return url.replace(/\/s\/crop\/\d+\D\d+\//g, '/crop' + size[0] + 'png-lossy-80.q80.i1/');
     }
 
     function getPlaceholderImage(layout) {
