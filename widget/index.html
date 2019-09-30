@@ -147,7 +147,7 @@
                     item.setAttribute('data-crop-width',cropWidth);
                     item.setAttribute('data-crop-height',cropHeight);
 
-                    var _newCroppedImg = optimizeImg(buildfire.imageLib.cropImage(originalImg, {width:cropWidth,height: cropHeight}));
+                    var _newCroppedImg = buildfire.imageLib.cropImage(originalImg, {width:cropWidth,height: cropHeight});
                     item.setAttribute('data-src',_newCroppedImg);
 
                     _initImg(item);
@@ -169,6 +169,7 @@
                         e.target.alt = pImg.alt || '';
                         e.target.classList.remove('reveal-img');
                         pImg.style.display = 'none';
+                        pImg.removeAttribute('src');
                     }
                     item.removeAttribute('data-src');
                 });
@@ -181,7 +182,7 @@
                 _elementHeight = element.parentElement.parentElement.clientHeight;
             }
 
-            var wT = window.pageYOffset, wB = wT + window.innerHeight + (_elementHeight * 1), cRect, pT, pB, p = 0;
+            var wT = window.pageYOffset, wB = wT + window.innerHeight + (_elementHeight * 3), cRect, pT, pB, p = 0;
             cRect = element.getBoundingClientRect();
             pT = wT + cRect.top;
             pB = pT + cRect.height;
@@ -215,6 +216,8 @@
         if (!obj.data.design) return;
         layout = obj.data.design.selectedLayout;
 
+        var compressImages = obj.data.design.compressImages;
+
         if(!obj.data.design.securedFeaturesOption)
             obj.data.design.securedFeaturesOption="Enable";
 
@@ -235,6 +238,7 @@
             txt.classList.remove('hide');
         }
 
+        setIphonePadding(obj.data.content.carouselImages, obj.data.content.text, layout);
 
         var pluginsContainer = document.getElementById("pluginsContainer");
         pluginsContainer.className = "layout" + layout;
@@ -244,7 +248,7 @@
             plugins = result;
             pluginsContainer.innerHTML = '';
 
-            var options = calcImgOptions(layout);
+            var options = calcImgOptions(layout, compressImages);
 
             if (layout == 12) {
                 var pluginItemFrame = document.createElement('div');
@@ -286,7 +290,7 @@
 
                     if (p.iconUrl || p.iconClassName) {
                         if (p.iconUrl) {
-                            var _croppedImg = optimizeImg(buildfire.imageLib.cropImage(p.iconUrl, options));
+                            var _croppedImg = buildfire.imageLib.cropImage(p.iconUrl, options);
                             divImg.classList.add("hasImg");
                             divImg.setAttribute("data-src", _croppedImg);
                             divImg.setAttribute("data-original-img", p.iconUrl);
@@ -448,9 +452,14 @@
                 if (err) {
                     console.error("Error searching plugins: ", err);
                 }
-                var data = _mapFromSearch(result);
-                plugins = data;
-                callback(data);
+                buildfire.getContext(function (error, context) {
+                    var thisInstanceId = context ? context.instanceId : '';
+                    var data = _mapFromSearch(result).filter(function (plugin) {
+                        return plugin.instanceId !== thisInstanceId;
+                    });
+                    plugins = data;
+                    callback(data);
+                });
             });
         }
         else {
@@ -534,6 +543,17 @@
             document.head.appendChild(style);
     }
 
+    function setIphonePadding(carouselImages, text, layout) {
+        var isLauncher = buildfire.getFrameType() === 'LAUNCHER_PLUGIN';
+        var hasImages = carouselImages && carouselImages.length > 0;
+        var isValidLayout = [1, 2, 6, 8].indexOf(layout) > -1;
+
+        if (!isLauncher || hasImages) return;
+
+        if (text || isValidLayout) {
+            document.body.classList.add('no-carousel');
+        }
+    }
     buildfire.datastore.getWithDynamicData(loadData);
 
     buildfire.datastore.onUpdate(function (obj) {
@@ -561,28 +581,6 @@
             }
         }
     };
-
-    function optimizeImg(url) {
-        /**
-         * Use image compression:
-         *      png-lossy-50: compresses PNGs
-         *      q80: compresses JPEG
-         *  
-         * These can be concatinated, as each
-         * compression filter only effects
-         * it's respective file type
-         */
-        var size = url.match(/\/\d+\D\d+\//g);
-        // ********* return the original url if *********
-        // cloudimg has gone down, or the provider has changed
-        // the image is already compressed
-        // size could not be determined
-        if (url.indexOf('cloudimg.io') < 0 || !size || url.indexOf('png-lossy-50') > 0 || url.indexOf('q80') > 0) {
-            return url;
-        }
-        // add light compression and return
-        return url.replace(/\/s\/crop\/\d+\D\d+\//g, '/crop' + size[0] + 'png-lossy-50.q80.i1/');
-    }
 
     function getPlaceholderImage(layout) {
         var baseUrl = '../../../styles/media/holder-';
@@ -621,8 +619,11 @@
         return fontSize;
     }
 
-    function calcImgOptions(layout) {
+    function calcImgOptions(layout, compress) {
         var option = {};
+        if (compress) {
+            option.compression = 80;
+        }
         if ([3, 4, 9].indexOf(layout) >= 0) {
             option.width = window.innerWidth;
             option.height = option.width * 9 / 16;
@@ -770,6 +771,11 @@
         -webkit-overflow-scrolling: touch !important;
         height: 100% !important;
         width: 100% !important;
+    }
+
+    .no-carousel {
+        padding-top: env(safe-area-inset-top) !important;
+        padding-top: constant(safe-area-inset-top) !important;
     }
 
     /* Smaller Mobile Screens */
