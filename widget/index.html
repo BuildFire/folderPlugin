@@ -90,6 +90,10 @@
 <div id="txt" class="text-left folder-plugin-text clearfix hide-empty"></div>
 <div id="pluginsContainer"></div>
 <script>
+    var carouselContainer = document.getElementById("carousel");
+    var txt = document.getElementById("txt");
+    var pluginsContainer = document.getElementById("pluginsContainer");
+
     var plugins = [];
     var compressImages = false;
 
@@ -207,21 +211,19 @@
     function loadData(err, obj) {
         if (err || !obj || !obj.data) return;
         if (!obj.data.design) return;
-        layout = obj.data.design.selectedLayout;
-
-        compressImages = obj.data.design.compressImages;
 
         cache.set(obj);
 
-        if(!obj.data.design.securedFeaturesOption)
-            obj.data.design.securedFeaturesOption="Enable";
+        layout = obj.data.design.selectedLayout;
+        compressImages = obj.data.design.compressImages;
 
+        if(!obj.data.design.securedFeaturesOption) {
+            obj.data.design.securedFeaturesOption="Enable";
+        }
         if(obj.data.content && obj.data.content.carouselImages && obj.data.content.carouselImages.length > 0){
-            var carouselContainer = document.getElementById("carousel");
             carouselContainer.classList.remove('hide');
         }
 
-        var txt = document.getElementById("txt");
         txt.innerHTML = '';
         if (layout != 12) {
             if (obj.data.content.text)
@@ -235,10 +237,10 @@
 
         setIphonePadding(obj.data.content.carouselImages, obj.data.content.text, layout);
 
-        var pluginsContainer = document.getElementById("pluginsContainer");
         pluginsContainer.className = "layout" + layout;
         pluginsContainer.innerHTML = '';
-
+        
+        initStyle(obj, layout);
         getPlugins(obj, function (result) {
             plugins = result;
             pluginsContainer.innerHTML = '';
@@ -389,7 +391,6 @@
             //load image in first render
             lazyLoad.processLazyImages();
         });
-        initStyle(obj, layout);
 
         if (layout != 12) {
             //Render Carousel
@@ -512,15 +513,16 @@
             buildfire.imageLib.cropImage(bgImage, { width: window.innerWidth, height: window.innerHeight }, document.body);
         }
 
-        if (obj.data.design.hideText)
+        if (obj.data.design.hideText) {
             style.innerHTML += " .divTitle { display:none !Important} ";
-
+        }
         if (layout == 12) {
             style.innerHTML += " #carousel { display:none !Important} ";
         }
 
-        if (style.innerHTML.length > 0)
+        if (style.innerHTML.length > 0) {
             document.head.appendChild(style);
+        }
     }
 
     function setIphonePadding(carouselImages, text, layout) {
@@ -564,29 +566,6 @@
             }
         }
     };
-
-    function getPlaceholderImage(layout) {
-        var baseUrl = '../../../styles/media/holder-';
-        var placeholderSrc = '';
-
-        if (layout === 10) {
-            placeholderSrc = baseUrl + '4x1.gif';
-        } 
-
-        else if (layout === 7) {
-            placeholderSrc = baseUrl + '16x9.gif';                                
-        }
-
-        else if ([2, 3, 4, 9].indexOf(layout) > -1) {
-            placeholderSrc = baseUrl + '2x1.gif';
-        }
-
-        else {
-            placeholderSrc = baseUrl + '1x1.gif';
-        }
-
-        return placeholderSrc;
-    }
 
     function calcFontSize(options, layout) {
         var fontSize = 0;
@@ -651,7 +630,6 @@
 
     function renderCarousel(carouselImages, layout) {
         if (layout != 12) {
-            var carouselContainer = document.getElementById("carousel");
             if (carouselImages && carouselImages.length > 0) {
                 /*
                  if more than one image add carousel else add image directly to the carousel container
