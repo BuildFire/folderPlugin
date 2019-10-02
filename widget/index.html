@@ -54,20 +54,6 @@
             position: absolute;
             left: 0;
             top: 0;
-            will-change: opacity;
-            animation: reveal 0.1s ease-out;
-        }
-
-        @keyframes reveal {
-            0% {
-                opacity: 0;
-            }
-            50% {
-                opacity: 0.5;
-            }
-            100% {
-                opacity: 1;
-            }
         }
 
         #light-folder-body {
@@ -105,6 +91,47 @@
 <div id="pluginsContainer"></div>
 <script>
     var plugins = [];
+    var compressImages = false;
+
+    const cache = {
+        instanceId: null,
+        init() {
+            return new Promise((resolve, reject) => {
+                if (this.instanceId) return resolve();
+                
+                buildfire.getContext((error, context) => {
+                    if (error) return reject();
+
+                    const { instanceId } = context;
+                    this.instanceId = instanceId;
+
+                    resolve();
+                });
+            });
+        },
+        get() {
+            return new Promise((resolve) => {
+                const getCache = () => {
+                    const key = `folder-cache-${this.instanceId}`;
+                    const result = localStorage.getItem(key)
+
+                    if (!result) return reject();
+
+                    resolve(null, JSON.parse(result));
+                }
+                
+                this.init().then(getCache);
+            });
+        },
+        set(data) {
+            const setCache = () => {
+                const key = `folder-cache-${this.instanceId}`;
+                localStorage.setItem(key, JSON.stringify(data));
+            }
+
+            this.init().then(setCache);
+        }
+    };
 
     var lazyLoad = {
         loadImage: function (item) {
@@ -119,39 +146,16 @@
             }
             
             function _initImg(item) {
-                img.src = item.getAttribute('data-src');
+                var src = item.getAttribute('data-src');
+
+                var options = {};
+                options.width = item.getAttribute('data-crop-width');
+                options.height = item.getAttribute('data-crop-height');
+                options.compression = compressImages ? 80 : false;
+
+                buildfire.imageLib.cropImage(src, options, img);
                 img.className = 'reveal-img';
-                if (img.complete) _addImg();
-                else img.onload = _addImg;
-
-                img.onerror=function (e) {
-                    if(_failAttempts >= 1){
-                        return;
-                    }
-
-                    _failAttempts++;
-
-                    /*
-                    *  Sometimes Image IO doesn't crop image with certain width & height
-                    *  So this for changes the dimensions and try to do another crop using image IO
-                    *  to avoid showing only the blurred image
-                    * */
-
-                    img = new Image();
-                    var originalImg = item.getAttribute('data-original-img');
-                    var cropWidth = parseInt(item.getAttribute('data-crop-width'));
-                    cropWidth +=1;
-                    var cropHeight = parseInt(item.getAttribute('data-crop-height'));
-                    cropHeight+=1;
-
-                    item.setAttribute('data-crop-width',cropWidth);
-                    item.setAttribute('data-crop-height',cropHeight);
-
-                    var _newCroppedImg = buildfire.imageLib.cropImage(originalImg, {width:cropWidth,height: cropHeight});
-                    item.setAttribute('data-src',_newCroppedImg);
-
-                    _initImg(item);
-                };
+                _addImg();
             }
 
             // replace image
@@ -161,18 +165,7 @@
                     e.preventDefault();
                 }, false);
                 
-                item.appendChild(img).addEventListener('animationend', function (e) {
-                    // remove preview image
-                    var pImg = item.querySelector && item.querySelector('.placeholder');
-
-                    if (pImg) {
-                        e.target.alt = pImg.alt || '';
-                        e.target.classList.remove('reveal-img');
-                        pImg.style.display = 'none';
-                        pImg.removeAttribute('src');
-                    }
-                    item.removeAttribute('data-src');
-                });
+                item.appendChild(img);
 
             }
         },
@@ -212,11 +205,13 @@
     });
 
     function loadData(err, obj) {
-        if (err) return;
+        if (err || !obj || !obj.data) return;
         if (!obj.data.design) return;
         layout = obj.data.design.selectedLayout;
 
-        var compressImages = obj.data.design.compressImages;
+        compressImages = obj.data.design.compressImages;
+
+        cache.set(obj);
 
         if(!obj.data.design.securedFeaturesOption)
             obj.data.design.securedFeaturesOption="Enable";
@@ -248,7 +243,7 @@
             plugins = result;
             pluginsContainer.innerHTML = '';
 
-            var options = calcImgOptions(layout, compressImages);
+            var options = calcImgOptions(layout);
 
             if (layout == 12) {
                 var pluginItemFrame = document.createElement('div');
@@ -290,25 +285,12 @@
 
                     if (p.iconUrl || p.iconClassName) {
                         if (p.iconUrl) {
-                            var _croppedImg = buildfire.imageLib.cropImage(p.iconUrl, options);
                             divImg.classList.add("hasImg");
-                            divImg.setAttribute("data-src", _croppedImg);
+                            divImg.setAttribute("data-src", p.iconUrl);
                             divImg.setAttribute("data-original-img", p.iconUrl);
                             divImg.setAttribute("data-crop-width", options.width);
                             divImg.setAttribute("data-crop-height", options.height);
                             divImg.classList.add('lazy-img');
-
-                            var placeholder = document.createElement('img');
-                            var baseUrl = '../../../styles/media/holder-';
-
-                            placeholder.src = getPlaceholderImage(layout);
-                            placeholder.classList.add("placeholder");
-                            placeholder.setAttribute('width', options.width);
-                            placeholder.setAttribute('height', options.height);
-                            placeholder.style.height = options.height + "px !important";
-                            placeholder.style.width = options.width + "px !important";
-                            
-                            divImg.appendChild(placeholder);
                         }
                         else {
                             divImg.classList.add("hasIcon");
@@ -526,10 +508,8 @@
         }
 
         if (bgImage) {
-            style.innerHTML += "body { background: no-repeat url('" + buildfire.imageLib.cropImage(bgImage, {
-                    width: window.innerWidth,
-                    height: window.innerHeight
-                }) + "') !Important; background-size: cover !important; } ";
+            style.innerHTML += "body { background-size: cover !important; } ";
+            buildfire.imageLib.cropImage(bgImage, { width: window.innerWidth, height: window.innerHeight }, document.body);
         }
 
         if (obj.data.design.hideText)
@@ -554,6 +534,9 @@
             document.body.classList.add('no-carousel');
         }
     }
+
+    cache.get().then(loadData).catch(console.error);
+    
     buildfire.datastore.getWithDynamicData(loadData);
 
     buildfire.datastore.onUpdate(function (obj) {
@@ -619,11 +602,9 @@
         return fontSize;
     }
 
-    function calcImgOptions(layout, compress) {
+    function calcImgOptions(layout) {
         var option = {};
-        if (compress) {
-            option.compression = 80;
-        }
+
         if ([3, 4, 9].indexOf(layout) >= 0) {
             option.width = window.innerWidth;
             option.height = option.width * 9 / 16;
