@@ -1,7 +1,8 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head lang="en">
-    <meta name="buildfire" content="disableBootstrap,disableAppStyles"/>
+    <meta name="buildfire" content="disableBootstrap,disableAppStyles" />
     <script src="../../../scripts/_bundles/buildfire_lightcarousel.min.js"></script>
     <!--this css is important to be loaded first for the first paint-->
     <style>
@@ -9,6 +10,7 @@
             cursor: not-allowed;
             opacity: 0.4;
         }
+
         .hide {
             display: none !important;
         }
@@ -16,20 +18,21 @@
         .show {
             display: block !important;
         }
+
         #carousel {
             width: 100%;
-            min-width:100%;
+            min-width: 100%;
             max-height: 56vw;
             min-height: 56vw;
             overflow-y: hidden;
         }
 
-        #pluginsContainer .pluginItem{
+        #pluginsContainer .pluginItem {
             position: relative;
         }
 
         #pluginsContainer:not(.layout12) .pluginItem .pluginItemDetails {
-            position:absolute;
+            position: absolute;
             top: 0px;
             left: 0px;
             width: 100%;
@@ -39,7 +42,7 @@
         .media-holder.media-holder-icon.hasImg {
             position: relative;
             overflow: hidden;
-            height:100%;
+            height: 100%;
         }
 
         .media-holder.media-holder-icon.hasImg img {
@@ -60,7 +63,8 @@
             overflow-x: hidden;
         }
 
-        #light-folder-body span, #light-folder-body p {
+        #light-folder-body span,
+        #light-folder-body p {
             font-size: 2.5vh;
             line-height: 3vh;
         }
@@ -79,1223 +83,1226 @@
             display: block;
         }
 
-        #txt.hide + #pluginsContainer {
+        #txt.hide+#pluginsContainer {
             padding-top: 0px;
         }
     </style>
 </head>
+
 <body id="light-folder-body">
-<div id="carousel" class="sliderCarousel hide">
-</div>
-<div id="txt" class="text-left folder-plugin-text clearfix hide-empty"></div>
-<div id="pluginsContainer"></div>
-<script>
-    var carouselContainer = document.getElementById("carousel");
-    var txt = document.getElementById("txt");
-    var pluginsContainer = document.getElementById("pluginsContainer");
+    <div id="carousel" class="sliderCarousel hide">
+    </div>
+    <div id="txt" class="text-left folder-plugin-text clearfix hide-empty"></div>
+    <div id="pluginsContainer"></div>
+    <script>
+        var carouselContainer = document.getElementById("carousel");
+        var txt = document.getElementById("txt");
+        var pluginsContainer = document.getElementById("pluginsContainer");
 
-    var plugins = [];
-    var compressImages = false;
+        var plugins = [];
+        var compressImages = false;
 
-    const cache = {
-        instanceId: null,
-        init() {
-            return new Promise((resolve, reject) => {
-                if (this.instanceId) return resolve();
-                
-                buildfire.getContext((error, context) => {
-                    if (error) return reject();
+        const cache = {
+            instanceId: null,
+            init() {
+                return new Promise((resolve, reject) => {
+                    if (this.instanceId) return resolve();
 
-                    const { instanceId } = context;
-                    this.instanceId = instanceId;
+                    buildfire.getContext((error, context) => {
+                        if (error) return reject();
 
-                    resolve();
+                        const { instanceId } = context;
+                        this.instanceId = instanceId;
+
+                        resolve();
+                    });
                 });
-            });
-        },
-        get() {
-            return new Promise((resolve) => {
-                const getCache = () => {
+            },
+            get() {
+                return new Promise((resolve) => {
+                    const getCache = () => {
+                        const key = `folder-cache-${this.instanceId}`;
+                        const result = localStorage.getItem(key)
+
+                        if (!result) return reject();
+
+                        resolve(null, JSON.parse(result));
+                    }
+
+                    this.init().then(getCache);
+                });
+            },
+            set(data) {
+                const setCache = () => {
                     const key = `folder-cache-${this.instanceId}`;
-                    const result = localStorage.getItem(key)
-
-                    if (!result) return reject();
-
-                    resolve(null, JSON.parse(result));
+                    localStorage.setItem(key, JSON.stringify(data));
                 }
-                
-                this.init().then(getCache);
-            });
-        },
-        set(data) {
-            const setCache = () => {
-                const key = `folder-cache-${this.instanceId}`;
-                localStorage.setItem(key, JSON.stringify(data));
+
+                this.init().then(setCache);
             }
+        };
 
-            this.init().then(setCache);
-        }
-    };
+        var lazyLoad = {
+            loadImage: function (item) {
+                var _failAttempts = 0;
 
-    var lazyLoad = {
-        loadImage: function (item) {
-            var _failAttempts = 0;
+                // load image
+                var img = new Image();
 
-            // load image
-            var img = new Image();
+                if (item.hasAttribute('data-src')) {
+                    item.classList.remove("lazy-img");
+                    _initImg(item);
+                }
 
-            if (item.hasAttribute('data-src')) {
-                item.classList.remove("lazy-img");
-                _initImg(item);
-            }
-            
-            function _initImg(item) {
-                var src = item.getAttribute('data-src');
+                function _initImg(item) {
+                    var src = item.getAttribute('data-src');
 
-                var options = {};
-                options.width = item.getAttribute('data-crop-width');
-                options.height = item.getAttribute('data-crop-height');
-                options.compression = compressImages ? 80 : false;
+                    var options = {};
+                    options.width = item.getAttribute('data-crop-width');
+                    options.height = item.getAttribute('data-crop-height');
+                    options.compression = compressImages ? 80 : false;
 
-                buildfire.imageLib.cropImage(src, options, img);
-                img.className = 'reveal-img';
-                _addImg();
-            }
+                    buildfire.imageLib.cropImage(src, options, img);
+                    img.className = 'reveal-img';
+                    _addImg();
+                }
 
-            // replace image
-            function _addImg() {
-                // disable click
-                item.addEventListener('click', function (e) {
-                    e.preventDefault();
-                }, false);
-                
-                item.appendChild(img);
+                // replace image
+                function _addImg() {
+                    // disable click
+                    item.addEventListener('click', function (e) {
+                        e.preventDefault();
+                    }, false);
 
-            }
-        },
-        isInViewport: function (element) {
-            var _elementHeight = 0;
-            if(element.parentElement && element.parentElement.parentElement){
-                _elementHeight = element.parentElement.parentElement.clientHeight;
-            }
+                    item.appendChild(img);
 
-            var wT = window.pageYOffset, wB = wT + window.innerHeight + (_elementHeight * 3), cRect, pT, pB, p = 0;
-            cRect = element.getBoundingClientRect();
-            pT = wT + cRect.top;
-            pB = pT + cRect.height;
-            return wT < pB && wB > pT;
-        },
-        processLazyImages: function () {
-            var lazyImgs = document.querySelectorAll('.lazy-img');
-            for (var i = 0; i < lazyImgs.length; i++) {
-                if (lazyLoad.isInViewport(lazyImgs[i])) {
-                    console.log('lazy img loaded');
-                    lazyLoad.loadImage(lazyImgs[i]);
+                }
+            },
+            isInViewport: function (element) {
+                var _elementHeight = 0;
+                if (element.parentElement && element.parentElement.parentElement) {
+                    _elementHeight = element.parentElement.parentElement.clientHeight;
+                }
+
+                var wT = window.pageYOffset, wB = wT + window.innerHeight + (_elementHeight * 3), cRect, pT, pB, p = 0;
+                cRect = element.getBoundingClientRect();
+                pT = wT + cRect.top;
+                pB = pT + cRect.height;
+                return wT < pB && wB > pT;
+            },
+            processLazyImages: function () {
+                var lazyImgs = document.querySelectorAll('.lazy-img');
+                for (var i = 0; i < lazyImgs.length; i++) {
+                    if (lazyLoad.isInViewport(lazyImgs[i])) {
+                        console.log('lazy img loaded');
+                        lazyLoad.loadImage(lazyImgs[i]);
+                    }
                 }
             }
-        }
-    };
+        };
 
-    buildfire.auth.onLogin(function (user) {
-        console.log('New user loggedIN reload data to apply security', user);
-        if (user && user._id) {
+        buildfire.auth.onLogin(function (user) {
+            console.log('New user loggedIN reload data to apply security', user);
+            if (user && user._id) {
+                buildfire.datastore.getWithDynamicData(loadData);
+            }
+        });
+        // On Logout
+        buildfire.auth.onLogout(function () {
+            console.log('User loggedOut reload data to apply security');
             buildfire.datastore.getWithDynamicData(loadData);
-        }
-    });
-    // On Logout
-    buildfire.auth.onLogout(function () {
-        console.log('User loggedOut reload data to apply security');
-        buildfire.datastore.getWithDynamicData(loadData);
-    });
+        });
 
-    function loadData(err, obj) {
-        if (err || !obj || !obj.data) return;
-        if (!obj.data.design) return;
+        function loadData(err, obj) {
+            if (err || !obj || !obj.data) return;
+            if (!obj.data.design) return;
 
-        cache.set(obj);
+            cache.set(obj);
 
-        layout = obj.data.design.selectedLayout;
-        compressImages = obj.data.design.compressImages;
+            layout = obj.data.design.selectedLayout;
+            compressImages = obj.data.design.compressImages;
 
-        if(!obj.data.design.securedFeaturesOption) {
-            obj.data.design.securedFeaturesOption="Enable";
-        }
-        if(obj.data.content && obj.data.content.carouselImages && obj.data.content.carouselImages.length > 0){
-            carouselContainer.classList.remove('hide');
-        }
+            if (!obj.data.design.securedFeaturesOption) {
+                obj.data.design.securedFeaturesOption = "Enable";
+            }
+            if (obj.data.content && obj.data.content.carouselImages && obj.data.content.carouselImages.length > 0) {
+                carouselContainer.classList.remove('hide');
+            }
 
-        txt.innerHTML = '';
-        if (layout != 12) {
-            if (obj.data.content.text)
-                txt.innerHTML = obj.data.content.text.trim();
-        }
-        if (txt.innerHTML == '') {
-            txt.classList.add('hide');
-        } else {
-            txt.classList.remove('hide');
-        }
+            txt.innerHTML = '';
+            if (layout != 12) {
+                if (obj.data.content.text)
+                    txt.innerHTML = obj.data.content.text.trim();
+            }
+            if (txt.innerHTML == '') {
+                txt.classList.add('hide');
+            } else {
+                txt.classList.remove('hide');
+            }
 
-        setIphonePadding(obj.data.content.carouselImages, obj.data.content.text, layout);
+            setIphonePadding(obj.data.content.carouselImages, obj.data.content.text, layout);
 
-        pluginsContainer.className = "layout" + layout;
-        pluginsContainer.innerHTML = '';
-        
-        initStyle(obj, layout);
-        getPlugins(obj, function (result) {
-            plugins = result;
+            pluginsContainer.className = "layout" + layout;
             pluginsContainer.innerHTML = '';
 
-            var options = calcImgOptions(layout);
+            initStyle(obj, layout);
+            getPlugins(obj, function (result) {
+                plugins = result;
+                pluginsContainer.innerHTML = '';
 
-            if (layout == 12) {
-                var pluginItemFrame = document.createElement('div');
-                pluginItemFrame.classList.add("pluginItemFrame");
+                var options = calcImgOptions(layout);
 
-                var pluginItemSlidesContainer = document.createElement('div');
-                pluginItemSlidesContainer.classList.add("pluginItemSlidesContainer");
+                if (layout == 12) {
+                    var pluginItemFrame = document.createElement('div');
+                    pluginItemFrame.classList.add("pluginItemFrame");
 
-                var pluginsWrapper = document.createElement('div');
-                pluginsWrapper.classList.add("pluginsWrapper");
-            }
+                    var pluginItemSlidesContainer = document.createElement('div');
+                    pluginItemSlidesContainer.classList.add("pluginItemSlidesContainer");
 
-            for (var i = 0; i < plugins.length; i++) {
-                if(!plugins[i].hasAccess && obj.data.design.securedFeaturesOption=="Hide")
-                    continue;
-                var pluginItem = document.createElement('div');
-                if(!plugins[i].hasAccess && obj.data.design.securedFeaturesOption=="Disable")
-                    pluginItem.classList.add("item-disabled");
+                    var pluginsWrapper = document.createElement('div');
+                    pluginsWrapper.classList.add("pluginsWrapper");
+                }
 
-                pluginItem.classList.add("pluginItem");
+                for (var i = 0; i < plugins.length; i++) {
+                    if (!plugins[i].hasAccess && obj.data.design.securedFeaturesOption == "Hide")
+                        continue;
+                    var pluginItem = document.createElement('div');
+                    if (!plugins[i].hasAccess && obj.data.design.securedFeaturesOption == "Disable")
+                        pluginItem.classList.add("item-disabled");
 
-                var pluginItemDetails = document.createElement('div');
-                pluginItemDetails.classList.add("pluginItemDetails");
+                    pluginItem.classList.add("pluginItem");
 
-                pluginItem.appendChild(pluginItemDetails);
+                    var pluginItemDetails = document.createElement('div');
+                    pluginItemDetails.classList.add("pluginItemDetails");
 
-                var p = plugins[i].data || plugins[i];
+                    pluginItem.appendChild(pluginItemDetails);
 
-                if (layout != 12) {
-                    var divImg = document.createElement('div');
-                    if ([6, 11].indexOf(layout) > -1) {
-                        divImg.style.minHeight = options.height + "px";
-                        divImg.style.maxHeight = options.height + "px";
-                    }
-                    divImg.classList.add("media-holder");
-                    divImg.classList.add("media-holder-icon");
-                    divImg.setAttribute('index', i);
-                    divImg.onclick = plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable"? onClick : null;
+                    var p = plugins[i].data || plugins[i];
 
-                    if (p.iconUrl || p.iconClassName) {
-                        if (p.iconUrl) {
-                            divImg.classList.add("hasImg");
-                            divImg.setAttribute("data-src", p.iconUrl);
-                            divImg.setAttribute("data-original-img", p.iconUrl);
-                            divImg.setAttribute("data-crop-width", options.width);
-                            divImg.setAttribute("data-crop-height", options.height);
-                            divImg.classList.add('lazy-img');
+                    if (layout != 12) {
+                        var divImg = document.createElement('div');
+                        if ([6, 11].indexOf(layout) > -1) {
+                            divImg.style.minHeight = options.height + "px";
+                            divImg.style.maxHeight = options.height + "px";
+                        }
+                        divImg.classList.add("media-holder");
+                        divImg.classList.add("media-holder-icon");
+                        divImg.setAttribute('index', i);
+                        divImg.onclick = plugins[i].hasAccess || obj.data.design.securedFeaturesOption == "Enable" ? onClick : null;
+
+                        if (p.iconUrl || p.iconClassName) {
+                            if (p.iconUrl) {
+                                divImg.classList.add("hasImg");
+                                divImg.setAttribute("data-src", p.iconUrl);
+                                divImg.setAttribute("data-original-img", p.iconUrl);
+                                divImg.setAttribute("data-crop-width", options.width);
+                                divImg.setAttribute("data-crop-height", options.height);
+                                divImg.classList.add('lazy-img');
+                            }
+                            else {
+                                divImg.classList.add("hasIcon");
+                                var span = document.createElement('span');
+                                var iIcon = document.createElement('i');
+                                iIcon.className += " main-icon " + p.iconClassName;
+                                if ([3, 4, 5, 6, 7, 9, 10, 11].indexOf(layout) > -1) {
+                                    iIcon.style.fontSize = calcFontSize(options, layout) + "px";
+                                }
+                                span.append(iIcon);
+                                divImg.appendChild(span);
+                            }
                         }
                         else {
-                            divImg.classList.add("hasIcon");
-                            var span = document.createElement('span');
-                            var iIcon = document.createElement('i');
-                            iIcon.className += " main-icon " + p.iconClassName;
-                            if ([3, 4, 5, 6, 7, 9, 10, 11].indexOf(layout) > -1) {
-                                iIcon.style.fontSize = calcFontSize(options, layout) + "px";
-                            }
-                            span.append(iIcon);
-                            divImg.appendChild(span);
+                            divImg.classList.add("noImg");
+                            divImg.innerHTML = "<h1>loading</h1>";
                         }
-                    }
-                    else {
-                        divImg.classList.add("noImg");
-                        divImg.innerHTML = "<h1>loading</h1>";
+
+                        pluginItemDetails.appendChild(divImg);
                     }
 
-                    pluginItemDetails.appendChild(divImg);
-                }
+                    if ([9, 10, 11].indexOf(layout) > -1) {
+                        var divBlackLayer = document.createElement('div');
+                        divBlackLayer.className = "blackLayer";
+                        divBlackLayer.setAttribute('index', i);
+                        divBlackLayer.onclick = plugins[i].hasAccess || obj.data.design.securedFeaturesOption == "Enable" ? onClick : null;
+                        pluginItemDetails.appendChild(divBlackLayer);
+                    }
 
-                if ([9, 10, 11].indexOf(layout) > -1) {
-                    var divBlackLayer = document.createElement('div');
-                    divBlackLayer.className = "blackLayer";
-                    divBlackLayer.setAttribute('index', i);
-                    divBlackLayer.onclick = plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable" ? onClick : null;
-                    pluginItemDetails.appendChild(divBlackLayer);
-                }
+                    var divTitle = document.createElement('div');
+                    divTitle.classList.add("media-holder");
+                    divTitle.classList.add("media-holder-text");
+                    divTitle.onclick = plugins[i].hasAccess || obj.data.design.securedFeaturesOption == "Enable" ? onClick : null;
+                    divTitle.setAttribute('index', i);
 
-                var divTitle = document.createElement('div');
-                divTitle.classList.add("media-holder");
-                divTitle.classList.add("media-holder-text");
-                divTitle.onclick = plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable" ? onClick : null;
-                divTitle.setAttribute('index', i);
+                    if ([4, 5].indexOf(layout) > -1)
+                        divTitle.classList.add("titleBarBackgroundTheme");
+                    if ([7].indexOf(layout) > -1)
+                        divTitle.classList.add("blackBackgroundTheme");
 
-                if ([4, 5].indexOf(layout) > -1)
-                    divTitle.classList.add("titleBarBackgroundTheme");
-                if ([7].indexOf(layout) > -1)
-                    divTitle.classList.add("blackBackgroundTheme");
+                    if ([4, 5, 6, 7, 9, 10, 11].indexOf(layout) > -1 && obj.data.design.hideText) {
+                        divTitle.classList.add('hide');
+                    }
 
-                if ([4, 5, 6, 7, 9, 10, 11].indexOf(layout) > -1 && obj.data.design.hideText) {
-                    divTitle.classList.add('hide');
-                }
+                    var spanTitle = document.createElement('span');
+                    if ([3, 6].indexOf(layout) > -1) {
+                        spanTitle.className = "text-primary";
+                    }
+                    if ([4, 5].indexOf(layout) > -1) {
+                        spanTitle.className = "titleBarTextAndIcons";
+                    }
+                    if ([7, 9, 10, 11, 12].indexOf(layout) > -1) {
+                        spanTitle.className = "whiteTheme";
+                    }
 
-                var spanTitle = document.createElement('span');
-                if ([3, 6].indexOf(layout) > -1) {
-                    spanTitle.className = "text-primary";
-                }
-                if ([4, 5].indexOf(layout) > -1) {
-                    spanTitle.className = "titleBarTextAndIcons";
-                }
-                if ([7, 9, 10, 11, 12].indexOf(layout) > -1) {
-                    spanTitle.className = "whiteTheme";
-                }
+                    spanTitle.innerText = p.title;
 
-                spanTitle.innerText = p.title;
+                    if (layout == 3 && obj.data.design.hideText) {
+                        spanTitle.classList.add('hide');
+                    }
 
-                if (layout == 3 && obj.data.design.hideText) {
-                    spanTitle.classList.add('hide');
-                }
+                    divTitle.appendChild(spanTitle);
 
-                divTitle.appendChild(spanTitle);
+                    pluginItemDetails.appendChild(divTitle);
 
-                pluginItemDetails.appendChild(divTitle);
-
-                if (layout != 12) {
-                    pluginsContainer.appendChild(pluginItem);
-
-                } else {
-                    if ((i + 1) % 8 == 0) {
-                        var span=pluginItem.getElementsByTagName("span");
-                        span[0].innerText='...';
-                        pluginsWrapper.appendChild(pluginItem);
-                        pluginItemSlidesContainer.appendChild(pluginsWrapper);
-                        //create new wrapper
-                        pluginsWrapper = document.createElement('div');
-                        pluginsWrapper.classList.add("pluginsWrapper");
+                    if (layout != 12) {
+                        pluginsContainer.appendChild(pluginItem);
 
                     } else {
-                        pluginsWrapper.appendChild(pluginItem);
-
-                        if ((i + 1 ) == plugins.length) {
+                        if ((i + 1) % 8 == 0) {
+                            var span = pluginItem.getElementsByTagName("span");
+                            span[0].innerText = '...';
+                            pluginsWrapper.appendChild(pluginItem);
                             pluginItemSlidesContainer.appendChild(pluginsWrapper);
+                            //create new wrapper
+                            pluginsWrapper = document.createElement('div');
+                            pluginsWrapper.classList.add("pluginsWrapper");
+
+                        } else {
+                            pluginsWrapper.appendChild(pluginItem);
+
+                            if ((i + 1) == plugins.length) {
+                                pluginItemSlidesContainer.appendChild(pluginsWrapper);
+                            }
                         }
                     }
                 }
+
+                if (layout == 12) {
+                    pluginItemFrame.appendChild(pluginItemSlidesContainer);
+                    pluginsContainer.appendChild(pluginItemFrame);
+
+                    renderCarousel(null, layout);
+                }
+
+                //load image in first render
+                lazyLoad.processLazyImages();
+            });
+
+            if (layout != 12) {
+                //Render Carousel
+                renderCarousel(obj.data.content.carouselImages, layout);
+            }
+        }
+
+        function getPlugins(obj, callback) {
+            var plugins = [];
+            if (obj.data.content.loadAllPlugins) {
+                function _mapFromSearch(data) {
+                    var result = [], dataResult = [], dataResultLength = 0, currentPlugin = null, tempObj = null;
+                    if (data.result && data.result instanceof Array) {
+                        dataResult = data.result;
+                        dataResultLength = dataResult.length;
+                        for (var i = 0; i < dataResultLength; i++) {
+
+                            currentPlugin = dataResult[i];
+                            if (currentPlugin.data && currentPlugin.data._buildfire) {
+                                tempObj = {};
+
+                                tempObj.folderName = currentPlugin.data._buildfire.pluginType.result[0].folderName;
+                                tempObj.instanceId = currentPlugin.data.instanceId;
+                                tempObj.iconUrl = currentPlugin.data.iconUrl;
+                                tempObj.pluginTypeId = currentPlugin.data._buildfire.pluginType.data;
+                                tempObj.pluginTypeName = currentPlugin.data._buildfire.pluginType.result[0].name;
+                                tempObj.title = currentPlugin.data.title;
+                                tempObj.iconClassName = currentPlugin.data.iconClassName;
+                                tempObj.hasAccess = currentPlugin.hasAccess === undefined ? true : currentPlugin.hasAccess;
+                                result.push(tempObj);
+                                tempObj = null;
+                                currentPlugin = null;
+                            }
+                        }
+                    }
+                    return result;
+                }
+
+                var searchOptions = { pageIndex: 0, pageSize: 100 };
+
+                buildfire.pluginInstance.search(searchOptions, function (err, result) {
+                    if (err) {
+                        console.error("Error searching plugins: ", err);
+                    }
+                    buildfire.getContext(function (error, context) {
+                        var thisInstanceId = context ? context.instanceId : '';
+                        var data = _mapFromSearch(result).filter(function (plugin) {
+                            return plugin.instanceId !== thisInstanceId;
+                        });
+                        plugins = data;
+                        callback(data);
+                    });
+                });
+            }
+            else {
+                if (obj.data._buildfire && obj.data._buildfire.plugins &&
+                    obj.data._buildfire.plugins.result && obj.data._buildfire.plugins.data) {
+                    plugins = getPluginDetails(obj.data._buildfire.plugins.result, obj.data._buildfire.plugins.data);
+                }
+                callback(plugins);
+            }
+        }
+
+        function getPluginDetails(pluginsInfo, pluginIds) {
+            var returnPlugins = [];
+            var tempPlugin = null;
+            for (var id = 0; id < pluginIds.length; id++) {
+                for (var i = 0; i < pluginsInfo.length; i++) {
+                    tempPlugin = {};
+                    var obj = pluginsInfo[i].data ? pluginsInfo[i].data : pluginsInfo[i];
+
+
+                    if (pluginsInfo[i].hasAccess === undefined)
+                        tempPlugin.hasAccess = true;
+                    else
+                        tempPlugin.hasAccess = pluginsInfo[i].hasAccess;
+
+                    if (pluginIds[id] == obj.instanceId) {
+                        tempPlugin.instanceId = obj.instanceId;
+                        if (obj) {
+                            tempPlugin.iconUrl = obj.iconUrl;
+                            tempPlugin.iconClassName = obj.iconClassName;
+                            tempPlugin.title = obj.title;
+                            if (obj.pluginType) {
+                                tempPlugin.pluginTypeId = obj.pluginType.token;
+                                tempPlugin.folderName = obj.pluginType.folderName;
+                            }
+                            else {
+                                tempPlugin.pluginTypeId = obj.pluginTypeId;
+                                tempPlugin.folderName = obj.folderName;
+                            }
+                        } else {
+                            tempPlugin.iconUrl = "";
+                            tempPlugin.title = "[No title]";
+                        }
+                        returnPlugins.push(tempPlugin);
+                    }
+                    tempPlugin = null;
+                }
+            }
+            return returnPlugins;
+        }
+
+        function initStyle(obj, layout) {
+            var style = document.getElementById("injectedStyle");
+            if (style) document.head.removeChild(style);
+
+            style = document.createElement('style');
+            style.id = "injectedStyle";
+
+            var bgImage = obj.data.design.backgroundImage || obj.data.design.lgBackgroundImage;
+
+            if (obj.data.design.lgBackgroundImage && window.innerWidth >= 600) {
+                //iPads
+                bgImage = obj.data.design.lgBackgroundImage;
             }
 
+            if (bgImage) {
+                style.innerHTML += "body { background-size: cover !important; } ";
+                buildfire.imageLib.cropImage(bgImage, { width: window.innerWidth, height: window.innerHeight }, document.body);
+            }
+
+            if (obj.data.design.hideText) {
+                style.innerHTML += " .divTitle { display:none !Important} ";
+            }
             if (layout == 12) {
-                pluginItemFrame.appendChild(pluginItemSlidesContainer);
-                pluginsContainer.appendChild(pluginItemFrame);
-
-                renderCarousel(null, layout);
+                style.innerHTML += " #carousel { display:none !Important} ";
             }
 
-            //load image in first render
-            lazyLoad.processLazyImages();
+            if (style.innerHTML.length > 0) {
+                document.head.appendChild(style);
+            }
+        }
+
+        function setIphonePadding(carouselImages, text, layout) {
+            var isLauncher = buildfire.getFrameType() === 'LAUNCHER_PLUGIN';
+            var hasImages = carouselImages && carouselImages.length > 0;
+            var isValidLayout = [1, 2, 6, 8].indexOf(layout) > -1;
+
+            if (!isLauncher || hasImages) return;
+
+            if (text || isValidLayout) {
+                document.body.classList.add('no-carousel');
+            }
+        }
+
+        cache.get().then(loadData).catch(console.error);
+
+        buildfire.datastore.getWithDynamicData(loadData);
+
+        buildfire.datastore.onUpdate(function (obj) {
+            loadData(null, obj)
         });
 
-        if (layout != 12) {
-            //Render Carousel
-            renderCarousel(obj.data.content.carouselImages, layout);
-        }
-    }
+        buildfire.messaging.onReceivedMessage = function (event) {
+            if (event) {
+                var plugin = event.message.data;
+                switch (event.name) {
+                    case 'OPEN_PLUGIN':
+                        var fName = '';
+                        if (plugin && plugin.pluginType && plugin.pluginType.folderName)
+                            fName = plugin.pluginType.folderName;
+                        else if (plugin && plugin.folderName)
+                            fName = plugin.folderName;
 
-    function getPlugins(obj, callback) {
-        var plugins = [];
-        if (obj.data.content.loadAllPlugins) {
-            function _mapFromSearch(data) {
-                var result = [], dataResult = [], dataResultLength = 0, currentPlugin = null, tempObj = null;
-                if (data.result && data.result instanceof Array) {
-                    dataResult = data.result;
-                    dataResultLength = dataResult.length;
-                    for (var i = 0; i < dataResultLength; i++) {
-
-                        currentPlugin = dataResult[i];
-                        if (currentPlugin.data && currentPlugin.data._buildfire) {
-                            tempObj = {};
-
-                            tempObj.folderName = currentPlugin.data._buildfire.pluginType.result[0].folderName;
-                            tempObj.instanceId = currentPlugin.data.instanceId;
-                            tempObj.iconUrl = currentPlugin.data.iconUrl;
-                            tempObj.pluginTypeId = currentPlugin.data._buildfire.pluginType.data;
-                            tempObj.pluginTypeName = currentPlugin.data._buildfire.pluginType.result[0].name;
-                            tempObj.title = currentPlugin.data.title;
-                            tempObj.iconClassName = currentPlugin.data.iconClassName;
-                            tempObj.hasAccess = currentPlugin.hasAccess === undefined?true:currentPlugin.hasAccess;
-                            result.push(tempObj);
-                            tempObj = null;
-                            currentPlugin = null;
-                        }
-                    }
+                        buildfire.navigation.navigateTo({
+                            pluginId: plugin.pluginId,
+                            instanceId: plugin.instanceId,
+                            title: plugin.title,
+                            folderName: fName
+                        });
+                        break;
                 }
-                return result;
+            }
+        };
+
+        function calcFontSize(options, layout) {
+            var fontSize = 0;
+            if ([6].indexOf(layout) >= 0) {
+                fontSize = options.height - 22;
+            }
+            else if ([5].indexOf(layout) >= 0) {
+                fontSize = options.height;
+            } else {
+                fontSize = options.height - 15;
             }
 
-            var searchOptions = {pageIndex: 0, pageSize: 100};
+            return fontSize;
+        }
 
-            buildfire.pluginInstance.search(searchOptions, function (err, result) {
-                if (err) {
-                    console.error("Error searching plugins: ", err);
-                }
-                buildfire.getContext(function (error, context) {
-                    var thisInstanceId = context ? context.instanceId : '';
-                    var data = _mapFromSearch(result).filter(function (plugin) {
-                        return plugin.instanceId !== thisInstanceId;
-                    });
-                    plugins = data;
-                    callback(data);
-                });
+        function calcImgOptions(layout) {
+            var option = {};
+
+            if ([3, 4, 9].indexOf(layout) >= 0) {
+                option.width = window.innerWidth;
+                option.height = option.width * 9 / 16;
+            }
+            else if ([1, 8].indexOf(layout) >= 0) {
+                option.width = window.innerWidth * (0.15);
+                option.height = option.width;
+            }
+            else if (layout == 2) {
+                option.width = window.innerWidth * (0.32);
+                option.height = window.innerWidth * (0.18);
+            }
+            else if ([5, 11].indexOf(layout) >= 0) {
+                option.width = Math.round(window.innerWidth / 2);
+                option.height = option.width;
+            }
+            else if (layout == 6) {
+                option.width = Math.round(window.innerWidth / 2.4);
+                option.height = option.width;
+            }
+            else if (layout == 7) {
+                option.width = window.innerWidth;
+                option.height = Math.round(window.innerWidth / 2.2);
+            }
+            else if (layout == 10) {
+                option.width = window.innerWidth;
+                option.height = Math.round(window.innerWidth * 0.23);
+            }
+            return option;
+        }
+
+        function onClick(e) {
+
+            var i = parseInt(this.getAttribute('index'));
+            var p = plugins[i];
+
+            buildfire.navigation.navigateTo({
+                pluginId: p.pluginTypeId
+                , folderName: p.folderName
+                , instanceId: p.instanceId
+                , title: p.title
             });
         }
-        else {
-            if (obj.data._buildfire && obj.data._buildfire.plugins &&
-                obj.data._buildfire.plugins.result && obj.data._buildfire.plugins.data) {
-                plugins = getPluginDetails(obj.data._buildfire.plugins.result, obj.data._buildfire.plugins.data);
-            }
-            callback(plugins);
-        }
-    }
 
-    function getPluginDetails(pluginsInfo, pluginIds) {
-        var returnPlugins = [];
-        var tempPlugin = null;
-        for (var id = 0; id < pluginIds.length; id++) {
-            for (var i = 0; i < pluginsInfo.length; i++) {
-                tempPlugin = {};
-                var obj = pluginsInfo[i].data ? pluginsInfo[i].data : pluginsInfo[i];
+        function renderCarousel(carouselImages, layout) {
+            if (layout != 12) {
+                if (carouselImages && carouselImages.length > 0) {
+                    /*
+                     if more than one image add carousel else add image directly to the carousel container
+                     */
+                    if (carouselImages.length > 1) {
 
-
-                if(pluginsInfo[i].hasAccess === undefined)
-                    tempPlugin.hasAccess=true ;
-                else
-                    tempPlugin.hasAccess=pluginsInfo[i].hasAccess;
-
-                if (pluginIds[id] == obj.instanceId) {
-                    tempPlugin.instanceId = obj.instanceId;
-                    if (obj) {
-                        tempPlugin.iconUrl = obj.iconUrl;
-                        tempPlugin.iconClassName = obj.iconClassName;
-                        tempPlugin.title = obj.title;
-                        if (obj.pluginType) {
-                            tempPlugin.pluginTypeId = obj.pluginType.token;
-                            tempPlugin.folderName = obj.pluginType.folderName;
-                        }
-                        else {
-                            tempPlugin.pluginTypeId = obj.pluginTypeId;
-                            tempPlugin.folderName = obj.folderName;
-                        }
-                    } else {
-                        tempPlugin.iconUrl = "";
-                        tempPlugin.title = "[No title]";
-                    }
-                    returnPlugins.push(tempPlugin);
-                }
-                tempPlugin = null;
-            }
-        }
-        return returnPlugins;
-    }
-
-    function initStyle(obj, layout) {
-        var style = document.getElementById("injectedStyle");
-        if (style) document.head.removeChild(style);
-
-        style = document.createElement('style');
-        style.id = "injectedStyle";
-
-        var bgImage = obj.data.design.backgroundImage || obj.data.design.lgBackgroundImage;
-
-        if (obj.data.design.lgBackgroundImage && window.innerWidth >= 600) {
-            //iPads
-            bgImage = obj.data.design.lgBackgroundImage;
-        }
-
-        if (bgImage) {
-            style.innerHTML += "body { background-size: cover !important; } ";
-            buildfire.imageLib.cropImage(bgImage, { width: window.innerWidth, height: window.innerHeight }, document.body);
-        }
-
-        if (obj.data.design.hideText) {
-            style.innerHTML += " .divTitle { display:none !Important} ";
-        }
-        if (layout == 12) {
-            style.innerHTML += " #carousel { display:none !Important} ";
-        }
-
-        if (style.innerHTML.length > 0) {
-            document.head.appendChild(style);
-        }
-    }
-
-    function setIphonePadding(carouselImages, text, layout) {
-        var isLauncher = buildfire.getFrameType() === 'LAUNCHER_PLUGIN';
-        var hasImages = carouselImages && carouselImages.length > 0;
-        var isValidLayout = [1, 2, 6, 8].indexOf(layout) > -1;
-
-        if (!isLauncher || hasImages) return;
-
-        if (text || isValidLayout) {
-            document.body.classList.add('no-carousel');
-        }
-    }
-
-    cache.get().then(loadData).catch(console.error);
-    
-    buildfire.datastore.getWithDynamicData(loadData);
-
-    buildfire.datastore.onUpdate(function (obj) {
-        loadData(null, obj)
-    });
-    
-    buildfire.messaging.onReceivedMessage = function (event) {
-        if (event) {
-            var plugin = event.message.data;
-            switch (event.name) {
-                case 'OPEN_PLUGIN':
-                    var fName = '';
-                    if (plugin && plugin.pluginType && plugin.pluginType.folderName)
-                        fName = plugin.pluginType.folderName;
-                    else if (plugin && plugin.folderName)
-                        fName = plugin.folderName;
-
-                    buildfire.navigation.navigateTo({
-                        pluginId: plugin.pluginId,
-                        instanceId: plugin.instanceId,
-                        title: plugin.title,
-                        folderName: fName
-                    });
-                    break;
-            }
-        }
-    };
-
-    function calcFontSize(options, layout) {
-        var fontSize = 0;
-        if ([6].indexOf(layout) >= 0) {
-            fontSize = options.height - 22;
-        }
-        else if ([5].indexOf(layout) >= 0) {
-            fontSize = options.height;
-        } else {
-            fontSize = options.height - 15;
-        }
-
-        return fontSize;
-    }
-
-    function calcImgOptions(layout) {
-        var option = {};
-
-        if ([3, 4, 9].indexOf(layout) >= 0) {
-            option.width = window.innerWidth;
-            option.height = option.width * 9 / 16;
-        }
-        else if ([1, 8].indexOf(layout) >= 0) {
-            option.width = window.innerWidth * (0.15);
-            option.height = option.width;
-        }
-        else if (layout == 2) {
-            option.width = window.innerWidth * (0.32);
-            option.height = window.innerWidth * (0.18);
-        }
-        else if ([5, 11].indexOf(layout) >= 0) {
-            option.width = Math.round(window.innerWidth / 2);
-            option.height = option.width;
-        }
-        else if (layout == 6) {
-            option.width = Math.round(window.innerWidth / 2.4);
-            option.height = option.width;
-        }
-        else if (layout == 7) {
-            option.width = window.innerWidth;
-            option.height = Math.round(window.innerWidth / 2.2);
-        }
-        else if (layout == 10) {
-            option.width = window.innerWidth;
-            option.height = Math.round(window.innerWidth * 0.23);
-        }
-        return option;
-    }
-
-    function onClick(e) {
-
-        var i = parseInt(this.getAttribute('index'));
-        var p = plugins[i];
-
-        buildfire.navigation.navigateTo({
-            pluginId: p.pluginTypeId
-            , folderName: p.folderName
-            , instanceId: p.instanceId
-            , title: p.title
-        });
-    }
-
-    function renderCarousel(carouselImages, layout) {
-        if (layout != 12) {
-            if (carouselImages && carouselImages.length > 0) {
-                /*
-                 if more than one image add carousel else add image directly to the carousel container
-                 */
-                if (carouselImages.length > 1) {
-
-                    var carousel = new buildfire.components.carousel.view({
-                        selector: carouselContainer,
-                        items: carouselImages,
-                        speed: 1000
-                    });
-
-                } else {
-                    //add image directly to carousel container without adding the carousel lib
-                    carouselContainer.innerHTML = '';
-                    //append image tag
-                    var img = document.createElement('img');
-                    img.setAttribute("src", buildfire.imageLib.cropImage(carouselImages[0].iconUrl, {
-                        width: window.innerWidth,
-                        height: Math.ceil(9 * (window.innerWidth) / 16)
-                    }));
-                    img.alt = "Carousel Image";
-                    carouselContainer.appendChild(img);
-                    img.addEventListener("click", function () {
-                        buildfire.actionItems.execute(carouselImages[0], function (err, result) {
-                            if (err) {
-                                console.warn('Error openning slider action: ', err);
-                            }
+                        var carousel = new buildfire.components.carousel.view({
+                            selector: carouselContainer,
+                            items: carouselImages,
+                            speed: 1000
                         });
-                    });
-                }
 
-                carouselContainer.classList.remove('hide');
-            } else {
-                carouselContainer.classList.add('hide');
+                    } else {
+                        //add image directly to carousel container without adding the carousel lib
+                        carouselContainer.innerHTML = '';
+                        //append image tag
+                        var img = document.createElement('img');
+                        img.setAttribute("src", buildfire.imageLib.cropImage(carouselImages[0].iconUrl, {
+                            width: window.innerWidth,
+                            height: Math.ceil(9 * (window.innerWidth) / 16)
+                        }));
+                        img.alt = "Carousel Image";
+                        carouselContainer.appendChild(img);
+                        img.addEventListener("click", function () {
+                            buildfire.actionItems.execute(carouselImages[0], function (err, result) {
+                                if (err) {
+                                    console.warn('Error openning slider action: ', err);
+                                }
+                            });
+                        });
+                    }
+
+                    carouselContainer.classList.remove('hide');
+                } else {
+                    carouselContainer.classList.add('hide');
+                }
             }
         }
-    }
 
-    //attach scroll event for lazy load images
-    document.getElementsByTagName('body')[0].addEventListener("scroll", lazyLoad.processLazyImages, false);
-</script>
-<style>
-    * {
-        outline: none;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-        font-family: Helvetica, Sans-Serif, Arial;
-    }
-
-    /* iFrame */
-    /* Plugin iFrame */
-    img,
-    iframe,
-    object {
-        max-width: 100%;
-        vertical-align: top;
-    }
-
-    section .pluginPage,
-    section .pluginPage #pluginContentPanel,
-    #iframeControl,
-    #iframeControl body,
-    #controlIFrame,
-    #controlIFrame body,
-    .pluginFrame,
-    #pluginFrame,
-    #launcherPlugin,
-    html[buildfire] {
-        width: 100%;
-        min-width: 100%;
-        max-width: 100%;
-        height: 100%;
-        background: none;
-        overflow: hidden !important;
-        -ms-text-size-adjust: 100%;
-        -webkit-text-size-adjust: 100%;
-    }
-
-    html[buildfire] body {
-        height: 100% !important;
-        width: 100% !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-        margin: 0;
-        overflow-x: hidden;
-    }
-
-    html[buildfire] body.no-scroll {
-        overflow: hidden !important;
-        -webkit-overflow-scrolling: inherit !important;
-    }
-
-    html[buildfire] body.no-scroll .scrollable {
-        overflow-y: auto !important;
-        overflow-x: hidden !important;
-        -webkit-overflow-scrolling: touch !important;
-        height: 100% !important;
-        width: 100% !important;
-    }
-
-    .no-carousel {
-        padding-top: env(safe-area-inset-top) !important;
-        padding-top: constant(safe-area-inset-top) !important;
-    }
-
-    /* Smaller Mobile Screens */
-    @media (max-height: 540px) {
-        .login-holder .moreoptions {
-            margin-top: 0 !important;
+        //attach scroll event for lazy load images
+        document.getElementsByTagName('body')[0].addEventListener("scroll", lazyLoad.processLazyImages, false);
+    </script>
+    <style>
+        * {
+            outline: none;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            font-family: Helvetica, Sans-Serif, Arial;
         }
-    }
 
-    /* Mobile Landscape Mode */
-    @media (max-height: 470px) {
-        .login-holder .login.content.padded {
-            padding-top: 60px !important;
+        /* iFrame */
+        /* Plugin iFrame */
+        img,
+        iframe,
+        object {
+            max-width: 100%;
+            vertical-align: top;
         }
-    }
 
-    /* END iFrame */
-    /* END Plugin iFrame */
+        section .pluginPage,
+        section .pluginPage #pluginContentPanel,
+        #iframeControl,
+        #iframeControl body,
+        #controlIFrame,
+        #controlIFrame body,
+        .pluginFrame,
+        #pluginFrame,
+        #launcherPlugin,
+        html[buildfire] {
+            width: 100%;
+            min-width: 100%;
+            max-width: 100%;
+            height: 100%;
+            background: none;
+            overflow: hidden !important;
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        html[buildfire] body {
+            height: 100% !important;
+            width: 100% !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        html[buildfire] body.no-scroll {
+            overflow: hidden !important;
+            -webkit-overflow-scrolling: inherit !important;
+        }
+
+        html[buildfire] body.no-scroll .scrollable {
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            -webkit-overflow-scrolling: touch !important;
+            height: 100% !important;
+            width: 100% !important;
+        }
+
+        .no-carousel {
+            padding-top: env(safe-area-inset-top) !important;
+            padding-top: constant(safe-area-inset-top) !important;
+        }
+
+        /* Smaller Mobile Screens */
+        @media (max-height: 540px) {
+            .login-holder .moreoptions {
+                margin-top: 0 !important;
+            }
+        }
+
+        /* Mobile Landscape Mode */
+        @media (max-height: 470px) {
+            .login-holder .login.content.padded {
+                padding-top: 60px !important;
+            }
+        }
+
+        /* END iFrame */
+        /* END Plugin iFrame */
 
 
-    /*
+        /*
                                         Carousel
 
     */
 
-    #carousel ul {
-        margin-bottom: 0px !important;
-    }
+        #carousel ul {
+            margin-bottom: 0px !important;
+        }
 
-    #pluginsContainer .pluginItem {
-        width: 100%;
-        display: block;
-    }
+        #pluginsContainer .pluginItem {
+            width: 100%;
+            display: block;
+        }
 
-    /*
+        /*
                                                                 Layout-1
     */
-    #pluginsContainer.layout1 .pluginItem {
-        display: inline-block;
-        border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
-        min-height: 20vw;
-        max-height: 20vw;
-        overflow: hidden;
-    }
+        #pluginsContainer.layout1 .pluginItem {
+            display: inline-block;
+            border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
+            min-height: 20vw;
+            max-height: 20vw;
+            overflow: hidden;
+        }
 
-    .layout1 .pluginItem .media-holder.media-holder-icon {
-        width: 15vw;
-        height: 15vw;
-        border-radius: 4px;
-        margin: 3vw;
-        text-align: center;
-        float: left;
-        margin-right: 4vw;
-    }
+        .layout1 .pluginItem .media-holder.media-holder-icon {
+            width: 15vw;
+            height: 15vw;
+            border-radius: 4px;
+            margin: 3vw;
+            text-align: center;
+            float: left;
+            margin-right: 4vw;
+        }
 
-    .layout1 .pluginItem .media-holder.media-holder-icon img {
-        width: 100%;
-        height: 100%;
-    }
+        .layout1 .pluginItem .media-holder.media-holder-icon img {
+            width: 100%;
+            height: 100%;
+        }
 
-    .layout1 .pluginItem .media-holder.media-holder-icon .main-icon {
-        font-size: 15vw !important;
-        position: relative;
-        top: -1px;
-    }
+        .layout1 .pluginItem .media-holder.media-holder-icon .main-icon {
+            font-size: 15vw !important;
+            position: relative;
+            top: -1px;
+        }
 
-    .layout1 .pluginItem .media-holder.media-holder-icon .main-icon:before {
-        display: inline-block;
-    }
+        .layout1 .pluginItem .media-holder.media-holder-icon .main-icon:before {
+            display: inline-block;
+        }
 
-    .layout1 .media-holder-text span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        position: relative;
-        margin-top: 8vw !important;
-        display: block;
-    }
+        .layout1 .media-holder-text span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            position: relative;
+            margin-top: 8vw !important;
+            display: block;
+        }
 
-    /*
+        /*
                                                                 Layout-2
     */
-    #pluginsContainer.layout2 .pluginItem {
-        display: inline-block;
-        border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
-        min-height: 21vw;
-        max-height: 21vw;
-        overflow: hidden;
-    }
+        #pluginsContainer.layout2 .pluginItem {
+            display: inline-block;
+            border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
+            min-height: 21vw;
+            max-height: 21vw;
+            overflow: hidden;
+        }
 
-    .layout2 .pluginItem .media-holder.media-holder-icon {
-        width: 32vw;
-        height: 18vw;
-        margin: inherit;
-        margin-right: 10px;
-        border-radius: 4px;
-        margin: 2vw;
-        text-align: center;
-        float: left;
-        overflow: hidden;
-    }
+        .layout2 .pluginItem .media-holder.media-holder-icon {
+            width: 32vw;
+            height: 18vw;
+            margin: inherit;
+            margin-right: 10px;
+            border-radius: 4px;
+            margin: 2vw;
+            text-align: center;
+            float: left;
+            overflow: hidden;
+        }
 
-    .layout2 .pluginItem .media-holder.media-holder-icon img {
-        width: 100%;
-        height: 100%;
-    }
+        .layout2 .pluginItem .media-holder.media-holder-icon img {
+            width: 100%;
+            height: 100%;
+        }
 
-    .layout2 .pluginItem .media-holder.media-holder-icon .main-icon {
-        font-size: 18vw !important;
-        position: relative;
-        top: -1px;
-    }
+        .layout2 .pluginItem .media-holder.media-holder-icon .main-icon {
+            font-size: 18vw !important;
+            position: relative;
+            top: -1px;
+        }
 
-    .layout2 .pluginItem .media-holder.media-holder-icon .main-icon:before {
-        display: inline-block;
-    }
+        .layout2 .pluginItem .media-holder.media-holder-icon .main-icon:before {
+            display: inline-block;
+        }
 
-    .layout2 .media-holder-text span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        position: relative;
-        margin-top: 9vw !important;
-        display: block;
-    }
+        .layout2 .media-holder-text span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            position: relative;
+            margin-top: 9vw !important;
+            display: block;
+        }
 
-    /*
+        /*
                                                                     Layout-3
         */
 
-    #pluginsContainer.layout3 .pluginItem {
-        min-height: 70vw;
-        max-height: 70vw;
-        overflow: hidden;
-    }
+        #pluginsContainer.layout3 .pluginItem {
+            min-height: 70vw;
+            max-height: 70vw;
+            overflow: hidden;
+        }
 
-    .layout3 .media-holder-text {
-        padding: 15px;
-    }
+        .layout3 .media-holder-text {
+            padding: 15px;
+        }
 
-    .layout3 .media-holder-text span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: block;
-        text-align: left;
-    }
+        .layout3 .media-holder-text span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+            text-align: left;
+        }
 
-    .layout3 .media-holder {
-        text-align: center;
-        width: 100%;
-    }
+        .layout3 .media-holder {
+            text-align: center;
+            width: 100%;
+        }
 
-    .layout3 .media-holder.media-holder-icon.hasImg {
-        max-height: 56vw;
-    }
+        .layout3 .media-holder.media-holder-icon.hasImg {
+            max-height: 56vw;
+        }
 
-    /*
+        /*
                                                                     Layout-4
         */
-    #pluginsContainer.layout4 .pluginItem {
-        position: relative;
-        min-height: 56vw;
-        max-height: 56vw;
-        overflow: hidden;
-    }
+        #pluginsContainer.layout4 .pluginItem {
+            position: relative;
+            min-height: 56vw;
+            max-height: 56vw;
+            overflow: hidden;
+        }
 
-    .layout4 .media-holder-text {
-        padding: 15px;
-        position: absolute;
-        bottom: 0px;
-        width: 100%;
-        opacity: .85;
-    }
+        .layout4 .media-holder-text {
+            padding: 15px;
+            position: absolute;
+            bottom: 0px;
+            width: 100%;
+            opacity: .85;
+        }
 
-    .layout4 .media-holder-text span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: block;
-        text-align: left;
-    }
+        .layout4 .media-holder-text span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+            text-align: left;
+        }
 
-    .layout4 .media-holder {
-        text-align: center;
-        width: 100%;
-    }
+        .layout4 .media-holder {
+            text-align: center;
+            width: 100%;
+        }
 
-    /*
+        /*
                                                                     Layout-5
         */
-    #pluginsContainer.layout5 .pluginItem {
-        width: 50%;
-        display: inline-block;
-        text-align: center;
-        position: relative;
-        float: left;
-        min-height: 50vw;
-        max-height: 50vw;
-        overflow: hidden;
-    }
+        #pluginsContainer.layout5 .pluginItem {
+            width: 50%;
+            display: inline-block;
+            text-align: center;
+            position: relative;
+            float: left;
+            min-height: 50vw;
+            max-height: 50vw;
+            overflow: hidden;
+        }
 
-    .layout5 .media-holder-text {
-        padding: 10px;
-        position: absolute;
-        width: 100%;
-        opacity: .85;
-        bottom: 0;
-    }
+        .layout5 .media-holder-text {
+            padding: 10px;
+            position: absolute;
+            width: 100%;
+            opacity: .85;
+            bottom: 0;
+        }
 
-    .layout5 .pluginItem .media-holder.media-holder-icon .main-icon {
-        font-size: 48.8vw !important;
-        position: relative;
-        top: -1px;
-    }
+        .layout5 .pluginItem .media-holder.media-holder-icon .main-icon {
+            font-size: 48.8vw !important;
+            position: relative;
+            top: -1px;
+        }
 
-    .layout5 .pluginItem .media-holder.media-holder-icon .main-icon:before {
-        display: inline-block;
-    }
+        .layout5 .pluginItem .media-holder.media-holder-icon .main-icon:before {
+            display: inline-block;
+        }
 
-    .layout5 .media-holder-text span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: block;
-    }
+        .layout5 .media-holder-text span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+        }
 
-    /*
+        /*
                                                                     Layout-6
         */
-    #pluginsContainer.layout6 .pluginItem {
-        width: 50%;
-        display: inline-block;
-        text-align: center;
-        float: left;
-        min-height: 56vw;
-        max-height: 56vw;
-        overflow: hidden;
-    }
+        #pluginsContainer.layout6 .pluginItem {
+            width: 50%;
+            display: inline-block;
+            text-align: center;
+            float: left;
+            min-height: 56vw;
+            max-height: 56vw;
+            overflow: hidden;
+        }
 
-    #pluginsContainer.layout6 .pluginItem .pluginItemDetails{
-        padding: 0px 15px;
-    }
+        #pluginsContainer.layout6 .pluginItem .pluginItemDetails {
+            padding: 0px 15px;
+        }
 
-    .layout6 .pluginItem .media-holder.media-holder-icon {
-        overflow: hidden;
-    }
+        .layout6 .pluginItem .media-holder.media-holder-icon {
+            overflow: hidden;
+        }
 
-    .layout6 .pluginItem .media-holder.media-holder-icon .main-icon {
-        font-size: 42.4vw !important;
-        position: relative;
-        top: -1px;
-    }
+        .layout6 .pluginItem .media-holder.media-holder-icon .main-icon {
+            font-size: 42.4vw !important;
+            position: relative;
+            top: -1px;
+        }
 
-    .layout6 .pluginItem .media-holder.media-holder-icon .main-icon:before {
-        display: inline-block;
-    }
+        .layout6 .pluginItem .media-holder.media-holder-icon .main-icon:before {
+            display: inline-block;
+        }
 
-    .layout6 .media-holder-text {
-        padding: 15px 0px;
-    }
+        .layout6 .media-holder-text {
+            padding: 15px 0px;
+        }
 
-    .layout6 .media-holder-text span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: block;
-    }
+        .layout6 .media-holder-text span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+        }
 
-    /*
+        /*
                                                                     Layout-7
         */
-    #pluginsContainer.layout7 .pluginItem {
-        position: relative;
-        min-height: 45vw;
-        max-height: 45vw;
-        overflow: hidden;
-    }
+        #pluginsContainer.layout7 .pluginItem {
+            position: relative;
+            min-height: 45vw;
+            max-height: 45vw;
+            overflow: hidden;
+        }
 
-    .layout7 .media-holder-text {
-        padding: 15px;
-        position: absolute;
-        width: 100%;
-        opacity: .85;
-        bottom: 0px;
-    }
+        .layout7 .media-holder-text {
+            padding: 15px;
+            position: absolute;
+            width: 100%;
+            opacity: .85;
+            bottom: 0px;
+        }
 
-    .layout7 .media-holder-text span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: block;
-        text-align: left;
-    }
+        .layout7 .media-holder-text span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+            text-align: left;
+        }
 
-    .layout7 .media-holder {
-        text-align: center;
-        width: 100%;
-    }
+        .layout7 .media-holder {
+            text-align: center;
+            width: 100%;
+        }
 
-    /*
+        /*
                                                                     Layout-8
         */
-    #pluginsContainer.layout8 .pluginItem {
-        display: block;
-        border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
-        min-height: 18vw;
-        max-height: 18vw;
-        overflow: hidden;
-    }
+        #pluginsContainer.layout8 .pluginItem {
+            display: block;
+            border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
+            min-height: 18vw;
+            max-height: 18vw;
+            overflow: hidden;
+        }
 
-    .layout8 img, .layout8 .placeholder {
-        border-radius: 50% !important;
-    }
+        .layout8 img,
+        .layout8 .placeholder {
+            border-radius: 50% !important;
+        }
 
-    .layout8 .pluginItem .media-holder.media-holder-icon {
-        width: 15vw;
-        height: 15vw;
-        margin: inherit;
-        margin-right: 10px;
-        border-radius: 4px;
-        margin: 2vw;
-        text-align: center;
-        float: left;
-    }
+        .layout8 .pluginItem .media-holder.media-holder-icon {
+            width: 15vw;
+            height: 15vw;
+            margin: inherit;
+            margin-right: 10px;
+            border-radius: 4px;
+            margin: 2vw;
+            text-align: center;
+            float: left;
+        }
 
-    .layout8 .pluginItem .media-holder.media-holder-icon .main-icon {
-        font-size: 15vw !important;
-        position: relative;
-        top: -1px;
-    }
+        .layout8 .pluginItem .media-holder.media-holder-icon .main-icon {
+            font-size: 15vw !important;
+            position: relative;
+            top: -1px;
+        }
 
-    .layout8 .pluginItem .media-holder.media-holder-icon .main-icon:before {
-        display: inline-block;
-    }
+        .layout8 .pluginItem .media-holder.media-holder-icon .main-icon:before {
+            display: inline-block;
+        }
 
-    .layout8 .media-holder-text span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        position: relative;
-        margin-top: 7.5vw !important;
-        display: block;
-    }
+        .layout8 .media-holder-text span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            position: relative;
+            margin-top: 7.5vw !important;
+            display: block;
+        }
 
-    /*
+        /*
                                                                     Layout-9
         */
-    #pluginsContainer.layout9 .pluginItem {
-        position: relative;
-        min-height: 56vw;
-        max-height: 56vw;
-        overflow: hidden;
-    }
+        #pluginsContainer.layout9 .pluginItem {
+            position: relative;
+            min-height: 56vw;
+            max-height: 56vw;
+            overflow: hidden;
+        }
 
-    .layout9 .blackLayer {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 7;
-        background: rgba(0, 0, 0, 0.35);
-        -webkit-transform: translate3d(0, 0, 0);
-    }
+        .layout9 .blackLayer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 7;
+            background: rgba(0, 0, 0, 0.35);
+            -webkit-transform: translate3d(0, 0, 0);
+        }
 
-    .layout9 .media-holder-text {
-        position: absolute;
-        top: 50%;
-        margin-top: -10px;
-        left: 0;
-        width: 100%;
-        padding: 0 20px;
-        font-size: 16px;
-        line-height: 24px;
-        color: #fff;
-        z-index: 7;
-        -webkit-transform: translate3d(0, 0, 0);
-        text-align: center;
-    }
+        .layout9 .media-holder-text {
+            position: absolute;
+            top: 50%;
+            margin-top: -10px;
+            left: 0;
+            width: 100%;
+            padding: 0 20px;
+            font-size: 16px;
+            line-height: 24px;
+            color: #fff;
+            z-index: 7;
+            -webkit-transform: translate3d(0, 0, 0);
+            text-align: center;
+        }
 
-    .layout9 .media-holder-text span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: block;
-    }
+        .layout9 .media-holder-text span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+        }
 
-    .layout9 .media-holder {
-        text-align: center;
-        width: 100%;
-    }
+        .layout9 .media-holder {
+            text-align: center;
+            width: 100%;
+        }
 
-    /*
+        /*
                                                                     Layout-10
         */
-    #pluginsContainer.layout10 .pluginItem {
-        position: relative;
-        margin-bottom: 1px;
-        min-height: 23.5vw;
-        max-height: 23.5vw;
-        overflow: hidden;
-    }
+        #pluginsContainer.layout10 .pluginItem {
+            position: relative;
+            margin-bottom: 1px;
+            min-height: 23.5vw;
+            max-height: 23.5vw;
+            overflow: hidden;
+        }
 
-    .layout10 .blackLayer {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 7;
-        background: rgba(0, 0, 0, 0.35);
-        -webkit-transform: translate3d(0, 0, 0);
-    }
+        .layout10 .blackLayer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 7;
+            background: rgba(0, 0, 0, 0.35);
+            -webkit-transform: translate3d(0, 0, 0);
+        }
 
-    .layout10 .media-holder-text {
-        position: absolute;
-        top: 50%;
-        margin-top: -10px;
-        left: 0;
-        width: 100%;
-        padding: 0 20px;
-        font-size: 16px;
-        line-height: 24px;
-        color: #fff;
-        z-index: 7;
-        -webkit-transform: translate3d(0, 0, 0);
-        text-align: center;
-    }
+        .layout10 .media-holder-text {
+            position: absolute;
+            top: 50%;
+            margin-top: -10px;
+            left: 0;
+            width: 100%;
+            padding: 0 20px;
+            font-size: 16px;
+            line-height: 24px;
+            color: #fff;
+            z-index: 7;
+            -webkit-transform: translate3d(0, 0, 0);
+            text-align: center;
+        }
 
-    .layout10 .media-holder-text span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: block;
-    }
+        .layout10 .media-holder-text span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+        }
 
-    .layout10 .media-holder {
-        text-align: center;
-        width: 100%;
-    }
+        .layout10 .media-holder {
+            text-align: center;
+            width: 100%;
+        }
 
-    /*
+        /*
                                                                         Layout-11
             */
-    #pluginsContainer.layout11 .pluginItem {
-        position: relative;
-        width: 50%;
-        display: inline-block;
-        text-align: center;
-        float: left;
-        padding: 1px;
-        min-height: 50vw;
-        max-height: 50vw;
-        overflow: hidden;
-    }
+        #pluginsContainer.layout11 .pluginItem {
+            position: relative;
+            width: 50%;
+            display: inline-block;
+            text-align: center;
+            float: left;
+            padding: 1px;
+            min-height: 50vw;
+            max-height: 50vw;
+            overflow: hidden;
+        }
 
-    #pluginsContainer.layout11 .pluginItem .pluginItemDetails {
-        position: relative !important;
-        height: 100%;
-    }
+        #pluginsContainer.layout11 .pluginItem .pluginItemDetails {
+            position: relative !important;
+            height: 100%;
+        }
 
-    .layout11 .blackLayer {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 7;
-        background: rgba(0, 0, 0, 0.35);
-        -webkit-transform: translate3d(0, 0, 0);
-    }
+        .layout11 .blackLayer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 7;
+            background: rgba(0, 0, 0, 0.35);
+            -webkit-transform: translate3d(0, 0, 0);
+        }
 
-    .layout11 .media-holder-text {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 7;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-    }
+        .layout11 .media-holder-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
 
-    .layout11 .media-holder {
-        text-align: center;
-        width: 100%;
-    }
+        .layout11 .media-holder {
+            text-align: center;
+            width: 100%;
+        }
 
-    .layout11 .pluginItem .media-holder.media-holder-icon {
-        position: relative;
-        overflow: hidden;
-    }
+        .layout11 .pluginItem .media-holder.media-holder-icon {
+            position: relative;
+            overflow: hidden;
+        }
 
-    .layout11 .pluginItem .media-holder.media-holder-icon img {
-        display: block;
-        /*position: absolute;*/
-        /*top: 50%;*/
-        /*left: 50%;*/
-        min-height: 100%;
-        min-width: 100%;
-        /*transform: translate(-50%, -50%);*/
-    }
+        .layout11 .pluginItem .media-holder.media-holder-icon img {
+            display: block;
+            /*position: absolute;*/
+            /*top: 50%;*/
+            /*left: 50%;*/
+            min-height: 100%;
+            min-width: 100%;
+            /*transform: translate(-50%, -50%);*/
+        }
 
-    .layout11 .pluginItem .media-holder.media-holder-icon .main-icon {
-        font-size: 48vw !important;
-        position: relative;
-        top: -1px;
-    }
+        .layout11 .pluginItem .media-holder.media-holder-icon .main-icon {
+            font-size: 48vw !important;
+            position: relative;
+            top: -1px;
+        }
 
-    .layout11 .pluginItem .media-holder.media-holder-icon .main-icon:before {
-        display: inline-block;
-    }
+        .layout11 .pluginItem .media-holder.media-holder-icon .main-icon:before {
+            display: inline-block;
+        }
 
-    /*
+        /*
                                                                         Layout-12
             */
-    #pluginsContainer.layout12 {
-        position: relative;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 70%;
-        margin: 0 auto;
-        background: rgba(0, 0, 0, 0.8);
-        padding: 5px 15px;
-        border-radius: 3px;
-    }
+        #pluginsContainer.layout12 {
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 70%;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 5px 15px;
+            border-radius: 3px;
+        }
 
-    .layout12 .pluginItemFrame {
-        position: relative;
-        width: 100%;
-        margin: 0 auto;
-        overflow: hidden;
-        white-space: nowrap;
-    }
+        .layout12 .pluginItemFrame {
+            position: relative;
+            width: 100%;
+            margin: 0 auto;
+            overflow: hidden;
+            white-space: nowrap;
+        }
 
-    .layout12 .media-holder-text span {
-        display: block;
-        text-align: center;
-        padding: 10px 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
+        .layout12 .media-holder-text span {
+            display: block;
+            text-align: center;
+            padding: 10px 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
 
-    .layout12 .media-holder.media-holder-text {
-        border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-        width: 100%;
-    }
+        .layout12 .media-holder.media-holder-text {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+            width: 100%;
+        }
 
-    .layout12 .pluginsWrapper {
-        position: relative;
-        display: inline-block;
-        width: 100%;
-        vertical-align: top;
-    }
-</style>
-<!-- build:bundleCSSFiles  -->
-<link href="glyphicons.css" rel="stylesheet"/>
-<!-- endbuild -->
+        .layout12 .pluginsWrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            vertical-align: top;
+        }
+    </style>
+    <!-- build:bundleCSSFiles  -->
+    <link href="glyphicons.css" rel="stylesheet" />
+    <!-- endbuild -->
 </body>
+
 </html>
