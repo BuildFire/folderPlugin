@@ -572,43 +572,43 @@
         var option = {};
 
         if ([3, 4, 9].indexOf(layout) >= 0) {
-            option.size = 'full-width';
+            option.size = 'full_width';
             option.aspect = '16:9';
             option.width = window.innerWidth;
             option.height = option.width * 9 / 16;
         }
         else if ([1, 8].indexOf(layout) >= 0) {
-            option.size = 'sixth-width';
+            option.size = 'sixth_width';
             option.aspect = '1:1';
             option.width = window.innerWidth * (0.15);
             option.height = option.width;
         }
         else if (layout == 2) {
-            option.size = 'third-width';
+            option.size = 'third_width';
             option.aspect = '16:9';
             option.width = window.innerWidth * (0.32);
             option.height = window.innerWidth * (0.18);
         }
         else if ([5, 11].indexOf(layout) >= 0) {
-            option.size = 'half-width';
+            option.size = 'half_width';
             option.aspect = '1:1';
             option.width = Math.round(window.innerWidth / 2);
             option.height = option.width;
         }
         else if (layout == 6) {
-            option.size = 'half-width';
+            option.size = 'half_width';
             option.aspect = '1:1';
             option.width = Math.round(window.innerWidth / 2.4);
             option.height = option.width;
         }
         else if (layout == 7) {
-            option.size = 'full-width';
+            option.size = 'full_width';
             option.aspect = '16:9';
             option.width = window.innerWidth;
             option.height = Math.round(window.innerWidth / 2.2);
         }
         else if (layout == 10) {
-            option.size = 'full-width';
+            option.size = 'full_width';
             option.aspect = '2.39:1';
             option.width = window.innerWidth;
             option.height = Math.round(window.innerWidth * 0.23);
