@@ -37,6 +37,8 @@
         }
 
         .media-holder.media-holder-icon.hasImg {
+            display: flex;
+            align-items: center;
             position: relative;
             overflow: hidden;
             height:100%;
@@ -51,23 +53,8 @@
         }
 
         .media-holder.media-holder-icon img.reveal-img {
-            position: absolute;
             left: 0;
             top: 0;
-            will-change: opacity;
-            animation: reveal 0.1s ease-out;
-        }
-
-        @keyframes reveal {
-            0% {
-                opacity: 0;
-            }
-            50% {
-                opacity: 0.5;
-            }
-            100% {
-                opacity: 1;
-            }
         }
 
         #light-folder-body {
@@ -124,12 +111,15 @@
 <div id="txt" class="text-left folder-plugin-text clearfix hide-empty"></div>
 <div id="pluginsContainer"></div>
 <script>
+    var carouselContainer = document.getElementById("carousel");
+    var txt = document.getElementById("txt");
+    var pluginsContainer = document.getElementById("pluginsContainer");
+
     var plugins = [];
+    var compressImages = false;
 
     var lazyLoad = {
         loadImage: function (item) {
-            var _failAttempts = 0;
-
             // load image
             var img = new Image();
 
@@ -139,39 +129,23 @@
             }
             
             function _initImg(item) {
-                img.src = item.getAttribute('data-src');
+                var src = item.getAttribute('data-src');
+
+                var options = {};
+                options.size = item.getAttribute('data-crop-size');
+                options.aspect = item.getAttribute('data-crop-aspect');
+                options.compression = compressImages ? 80 : false;
+                // fallbacks
+                options.width = item.getAttribute('data-crop-width');
+                options.height = item.getAttribute('data-crop-height');
+                // enable for cache
+                // buildfire.imageLib.cropImage(src, options, img);
+                img.src = buildfire.imageLib.cropImage(src, options);
+
                 img.className = 'reveal-img';
+
                 if (img.complete) _addImg();
                 else img.onload = _addImg;
-
-                img.onerror=function (e) {
-                    if(_failAttempts >= 1){
-                        return;
-                    }
-
-                    _failAttempts++;
-
-                    /*
-                    *  Sometimes Image IO doesn't crop image with certain width & height
-                    *  So this for changes the dimensions and try to do another crop using image IO
-                    *  to avoid showing only the blurred image
-                    * */
-
-                    img = new Image();
-                    var originalImg = item.getAttribute('data-original-img');
-                    var cropWidth = parseInt(item.getAttribute('data-crop-width'));
-                    cropWidth +=1;
-                    var cropHeight = parseInt(item.getAttribute('data-crop-height'));
-                    cropHeight+=1;
-
-                    item.setAttribute('data-crop-width',cropWidth);
-                    item.setAttribute('data-crop-height',cropHeight);
-
-                    var _newCroppedImg = buildfire.imageLib.cropImage(originalImg, {width:cropWidth,height: cropHeight});
-                    item.setAttribute('data-src',_newCroppedImg);
-
-                    _initImg(item);
-                };
             }
 
             // replace image
@@ -180,20 +154,8 @@
                 item.addEventListener('click', function (e) {
                     e.preventDefault();
                 }, false);
-                
-                item.appendChild(img).addEventListener('animationend', function (e) {
-                    // remove preview image
-                    var pImg = item.querySelector && item.querySelector('.placeholder');
 
-                    if (pImg) {
-                        e.target.alt = pImg.alt || '';
-                        e.target.classList.remove('reveal-img');
-                        pImg.style.display = 'none';
-                        pImg.removeAttribute('src');
-                    }
-                    item.removeAttribute('data-src');
-                });
-
+                item.appendChild(img);
             }
         },
         isInViewport: function (element) {
@@ -232,21 +194,19 @@
     });
 
     function loadData(err, obj) {
-        if (err) return;
+        if (err || !obj || !obj.data) return;
         if (!obj.data.design) return;
-        layout = obj.data.design.selectedLayout;
 
-        var compressImages = obj.data.design.compressImages;
+        layout = obj.data.design.selectedLayout;
+        compressImages = obj.data.design.compressImages;
 
         if(!obj.data.design.securedFeaturesOption)
             obj.data.design.securedFeaturesOption="Enable";
 
         if(obj.data.content && obj.data.content.carouselImages && obj.data.content.carouselImages.length > 0){
-            var carouselContainer = document.getElementById("carousel");
             carouselContainer.classList.remove('hide');
         }
 
-        var txt = document.getElementById("txt");
         txt.innerHTML = '';
         if (layout != 12) {
             if (obj.data.content.text)
@@ -260,15 +220,15 @@
 
         setIphonePadding(obj.data.content.carouselImages, obj.data.content.text, layout);
 
-        var pluginsContainer = document.getElementById("pluginsContainer");
         pluginsContainer.className = "layout" + layout;
         pluginsContainer.innerHTML = '';
 
+        initStyle(obj, layout);
         getPlugins(obj, function (result) {
             plugins = result;
             pluginsContainer.innerHTML = '';
 
-            var options = calcImgOptions(layout, compressImages);
+            var options = calcImgOptions(layout);
 
             if (layout == 12) {
                 var pluginItemFrame = document.createElement('div');
@@ -310,25 +270,14 @@
 
                     if (p.iconUrl || p.iconClassName) {
                         if (p.iconUrl) {
-                            var _croppedImg = buildfire.imageLib.cropImage(p.iconUrl, options);
                             divImg.classList.add("hasImg");
-                            divImg.setAttribute("data-src", _croppedImg);
+                            divImg.setAttribute("data-src", p.iconUrl);
                             divImg.setAttribute("data-original-img", p.iconUrl);
+                            divImg.setAttribute("data-crop-size", options.size);
+                            divImg.setAttribute("data-crop-aspect", options.aspect);
                             divImg.setAttribute("data-crop-width", options.width);
                             divImg.setAttribute("data-crop-height", options.height);
                             divImg.classList.add('lazy-img');
-
-                            var placeholder = document.createElement('img');
-                            var baseUrl = '../../../styles/media/holder-';
-
-                            placeholder.src = getPlaceholderImage(layout);
-                            placeholder.classList.add("placeholder");
-                            placeholder.setAttribute('width', options.width);
-                            placeholder.setAttribute('height', options.height);
-                            placeholder.style.height = options.height + "px !important";
-                            placeholder.style.width = options.width + "px !important";
-                            
-                            divImg.appendChild(placeholder);
                         }
                         else {
                             divImg.classList.add("hasIcon");
@@ -427,7 +376,6 @@
             //load image in first render
             lazyLoad.processLazyImages();
         });
-        initStyle(obj, layout);
 
         if (layout != 12) {
             //Render Carousel
@@ -550,6 +498,9 @@
                     width: window.innerWidth,
                     height: window.innerHeight
                 }) + "') !Important; background-size: cover !important; } ";
+            // enable for imageCache
+            // style.innerHTML += "body { background-size: cover !important; } ";
+            // buildfire.imageLib.cropImage(bgImage, { width: window.innerWidth, height: window.innerHeight }, document.body);
         }
 
         if (obj.data.design.hideText)
@@ -574,6 +525,7 @@
             document.body.classList.add('no-carousel');
         }
     }
+
     buildfire.datastore.getWithDynamicData(loadData);
 
     buildfire.datastore.onUpdate(function (obj) {
@@ -602,29 +554,6 @@
         }
     };
 
-    function getPlaceholderImage(layout) {
-        var baseUrl = '../../../styles/media/holder-';
-        var placeholderSrc = '';
-
-        if (layout === 10) {
-            placeholderSrc = baseUrl + '4x1.gif';
-        } 
-
-        else if (layout === 7) {
-            placeholderSrc = baseUrl + '16x9.gif';                                
-        }
-
-        else if ([2, 3, 4, 9].indexOf(layout) > -1) {
-            placeholderSrc = baseUrl + '2x1.gif';
-        }
-
-        else {
-            placeholderSrc = baseUrl + '1x1.gif';
-        }
-
-        return placeholderSrc;
-    }
-
     function calcFontSize(options, layout) {
         var fontSize = 0;
         if ([6].indexOf(layout) >= 0) {
@@ -639,36 +568,48 @@
         return fontSize;
     }
 
-    function calcImgOptions(layout, compress) {
+    function calcImgOptions(layout) {
         var option = {};
-        if (compress) {
-            option.compression = 80;
-        }
+
         if ([3, 4, 9].indexOf(layout) >= 0) {
+            option.size = 'full-width';
+            option.aspect = '16:9';
             option.width = window.innerWidth;
             option.height = option.width * 9 / 16;
         }
         else if ([1, 8].indexOf(layout) >= 0) {
+            option.size = 'sixth-width';
+            option.aspect = '1:1';
             option.width = window.innerWidth * (0.15);
             option.height = option.width;
         }
         else if (layout == 2) {
+            option.size = 'third-width';
+            option.aspect = '16:9';
             option.width = window.innerWidth * (0.32);
             option.height = window.innerWidth * (0.18);
         }
         else if ([5, 11].indexOf(layout) >= 0) {
+            option.size = 'half-width';
+            option.aspect = '1:1';
             option.width = Math.round(window.innerWidth / 2);
             option.height = option.width;
         }
         else if (layout == 6) {
+            option.size = 'half-width';
+            option.aspect = '1:1';
             option.width = Math.round(window.innerWidth / 2.4);
             option.height = option.width;
         }
         else if (layout == 7) {
+            option.size = 'full-width';
+            option.aspect = '16:9';
             option.width = window.innerWidth;
             option.height = Math.round(window.innerWidth / 2.2);
         }
         else if (layout == 10) {
+            option.size = 'full-width';
+            option.aspect = '2.39:1';
             option.width = window.innerWidth;
             option.height = Math.round(window.innerWidth * 0.23);
         }
@@ -690,7 +631,6 @@
 
     function renderCarousel(carouselImages, layout) {
         if (layout != 12) {
-            var carouselContainer = document.getElementById("carousel");
             if (carouselImages && carouselImages.length > 0) {
                 /*
                  if more than one image add carousel else add image directly to the carousel container
