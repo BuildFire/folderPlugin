@@ -45,6 +45,63 @@
                 </div>
             </div>
         </div>
+        <hr ng-hide="data.design.selectedLayout < 9 || data.design.selectedLayout > 11">
+        <div class="item row margin-bottom-twenty clearfix textAlign"
+            ng-hide="data.design.selectedLayout < 9 || data.design.selectedLayout > 11">
+            <div class="labels col-md-3 padding-right-zero pull-left">
+                <span>Text Align</span>
+            </div>
+            <div class="main col-md-9 pull-right">
+                <div class="screens clearfix margin-bottom-twenty">
+                    <div class="screen layouticon pull-left">
+                        Vertical
+                    </div>
+                    <div class="screen margin-left-zero">
+                        <select class="form-control dropdown" ng-model="data.design.textAlignVertical">
+                            <option value="flex-start">Top</option>
+                            <option value="center" ng-selected="true">Center</option>
+                            <option value="flex-end">Bottom</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="screens clearfix">
+                    <div class="screen layouticon pull-left">
+                        Horizontal
+                    </div>
+                    <div class="screen margin-left-zero">
+                        <select class="form-control dropdown" ng-model="data.design.textAlignHorizontal">
+                            <option value="flex-start">Left</option>
+                            <option value="center" ng-selected="true">Center</option>
+                            <option value="flex-end">Right</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="item row margin-bottom-twenty clearfix textAlign">
+            <div class="labels col-md-3 padding-right-zero pull-left">
+                <span>Font Size</span>
+            </div>
+            <div class="main col-md-9 pull-right">
+                <div class="screens clearfix">
+                    <div class="screen layouticon pull-left">
+                        <select class="form-control dropdown margin-left-zero" ng-model="data.design.textFontSize">
+                            <option value="12">12px</option>
+                            <option value="14">14px</option>
+                            <option value="16" ng-selected="true">16px</option>
+                            <option value="18">18px</option>
+                            <option value="20">20px</option>
+                            <option value="24">24px</option>
+                            <option value="28">24px</option>
+                            <option value="32">30px</option>
+                            <option value="36">36px</option>
+                            <option value="48">48px</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
         <hr>
         <div class="item clearfix row padding-bottom-twenty">
             <div class="labels col-md-3 padding-right-zero pull-left">

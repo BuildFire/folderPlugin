@@ -71,3 +71,9 @@
     left: 0;
     right: 0;
 }
+
+.dropdown {
+    -webkit-appearance: menulist !important;
+    margin-left: 14px;
+    
+}

@@ -235,11 +235,48 @@
             txt.classList.remove('hide');
         }
 
+        const {textAlignVertical, textAlignHorizontal, textFontSize} = obj.data.design;
+        let postitioning = document.createElement("style");
+        let justifyContent = "center";
+        let alignItems = "center";
+        let fontSize = textFontSize ? textFontSize + "px" : "2.5vh";
+        if(textAlignHorizontal) justifyContent = textAlignHorizontal;
+        if(textAlignVertical) alignItems = textAlignVertical;
+        let css = `{
+                    justify-content: ${justifyContent} !important;
+                    align-items: ${alignItems} !important;
+                }`;
+        let cssFontSize = `{
+            font-size: ${fontSize} !important;
+        }`
+        postitioning.innerHTML += `.media-holder .whiteTheme ${cssFontSize}`
+        switch (layout) {
+            case 9:
+                postitioning.innerHTML += `.layout9 .media-holder ${css}`
+                break;
+
+            case 10:
+                postitioning.innerHTML += `.layout10 .media-holder ${css}`
+                break;
+
+            case 11:
+                postitioning.innerHTML += `.layout11 .media-holder-text ${css}`
+                break;
+        
+            default:
+                break;
+        }
+
+
+
 
         var pluginsContainer = document.getElementById("pluginsContainer");
         pluginsContainer.className = "layout" + layout;
         pluginsContainer.innerHTML = '';
-
+        let body = document.getElementsByTagName("body");
+        if(body && body[0]){
+            body[0].appendChild(postitioning)
+        }
         getPlugins(obj, function (result) {
             plugins = result;
             pluginsContainer.innerHTML = '';
@@ -730,6 +767,10 @@
         vertical-align: top;
     }
 
+    #carousel img {
+        width: 100vw;
+    }
+
     section .pluginPage,
     section .pluginPage #pluginContentPanel,
     #iframeControl,
@@ -1138,29 +1179,29 @@
 
     .layout9 .media-holder-text {
         position: absolute;
-        top: 50%;
-        margin-top: -10px;
-        left: 0;
-        width: 100%;
-        padding: 0 20px;
+        display: flex;
+        top: 0;
         font-size: 16px;
-        line-height: 24px;
         color: #fff;
         z-index: 7;
         -webkit-transform: translate3d(0, 0, 0);
-        text-align: center;
     }
 
     .layout9 .media-holder-text span {
         overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: block;
+        min-width: 50%;
+        height: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .layout9 .media-holder {
         text-align: center;
         width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
     }
 
     /*
@@ -1187,29 +1228,29 @@
 
     .layout10 .media-holder-text {
         position: absolute;
-        top: 50%;
-        margin-top: -10px;
-        left: 0;
-        width: 100%;
-        padding: 0 20px;
+        display: flex;
+        top: 0;
         font-size: 16px;
-        line-height: 24px;
         color: #fff;
         z-index: 7;
         -webkit-transform: translate3d(0, 0, 0);
-        text-align: center;
     }
 
     .layout10 .media-holder-text span {
         overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: block;
+        min-width: 50%;
+        height: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .layout10 .media-holder {
         text-align: center;
         width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
     }
 
     /*
@@ -1251,9 +1292,17 @@
         height: 100%;
         z-index: 7;
         display: flex;
-        align-items: center;
-        justify-content: center;
         overflow: hidden;
+        color: #fff;
+    }
+
+    .layout11 .media-holder-text span {
+        overflow: hidden;
+        min-width: 50%;
+        height: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .layout11 .media-holder {
