@@ -36,6 +36,11 @@
             height: 100%;
         }
 
+        #pluginsContainer.layout10 .media-holder.media-holder-icon.hasImg{
+            display: flex;
+            align-items: center;
+        }
+
         .media-holder.media-holder-icon.hasImg {
             position: relative;
             overflow: hidden;
@@ -51,23 +56,8 @@
         }
 
         .media-holder.media-holder-icon img.reveal-img {
-            position: absolute;
             left: 0;
             top: 0;
-            will-change: opacity;
-            animation: reveal 0.1s ease-out;
-        }
-
-        @keyframes reveal {
-            0% {
-                opacity: 0;
-            }
-            50% {
-                opacity: 0.5;
-            }
-            100% {
-                opacity: 1;
-            }
         }
 
         #light-folder-body {
@@ -96,6 +86,26 @@
         #txt.hide + #pluginsContainer {
             padding-top: 0px;
         }
+
+        #txt h1,
+        #txt h2,
+        #txt h3,
+        #txt h4,
+        #txt h5,
+        #txt h6,
+        #txt p {
+            word-break: break-word;
+        }
+
+        #txt h1 span,
+        #txt h2 span,
+        #txt h3 span,
+        #txt h4 span,
+        #txt h5 span,
+        #txt h6 span {
+            font-size: inherit;
+        }
+
     </style>
 </head>
 <body id="light-folder-body">
@@ -104,12 +114,15 @@
 <div id="txt" class="text-left folder-plugin-text clearfix hide-empty"></div>
 <div id="pluginsContainer"></div>
 <script>
+    var carouselContainer = document.getElementById("carousel");
+    var txt = document.getElementById("txt");
+    var pluginsContainer = document.getElementById("pluginsContainer");
+
     var plugins = [];
+    var compressImages = false;
 
     var lazyLoad = {
         loadImage: function (item) {
-            var _failAttempts = 0;
-
             // load image
             var img = new Image();
 
@@ -119,39 +132,23 @@
             }
             
             function _initImg(item) {
-                img.src = item.getAttribute('data-src');
+                var src = item.getAttribute('data-src');
+
+                var options = {};
+                options.size = item.getAttribute('data-crop-size');
+                options.aspect = item.getAttribute('data-crop-aspect');
+                options.compression = compressImages ? 80 : false;
+                // fallbacks
+                options.width = item.getAttribute('data-crop-width');
+                options.height = item.getAttribute('data-crop-height');
+                // enable for cache
+                // buildfire.imageLib.cropImage(src, options, img);
+                img.src = buildfire.imageLib.cropImage(src, options);
+
                 img.className = 'reveal-img';
+
                 if (img.complete) _addImg();
                 else img.onload = _addImg;
-
-                img.onerror=function (e) {
-                    if(_failAttempts >= 1){
-                        return;
-                    }
-
-                    _failAttempts++;
-
-                    /*
-                    *  Sometimes Image IO doesn't crop image with certain width & height
-                    *  So this for changes the dimensions and try to do another crop using image IO
-                    *  to avoid showing only the blurred image
-                    * */
-
-                    img = new Image();
-                    var originalImg = item.getAttribute('data-original-img');
-                    var cropWidth = parseInt(item.getAttribute('data-crop-width'));
-                    cropWidth +=1;
-                    var cropHeight = parseInt(item.getAttribute('data-crop-height'));
-                    cropHeight+=1;
-
-                    item.setAttribute('data-crop-width',cropWidth);
-                    item.setAttribute('data-crop-height',cropHeight);
-
-                    var _newCroppedImg = optimizeImg(buildfire.imageLib.cropImage(originalImg, {width:cropWidth,height: cropHeight}));
-                    item.setAttribute('data-src',_newCroppedImg);
-
-                    _initImg(item);
-                };
             }
 
             // replace image
@@ -160,19 +157,8 @@
                 item.addEventListener('click', function (e) {
                     e.preventDefault();
                 }, false);
-                
-                item.appendChild(img).addEventListener('animationend', function (e) {
-                    // remove preview image
-                    var pImg = item.querySelector && item.querySelector('.placeholder');
 
-                    if (pImg) {
-                        e.target.alt = pImg.alt || '';
-                        e.target.classList.remove('reveal-img');
-                        pImg.style.display = 'none';
-                    }
-                    item.removeAttribute('data-src');
-                });
-
+                item.appendChild(img);
             }
         },
         isInViewport: function (element) {
@@ -181,7 +167,7 @@
                 _elementHeight = element.parentElement.parentElement.clientHeight;
             }
 
-            var wT = window.pageYOffset, wB = wT + window.innerHeight + (_elementHeight * 1), cRect, pT, pB, p = 0;
+            var wT = window.pageYOffset, wB = wT + window.innerHeight + (_elementHeight * 3), cRect, pT, pB, p = 0;
             cRect = element.getBoundingClientRect();
             pT = wT + cRect.top;
             pB = pT + cRect.height;
@@ -211,19 +197,19 @@
     });
 
     function loadData(err, obj) {
-        if (err) return;
+        if (err || !obj || !obj.data) return;
         if (!obj.data.design) return;
+
         layout = obj.data.design.selectedLayout;
+        compressImages = obj.data.design.compressImages;
 
         if(!obj.data.design.securedFeaturesOption)
             obj.data.design.securedFeaturesOption="Enable";
 
         if(obj.data.content && obj.data.content.carouselImages && obj.data.content.carouselImages.length > 0){
-            var carouselContainer = document.getElementById("carousel");
             carouselContainer.classList.remove('hide');
         }
 
-        var txt = document.getElementById("txt");
         txt.innerHTML = '';
         if (layout != 12) {
             if (obj.data.content.text)
@@ -235,48 +221,13 @@
             txt.classList.remove('hide');
         }
 
-        const {textAlignVertical, textAlignHorizontal, textFontSize} = obj.data.design;
-        let postitioning = document.createElement("style");
-        let justifyContent = "center";
-        let alignItems = "center";
-        let fontSize = textFontSize ? textFontSize + "px" : "2.5vh";
-        if(textAlignHorizontal) justifyContent = textAlignHorizontal;
-        if(textAlignVertical) alignItems = textAlignVertical;
-        let css = `{
-                    justify-content: ${justifyContent} !important;
-                    align-items: ${alignItems} !important;
-                }`;
-        let cssFontSize = `{
-            font-size: ${fontSize} !important;
-        }`
-        postitioning.innerHTML += `.media-holder .whiteTheme ${cssFontSize}`
-        switch (layout) {
-            case 9:
-                postitioning.innerHTML += `.layout9 .media-holder ${css}`
-                break;
+        setIphonePadding(obj.data.content.carouselImages, obj.data.content.text, layout);
 
-            case 10:
-                postitioning.innerHTML += `.layout10 .media-holder ${css}`
-                break;
-
-            case 11:
-                postitioning.innerHTML += `.layout11 .media-holder-text ${css}`
-                break;
-        
-            default:
-                break;
-        }
-
-
-
-
-        var pluginsContainer = document.getElementById("pluginsContainer");
         pluginsContainer.className = "layout" + layout;
         pluginsContainer.innerHTML = '';
-        let body = document.getElementsByTagName("body");
-        if(body && body[0]){
-            body[0].appendChild(postitioning)
-        }
+
+
+        initStyle(obj, layout);
         getPlugins(obj, function (result) {
             plugins = result;
             pluginsContainer.innerHTML = '';
@@ -323,25 +274,14 @@
 
                     if (p.iconUrl || p.iconClassName) {
                         if (p.iconUrl) {
-                            var _croppedImg = optimizeImg(buildfire.imageLib.cropImage(p.iconUrl, options));
                             divImg.classList.add("hasImg");
-                            divImg.setAttribute("data-src", _croppedImg);
+                            divImg.setAttribute("data-src", p.iconUrl);
                             divImg.setAttribute("data-original-img", p.iconUrl);
+                            divImg.setAttribute("data-crop-size", options.size);
+                            divImg.setAttribute("data-crop-aspect", options.aspect);
                             divImg.setAttribute("data-crop-width", options.width);
                             divImg.setAttribute("data-crop-height", options.height);
                             divImg.classList.add('lazy-img');
-
-                            var placeholder = document.createElement('img');
-                            var baseUrl = '../../../styles/media/holder-';
-
-                            placeholder.src = getPlaceholderImage(layout);
-                            placeholder.classList.add("placeholder");
-                            placeholder.setAttribute('width', options.width);
-                            placeholder.setAttribute('height', options.height);
-                            placeholder.style.height = options.height + "px !important";
-                            placeholder.style.width = options.width + "px !important";
-                            
-                            divImg.appendChild(placeholder);
                         }
                         else {
                             divImg.classList.add("hasIcon");
@@ -440,7 +380,6 @@
             //load image in first render
             lazyLoad.processLazyImages();
         });
-        initStyle(obj, layout);
 
         if (layout != 12) {
             //Render Carousel
@@ -485,9 +424,14 @@
                 if (err) {
                     console.error("Error searching plugins: ", err);
                 }
-                var data = _mapFromSearch(result);
-                plugins = data;
-                callback(data);
+                buildfire.getContext(function (error, context) {
+                    var thisInstanceId = context ? context.instanceId : '';
+                    var data = _mapFromSearch(result).filter(function (plugin) {
+                        return plugin.instanceId !== thisInstanceId;
+                    });
+                    plugins = data;
+                    callback(data);
+                });
             });
         }
         else {
@@ -558,6 +502,9 @@
                     width: window.innerWidth,
                     height: window.innerHeight
                 }) + "') !Important; background-size: cover !important; } ";
+            // enable for imageCache
+            // style.innerHTML += "body { background-size: cover !important; } ";
+            // buildfire.imageLib.cropImage(bgImage, { width: window.innerWidth, height: window.innerHeight }, document.body);
         }
 
         if (obj.data.design.hideText)
@@ -569,6 +516,53 @@
 
         if (style.innerHTML.length > 0)
             document.head.appendChild(style);
+
+            const {textAlignVertical, textAlignHorizontal, textFontSize} = obj.data.design;
+        let postitioning = document.createElement("style");
+        let justifyContent = "center";
+        let alignItems = "center";
+        let fontSize = textFontSize ? textFontSize + "px" : "2.5vh";
+        if(textAlignHorizontal) justifyContent = textAlignHorizontal;
+        if(textAlignVertical) alignItems = textAlignVertical;
+        let css = `{
+                    justify-content: ${justifyContent} !important;
+                    align-items: ${alignItems} !important;
+                }`;
+        let cssFontSize = `{
+            font-size: ${fontSize} !important;
+        }`
+        postitioning.innerHTML += `.media-holder .whiteTheme ${cssFontSize}`
+        switch (layout) {
+            case 9:
+                postitioning.innerHTML += `.layout9 .media-holder ${css}`
+                break;
+
+            case 10:
+                postitioning.innerHTML += `.layout10 .media-holder ${css}`
+                break;
+
+            case 11:
+                postitioning.innerHTML += `.layout11 .media-holder-text ${css}`
+                break;
+        
+            default:
+                break;
+        }
+
+        document.head.appendChild(postitioning)
+
+    }
+
+    function setIphonePadding(carouselImages, text, layout) {
+        var isLauncher = buildfire.getFrameType() === 'LAUNCHER_PLUGIN';
+        var hasImages = carouselImages && carouselImages.length > 0;
+        var isValidLayout = [1, 2, 6, 8].indexOf(layout) > -1;
+
+        if (!isLauncher || hasImages) return;
+
+        if (text || isValidLayout) {
+            document.body.classList.add('no-carousel');
+        }
     }
 
     buildfire.datastore.getWithDynamicData(loadData);
@@ -599,51 +593,6 @@
         }
     };
 
-    function optimizeImg(url) {
-        /**
-         * Use image compression:
-         *      png-lossy-50: compresses PNGs
-         *      q80: compresses JPEG
-         *  
-         * These can be concatinated, as each
-         * compression filter only effects
-         * it's respective file type
-         */
-        var size = url.match(/\/\d+\D\d+\//g);
-        // ********* return the original url if *********
-        // cloudimg has gone down, or the provider has changed
-        // the image is already compressed
-        // size could not be determined
-        if (url.indexOf('cloudimg.io') < 0 || !size || url.indexOf('png-lossy-50') > 0 || url.indexOf('q80') > 0) {
-            return url;
-        }
-        // add light compression and return
-        return url.replace(/\/s\/crop\/\d+\D\d+\//g, '/crop' + size[0] + 'png-lossy-50.q80.i1/');
-    }
-
-    function getPlaceholderImage(layout) {
-        var baseUrl = '../../../styles/media/holder-';
-        var placeholderSrc = '';
-
-        if (layout === 10) {
-            placeholderSrc = baseUrl + '4x1.gif';
-        } 
-
-        else if (layout === 7) {
-            placeholderSrc = baseUrl + '16x9.gif';                                
-        }
-
-        else if ([2, 3, 4, 9].indexOf(layout) > -1) {
-            placeholderSrc = baseUrl + '2x1.gif';
-        }
-
-        else {
-            placeholderSrc = baseUrl + '1x1.gif';
-        }
-
-        return placeholderSrc;
-    }
-
     function calcFontSize(options, layout) {
         var fontSize = 0;
         if ([6].indexOf(layout) >= 0) {
@@ -660,33 +609,48 @@
 
     function calcImgOptions(layout) {
         var option = {};
+
         if ([3, 4, 9].indexOf(layout) >= 0) {
+            option.size = 'full_width';
+            option.aspect = '16:9';
             option.width = window.innerWidth;
             option.height = option.width * 9 / 16;
         }
         else if ([1, 8].indexOf(layout) >= 0) {
+            option.size = 'sixth_width';
+            option.aspect = '1:1';
             option.width = window.innerWidth * (0.15);
             option.height = option.width;
         }
         else if (layout == 2) {
+            option.size = 'third_width';
+            option.aspect = '16:9';
             option.width = window.innerWidth * (0.32);
             option.height = window.innerWidth * (0.18);
         }
         else if ([5, 11].indexOf(layout) >= 0) {
+            option.size = 'half_width';
+            option.aspect = '1:1';
             option.width = Math.round(window.innerWidth / 2);
             option.height = option.width;
         }
         else if (layout == 6) {
+            option.size = 'half_width';
+            option.aspect = '1:1';
             option.width = Math.round(window.innerWidth / 2.4);
             option.height = option.width;
         }
         else if (layout == 7) {
+            option.size = 'full_width';
+            option.aspect = '11:5';
             option.width = window.innerWidth;
             option.height = Math.round(window.innerWidth / 2.2);
         }
         else if (layout == 10) {
+            option.size = 'full_width';
+            option.aspect = '4:1';
             option.width = window.innerWidth;
-            option.height = Math.round(window.innerWidth * 0.23);
+            option.height = Math.round(window.innerWidth * 0.25);
         }
         return option;
     }
@@ -706,7 +670,6 @@
 
     function renderCarousel(carouselImages, layout) {
         if (layout != 12) {
-            var carouselContainer = document.getElementById("carousel");
             if (carouselImages && carouselImages.length > 0) {
                 /*
                  if more than one image add carousel else add image directly to the carousel container
@@ -811,6 +774,11 @@
         -webkit-overflow-scrolling: touch !important;
         height: 100% !important;
         width: 100% !important;
+    }
+
+    .no-carousel {
+        padding-top: env(safe-area-inset-top) !important;
+        padding-top: constant(safe-area-inset-top) !important;
     }
 
     /* Smaller Mobile Screens */
@@ -1303,6 +1271,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        -webkit-transform: translate3d(0, 0, 0);
     }
 
     .layout11 .media-holder {

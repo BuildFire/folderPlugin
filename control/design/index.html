@@ -128,6 +128,28 @@
                 </div>
             </div>
         </div>
+
+        <div>
+            <hr>
+            <div class="item row clearfix">
+                <div class="labels col-md-3 padding-right-zero pull-left">
+                    <span>Compress Images</span>
+                </div>
+                <div class="main col-md-9 pull-right" ng-init="data.design.compressImages">
+                    <div class="radio radio-primary radio-inline">
+                        <input ng-if="data.design.compressImages" id="compressImagesOff" type="radio" name="toggleCompression" ng-model="data.design.compressImages" ng-value="false">
+                        <input ng-if="!data.design.compressImages" id="compressImagesOff" type="radio" name="toggleCompression" checked="checked">
+                        <label for="compressImagesOff">False</label>
+                    </div>
+                    <div class="radio radio-primary radio-inline">
+                        <input id="compressImagesOn" type="radio" name="compressImages" ng-model="data.design.compressImages" ng-value="true">
+                        <label for="compressImages">True</label>
+                    </div>
+                    <p class="info margin-top-fifteen">Note: Compression can increase performance, but may effect image transparency.</p>
+                </div>
+            </div>
+        </div>
+
         <div>
             <hr>
             <div class="item row clearfix">
@@ -148,6 +170,7 @@
                 </div>
             </div>
         </div>
+
         <hr ng-if="enterpriseApp" >
         <div ng-if="enterpriseApp" class="padded padding-top-ten clearfix" >
             <div class="item clearfix row">
