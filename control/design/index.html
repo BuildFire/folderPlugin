@@ -94,6 +94,22 @@
                 </div>
             </div>
         </div>
+        <hr ng-hide="![1, 2, 8].includes(data.design.selectedLayout)">
+        <div class="item row clearfix" ng-hide="![1, 2, 8].includes(data.design.selectedLayout)">
+            <div class="labels col-md-3 padding-right-zero pull-left">
+                <span>Line Separator</span>
+            </div>
+            <div class="main col-md-9 pull-right">
+                <div class="radio radio-primary radio-inline">
+                    <input id="showLineSeparatorOff" type="radio" name="showLineSeparatorOff" ng-model="data.design.showLineSeparator" ng-value="false">
+                    <label for="showLineSeparatorOff">Hide</label>
+                </div>
+                <div class="radio radio-primary radio-inline">
+                    <input id="showLineSeparator" type="radio" name="showLineSeparator" ng-model="data.design.showLineSeparator" ng-value="true">
+                    <label for="showLineSeparator">Show</label>
+                </div>
+            </div>
+        </div>
         <hr>
         <div class="item row margin-bottom-twenty clearfix textAlign">
             <div class="labels col-md-3 padding-right-zero pull-left">

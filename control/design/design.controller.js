@@ -48,8 +48,11 @@
                                 securedFeaturesOption:"Enable"
                             };
                         }
-                        if(!$scope.data.design.showBlackOverlay) {
+                        if(typeof $scope.data.design.showBlackOverlay !== 'boolean') {
                             $scope.data.design.showBlackOverlay = true;
+                        }
+                        if(typeof $scope.data.design.showLineSeparator !== 'boolean') {
+                            $scope.data.design.showLineSeparator = true;
                         }
                         if (!$scope.data.design.securedFeaturesOption){
                             $scope.data.design.securedFeaturesOption = "Enable";

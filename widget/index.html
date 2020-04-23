@@ -518,7 +518,7 @@
         if (style.innerHTML.length > 0)
             document.head.appendChild(style);
 
-            const {textAlignVertical, textAlignHorizontal, textFontSize} = obj.data.design;
+            const {textAlignVertical, textAlignHorizontal, textFontSize, showLineSeparator} = obj.data.design;
         let postitioning = document.createElement("style");
         let justifyContent = "center";
         let alignItems = "center";
@@ -534,23 +534,26 @@
         }`
         postitioning.innerHTML += `span ${cssFontSize}`
         switch (layout) {
+            case 1:
+            case 2:
+            case 8:
+                if(!showLineSeparator){
+                    postitioning.innerHTML += `#pluginsContainer.layout${layout} .pluginItem { border-top: 0 !important; }`;
+                } else {
+                    postitioning.innerHTML += `#pluginsContainer.layout${layout} .pluginItem { border-top: 1px solid rgba(57, 52, 46, 0.25) !important; }`;
+                }
+                break
             case 9:
-                postitioning.innerHTML += `.layout9 .media-holder ${css}`
-                break;
-
             case 10:
-                postitioning.innerHTML += `.layout10 .media-holder ${css}`
-                break;
-
             case 11:
-                postitioning.innerHTML += `.layout11 .media-holder-text ${css}`
+                postitioning.innerHTML += `.layout${layout} .media-holder ${css}`
                 break;
         
             default:
                 break;
         }
 
-        document.head.appendChild(postitioning)
+        document.body.appendChild(postitioning)
 
     }
 
