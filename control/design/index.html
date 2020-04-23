@@ -79,6 +79,22 @@
             </div>
         </div>
         <hr>
+        <div class="item row clearfix">
+            <div class="labels col-md-3 padding-right-zero pull-left">
+                <span>Image Overlay</span>
+            </div>
+            <div class="main col-md-9 pull-right">
+                <div class="radio radio-primary radio-inline">
+                    <input id="showBlackOverlayOff" type="radio" name="showBlackOverlayOff" ng-model="data.design.showBlackOverlay" ng-value="false">
+                    <label for="showBlackOverlayOff">Hide</label>
+                </div>
+                <div class="radio radio-primary radio-inline">
+                    <input id="showBlackOverlay" type="radio" name="showBlackOverlay" ng-model="data.design.showBlackOverlay" ng-value="true">
+                    <label for="showBlackOverlay">Show</label>
+                </div>
+            </div>
+        </div>
+        <hr>
         <div class="item row margin-bottom-twenty clearfix textAlign">
             <div class="labels col-md-3 padding-right-zero pull-left">
                 <span>Font Size</span>
@@ -93,10 +109,9 @@
                             <option value="18">18px</option>
                             <option value="20">20px</option>
                             <option value="24">24px</option>
-                            <option value="28">24px</option>
-                            <option value="32">30px</option>
+                            <option value="28">28px</option>
+                            <option value="32">32px</option>
                             <option value="36">36px</option>
-                            <option value="48">48px</option>
                         </select>
                     </div>
                 </div>

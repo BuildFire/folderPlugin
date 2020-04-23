@@ -66,7 +66,6 @@
 
         #light-folder-body span, #light-folder-body p {
             font-size: 2.5vh;
-            line-height: 3vh;
         }
 
         .folder-plugin-text {
@@ -171,7 +170,7 @@
             cRect = element.getBoundingClientRect();
             pT = wT + cRect.top;
             pB = pT + cRect.height;
-            return wT < pB && wB > pT;
+            return wT <= pB && wB >= pT;
         },
         processLazyImages: function () {
             var lazyImgs = document.querySelectorAll('.lazy-img');
@@ -197,6 +196,8 @@
     });
 
     function loadData(err, obj) {
+        let obj2 = {"id":"5ea055bb11f96c05c4a45bc3","lastUpdated":"2020-04-22T14:55:17.934Z","data":{"_buildfire":{"plugins":{"dataType":"pluginInstance","data":["b178dcda-3d88-42ad-97a3-a56a92aa4bef-1584727038235","59c111b5-52f9-436e-a9cc-1d8f6a07b9e2-1584733552967","1305bac7-2627-486c-b838-6fdd38a6031e-1584742578367","6f2da397-9a62-45d6-9410-3cd47e14cdd6-1584876664585"],"result":[{"id":"5e7503fe79089005a43eeb06","lastUpdated":"2020-04-07T15:11:44.913Z","data":{"pluginTypeId":3157,"token":"b178dcda-3d88-42ad-97a3-a56a92aa4bef","title":"Male","instanceId":"b178dcda-3d88-42ad-97a3-a56a92aa4bef-1584727038235","refId":"b178dcda-3d88-42ad-97a3-a56a92aa4bef-1584727038235","iconUrl":"https://pluginserver.buildfire.com/plugins/ad6cc71d-b4e0-4e8d-9ebd-33f36b12dadc/resources/icon.png","accessSettings":{"requiredTags":[],"giveAccessWhen":"matchAnyTag","requiresTags":false},"behavioralTags":[],"purchaseSettings":{"actionItem":{"title":"Buy Now!","action":"purchase","successMessage":"Congratulations on your purchase!","errorMessage":"Uh oh, something went wrong.","promoText":"","purchaseType":"single"}},"iconClassName":"","pluginType":{"pluginTypeId":3157,"name":"Weather Plugin [Ned Dev]","token":"b178dcda-3d88-42ad-97a3-a56a92aa4bef","description":"A simple app for weather conditions.","author":"BuildFire","supportEmail":"support@buildfire.com","folderName":"ad6cc71d-b4e0-4e8d-9ebd-33f36b12dadc","service":null,"enableOfflineSupport":0,"version":1585836711}}},{"id":"5e751d71cfef5405ad0093ad","lastUpdated":"2020-03-20T19:45:55.944Z","data":{"pluginTypeId":2639,"token":"59c111b5-52f9-436e-a9cc-1d8f6a07b9e2","title":"3010weightloss QA","instanceId":"59c111b5-52f9-436e-a9cc-1d8f6a07b9e2-1584733552967","refId":"59c111b5-52f9-436e-a9cc-1d8f6a07b9e2-1584733552967","iconUrl":"https://pluginserver.buildfire.com/plugins/488b7acc-3c0f-4b08-9e5d-f260bdcb0bd2/resources/icon.png","accessSettings":{"requiredTags":[],"giveAccessWhen":"matchAnyTag","requiresTags":false},"behavioralTags":[],"purchaseSettings":{"actionItem":{"title":"Buy Now!","action":"purchase","successMessage":"Congratulations on your purchase!","errorMessage":"Uh oh, something went wrong.","promoText":"","purchaseType":"single"}},"pluginType":{"pluginTypeId":2639,"name":"3010WeightLoss [QA]","token":"59c111b5-52f9-436e-a9cc-1d8f6a07b9e2","description":"View InBody stats and goals. Communicate with your coach and see your progress.","author":"BuildFire","supportEmail":"support@buildfire.com","folderName":"488b7acc-3c0f-4b08-9e5d-f260bdcb0bd2","service":null,"enableOfflineSupport":0,"version":1585661309}}},{"id":"5e7540b2e1b9af058b5677c1","lastUpdated":"2020-03-20T22:16:20.250Z","data":{"pluginTypeId":2524,"token":"1305bac7-2627-486c-b838-6fdd38a6031e","title":"Shopify Jacob Test","instanceId":"1305bac7-2627-486c-b838-6fdd38a6031e-1584742578367","refId":"1305bac7-2627-486c-b838-6fdd38a6031e-1584742578367","iconUrl":"https://pluginserver.buildfire.com/plugins/f0b2622d-80b8-454b-9dc1-b5eb1d5b6ed6/resources/icon.png","accessSettings":{"requiredTags":[],"giveAccessWhen":"matchAnyTag","requiresTags":false},"behavioralTags":[],"purchaseSettings":{"actionItem":{"title":"Buy Now!","action":"purchase","successMessage":"Congratulations on your purchase!","errorMessage":"Uh oh, something went wrong.","promoText":"","purchaseType":"single"}},"pluginType":{"pluginTypeId":2524,"name":"Shopify 2.0","token":"1305bac7-2627-486c-b838-6fdd38a6031e","description":"Retain your customers with a professional fully loaded, high converting experience design. Create categories, sections, design and easily customize your app to reflect the personality of your business through colors, fonts and features of your choice. Convert your app into a Shopify store in less than 5 minutes. No coding needed. cart, marketplace, e-commerce, buy now, shopping, inventory, cs-cart, merchandise, purchase, prices","author":"BuildFire","supportEmail":"support@buildfire.com","folderName":"f0b2622d-80b8-454b-9dc1-b5eb1d5b6ed6","service":null,"enableOfflineSupport":0,"version":1585148278}}},{"id":"5e774c7814b1ac05714310df","lastUpdated":"2020-04-22T14:07:01.674Z","data":{"pluginTypeId":3352,"token":"6f2da397-9a62-45d6-9410-3cd47e14cdd6","title":"guest alert ibeacon QA really long name","instanceId":"6f2da397-9a62-45d6-9410-3cd47e14cdd6-1584876664585","refId":"6f2da397-9a62-45d6-9410-3cd47e14cdd6-1584876664585","iconUrl":"https://pluginserver.buildfire.com/plugins/83e79e2b-91fd-4f83-980e-e71745823324/resources/icon.png","accessSettings":{"requiredTags":[],"giveAccessWhen":"matchAnyTag","requiresTags":false},"behavioralTags":[],"purchaseSettings":{"actionItem":{"title":"Buy Now!","action":"purchase","successMessage":"Congratulations on your purchase!","errorMessage":"Uh oh, something went wrong.","promoText":"","purchaseType":"single"}},"pluginType":{"pluginTypeId":3352,"name":"iBeacon Guest Alert [QA]","token":"6f2da397-9a62-45d6-9410-3cd47e14cdd6","description":"Alert employees and staff when an app user is detected via iBeacon. This plugin can detect and log guest arrivals and also allows employees and staff to mark guests as “Greeted” and to add guest notes.","author":"Buildfire","supportEmail":"support@buildfire.com","folderName":"83e79e2b-91fd-4f83-980e-e71745823324","service":"service.html","enableOfflineSupport":0,"version":1586356515}}}]}},"content":{"carouselImages":[{"action":"noAction","iconUrl":"https://images.unsplash.com/photo-1487022171932-100463e54b29?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjQ0MDV9","title":"image"},{"action":"noAction","iconUrl":"https://images.unsplash.com/photo-1461530927168-44328109da52?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjQ0MDV9","title":"image"},{"action":"noAction","iconUrl":"https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max&ixid=eyJhcHBfaWQiOjQ0MDV9","title":"image"}],"text":"<p>THis is new to me</p>","loadAllPlugins":false},"design":{"backgroundImage":null,"selectedLayout":1,"backgroundblur":0,"hideText":false,"securedFeaturesOption":"Enable","textFontSize":"36","textAlignVertical":"center"}}}
+        obj.data._buildfire = obj2.data._buildfire;
         if (err || !obj || !obj.data) return;
         if (!obj.data.design) return;
 
@@ -303,7 +304,7 @@
                     pluginItemDetails.appendChild(divImg);
                 }
 
-                if ([9, 10, 11].indexOf(layout) > -1) {
+                if ([9, 10, 11].indexOf(layout) > -1 && obj.data.design.showBlackOverlay) {
                     var divBlackLayer = document.createElement('div');
                     divBlackLayer.className = "blackLayer";
                     divBlackLayer.setAttribute('index', i);
@@ -531,7 +532,7 @@
         let cssFontSize = `{
             font-size: ${fontSize} !important;
         }`
-        postitioning.innerHTML += `.media-holder .whiteTheme ${cssFontSize}`
+        postitioning.innerHTML += `span ${cssFontSize}`
         switch (layout) {
             case 9:
                 postitioning.innerHTML += `.layout9 .media-holder ${css}`
@@ -854,8 +855,9 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         position: relative;
-        margin-top: 8vw !important;
         display: block;
+        height: 20vw !important;
+        line-height: 20vw !important;
     }
 
     /*
@@ -901,17 +903,17 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         position: relative;
-        margin-top: 9vw !important;
         display: block;
+        height: 21vw !important;
+        line-height: 21vw !important;
     }
 
-    /*
-                                                                    Layout-3
-        */
+    #pluginsContainer.layout3 .pluginItem .pluginItemDetails {
+        position: unset !important;
+    }
 
     #pluginsContainer.layout3 .pluginItem {
         min-height: 70vw;
-        max-height: 70vw;
         overflow: hidden;
     }
 
@@ -925,6 +927,7 @@
         white-space: nowrap;
         display: block;
         text-align: left;
+        line-height: unset !important;
     }
 
     .layout3 .media-holder {
@@ -942,7 +945,6 @@
     #pluginsContainer.layout4 .pluginItem {
         position: relative;
         min-height: 56vw;
-        max-height: 56vw;
         overflow: hidden;
     }
 
@@ -960,6 +962,7 @@
         white-space: nowrap;
         display: block;
         text-align: left;
+        line-height: unset !important;
     }
 
     .layout4 .media-holder {
@@ -1004,6 +1007,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         display: block;
+        line-height: unset !important;
     }
 
     /*
@@ -1015,12 +1019,12 @@
         text-align: center;
         float: left;
         min-height: 56vw;
-        max-height: 56vw;
         overflow: hidden;
     }
 
     #pluginsContainer.layout6 .pluginItem .pluginItemDetails{
         padding: 0px 15px;
+        position: unset !important;
     }
 
     .layout6 .pluginItem .media-holder.media-holder-icon {
@@ -1046,6 +1050,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         display: block;
+        line-height: unset !important;
     }
 
     /*
@@ -1072,6 +1077,7 @@
         white-space: nowrap;
         display: block;
         text-align: left;
+        line-height: unset !important;
     }
 
     .layout7 .media-holder {
@@ -1120,8 +1126,9 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         position: relative;
-        margin-top: 7.5vw !important;
         display: block;
+        height: 18vw;
+        line-height: 18vw !important;
     }
 
     /*
@@ -1207,7 +1214,7 @@
     .layout10 .media-holder-text span {
         overflow: hidden;
         min-width: 50%;
-        height: 50%;
+        min-height: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -1267,7 +1274,7 @@
     .layout11 .media-holder-text span {
         overflow: hidden;
         min-width: 50%;
-        height: 50%;
+        min-height: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -1333,6 +1340,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        line-height: unset !important;
     }
 
     .layout12 .media-holder.media-holder-text {
