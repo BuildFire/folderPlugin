@@ -23,9 +23,18 @@
             min-height: 56vw;
             overflow-y: hidden;
         }
+        #carousel .loryFrame,
+        #carousel .loryFrame .lorySlides,
+        #carousel .loryFrame .js_slide,
+        #carousel .loryFrame .js_slide img{
+            min-height: inherit;
+        }
+        #carousel .loryFrame .js_slide img{
+            object-fit: cover;
+        }
 
         #pluginsContainer{
-            animation: load-in .2s ease-in .5s forwards;
+            animation: load-in .2s ease-in .75s forwards;
             transform-origin: top;
             opacity: 0;
         }
@@ -89,6 +98,8 @@
         .media-holder.media-holder-icon img.reveal-img {
             left: 0;
             top: 0;
+            height: 100%;
+            object-fit: cover;
         }
 
         #light-folder-body {
@@ -901,11 +912,9 @@
         */
 
     #pluginsContainer.layout3 .pluginItem {
-        margin: 12px;
         overflow: hidden;
-        border-radius: 4px;
-        box-shadow: 0 2px 4px rgba(150,150,150,.5);
-        background-color: rgba(255,255,255,.2);
+        box-shadow: 0 2px 4px rgba(150,150,150,.01);
+        background-color: rgba(255,255,255,.05);
     }
     #pluginsContainer.layout3 .pluginItem .pluginItemDetails{
         position: relative;
@@ -1295,9 +1304,8 @@
         display: inline-block;
         text-align: center;
         float: left;
-        padding: 1px;
-        min-height: 50vw;
-        max-height: 50vw;
+        /* padding: 1px; */
+        height: 50vw;
         overflow: hidden;
     }
 
@@ -1339,11 +1347,13 @@
     .layout11 .pluginItem .media-holder.media-holder-icon {
         position: relative;
         overflow: hidden;
+        min-height: auto !important;
+        max-height: none !important;
     }
 
     .layout11 .pluginItem .media-holder.media-holder-icon img {
         display: block;
-        /*position: absolute;*/
+        position: absolute;
         /*top: 50%;*/
         /*left: 50%;*/
         min-height: 100%;
