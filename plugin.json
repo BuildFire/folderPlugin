@@ -23,5 +23,9 @@
   ],
   "languages": [
     "en"
-  ]
+  ],
+	"media": [
+      { "type": "image-resource", "path": "marketplacegif.gif" },
+      { "type": "image-resource", "path": "image.png" }
+    ]
 }
