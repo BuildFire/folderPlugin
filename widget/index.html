@@ -96,13 +96,14 @@
             word-break: break-word;
         }
 
+        #txt p span,
         #txt h1 span,
         #txt h2 span,
         #txt h3 span,
         #txt h4 span,
         #txt h5 span,
         #txt h6 span {
-            font-size: inherit;
+            font-size: inherit !important;
         }
 
     </style>
@@ -545,6 +546,7 @@
             case 10:
             case 11:
                 postitioning.innerHTML += `.layout${layout} .media-holder ${css}`
+                postitioning.innerHTML += `.layout${layout} .media-holder-text span { justify-content: ${justifyContent} !important; }`
                 break;
         
             default:
