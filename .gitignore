@@ -32,3 +32,5 @@ build/Release
 node_modules
 
 
+package-lock.json
+test/assets/bower_components
