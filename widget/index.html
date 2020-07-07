@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head lang="en">
     <meta name="buildfire" content="disableBootstrap,disableAppStyles"/>
@@ -138,13 +138,14 @@
             word-break: break-word;
         }
 
+        #txt p span,
         #txt h1 span,
         #txt h2 span,
         #txt h3 span,
         #txt h4 span,
         #txt h5 span,
         #txt h6 span {
-            font-size: inherit;
+            font-size: inherit !important;
         }
 
     </style>
@@ -212,7 +213,7 @@
             cRect = element.getBoundingClientRect();
             pT = wT + cRect.top;
             pB = pT + cRect.height;
-            return wT < pB && wB > pT;
+            return wT <= pB && wB >= pT;
         },
         processLazyImages: function () {
             var lazyImgs = document.querySelectorAll('.lazy-img');
@@ -266,6 +267,7 @@
 
         pluginsContainer.className = "layout" + layout;
         pluginsContainer.innerHTML = '';
+
 
         initStyle(obj, layout);
         getPlugins(obj, function (result) {
@@ -343,7 +345,7 @@
                     pluginItemDetails.appendChild(divImg);
                 }
 
-                if ([9, 10, 11].indexOf(layout) > -1) {
+                if ([9, 10, 11].indexOf(layout) > -1 && obj.data.design.showBlackOverlay) {
                     var divBlackLayer = document.createElement('div');
                     divBlackLayer.className = "blackLayer";
                     divBlackLayer.setAttribute('index', i);
@@ -556,6 +558,45 @@
 
         if (style.innerHTML.length > 0)
             document.head.appendChild(style);
+
+            const {textAlignVertical, textAlignHorizontal, textFontSize, showLineSeparator} = obj.data.design;
+        let postitioning = document.createElement("style");
+        let justifyContent = "center";
+        let alignItems = "center";
+        let fontSize = textFontSize ? textFontSize + "px" : "2.5vh";
+        if(textAlignHorizontal) justifyContent = textAlignHorizontal;
+        if(textAlignVertical) alignItems = textAlignVertical;
+        let css = `{
+                    justify-content: ${justifyContent} !important;
+                    align-items: ${alignItems} !important;
+                }`;
+        let cssFontSize = `{
+            font-size: ${fontSize} !important;
+        }`
+        postitioning.innerHTML += `span ${cssFontSize}`
+        switch (layout) {
+            case 1:
+            case 2:
+            case 8:
+                if(!showLineSeparator){
+                    postitioning.innerHTML += `#pluginsContainer.layout${layout} .pluginItem { border-top: 0 !important; }`;
+                } else {
+                    postitioning.innerHTML += `#pluginsContainer.layout${layout} .pluginItem { border-top: 1px solid rgba(57, 52, 46, 0.25) !important; }`;
+                }
+                break
+            case 9:
+            case 10:
+            case 11:
+                postitioning.innerHTML += `.layout${layout} .media-holder ${css}`
+                postitioning.innerHTML += `.layout${layout} .media-holder-text span { justify-content: ${justifyContent} !important; }`
+                break;
+        
+            default:
+                break;
+        }
+
+        document.body.appendChild(postitioning)
+
     }
 
     function setIphonePadding(carouselImages, text, layout) {
@@ -653,9 +694,9 @@
         }
         else if (layout == 10) {
             option.size = 'full_width';
-            option.aspect = '11:5';
+            option.aspect = '4:1';
             option.width = window.innerWidth;
-            option.height = Math.round(window.innerWidth * 0.23);
+            option.height = Math.round(window.innerWidth * 0.25);
         }
         return option;
     }
@@ -733,6 +774,10 @@
     object {
         max-width: 100%;
         vertical-align: top;
+    }
+
+    #carousel img {
+        width: 100vw;
     }
 
     section .pluginPage,
@@ -852,6 +897,8 @@
         white-space: nowrap;
         position: relative;
         display: block;
+        height: 20vw !important;
+        line-height: 20vw !important;
     }
 
     /*
@@ -905,11 +952,13 @@
         white-space: nowrap;
         position: relative;
         display: block;
+        height: 21vw !important;
+        line-height: 21vw !important;
     }
 
-    /*
-                                                                    Layout-3
-        */
+    #pluginsContainer.layout3 .pluginItem .pluginItemDetails {
+        position: unset !important;
+    }
 
     #pluginsContainer.layout3 .pluginItem {
         overflow: hidden;
@@ -928,6 +977,7 @@
         white-space: nowrap;
         display: block;
         text-align: left;
+        line-height: unset !important;
     }
 
     .layout3 .media-holder {
@@ -950,7 +1000,6 @@
     #pluginsContainer.layout4 .pluginItem {
         position: relative;
         min-height: 56vw;
-        max-height: 56vw;
         overflow: hidden;
     }
 
@@ -968,6 +1017,7 @@
         white-space: nowrap;
         display: block;
         text-align: left;
+        line-height: unset !important;
     }
 
     .layout4 .media-holder {
@@ -1017,6 +1067,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         display: block;
+        line-height: unset !important;
     }
 
     /*
@@ -1123,6 +1174,7 @@
         white-space: nowrap;
         display: block;
         text-align: left;
+        line-height: unset !important;
     }
 
     .layout7 .media-holder {
@@ -1193,6 +1245,8 @@
         padding: 23px 0;
         padding-right: 16px;
         display: block;
+        height: 18vw;
+        line-height: 18vw !important;
     }
     .media-holder.media-holder-icon{
         flex-shrink: 0;
@@ -1221,29 +1275,29 @@
 
     .layout9 .media-holder-text {
         position: absolute;
-        top: 50%;
-        margin-top: -10px;
-        left: 0;
-        width: 100%;
-        padding: 0 20px;
+        display: flex;
+        top: 0;
         font-size: 16px;
-        line-height: 24px;
         color: #fff;
         z-index: 7;
         -webkit-transform: translate3d(0, 0, 0);
-        text-align: center;
     }
 
     .layout9 .media-holder-text span {
         overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: block;
+        min-width: 50%;
+        height: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .layout9 .media-holder {
         text-align: center;
         width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
     }
 
     /*
@@ -1270,29 +1324,29 @@
 
     .layout10 .media-holder-text {
         position: absolute;
-        top: 50%;
-        margin-top: -10px;
-        left: 0;
-        width: 100%;
-        padding: 0 20px;
+        display: flex;
+        top: 0;
         font-size: 16px;
-        line-height: 24px;
         color: #fff;
         z-index: 7;
         -webkit-transform: translate3d(0, 0, 0);
-        text-align: center;
     }
 
     .layout10 .media-holder-text span {
         overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        display: block;
+        min-width: 50%;
+        min-height: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .layout10 .media-holder {
         text-align: center;
         width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
     }
 
     /*
@@ -1333,9 +1387,17 @@
         height: 100%;
         z-index: 7;
         display: flex;
-        align-items: center;
-        justify-content: center;
         overflow: hidden;
+        color: #fff;
+    }
+
+    .layout11 .media-holder-text span {
+        overflow: hidden;
+        min-width: 50%;
+        min-height: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         -webkit-transform: translate3d(0, 0, 0);
     }
 
@@ -1399,6 +1461,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        line-height: unset !important;
     }
 
     .layout12 .media-holder.media-holder-text {
