@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head lang="en">
     <meta name="buildfire" content="disableBootstrap,disableAppStyles"/>
@@ -23,9 +23,49 @@
             min-height: 56vw;
             overflow-y: hidden;
         }
+        #carousel .loryFrame,
+        #carousel .loryFrame .lorySlides,
+        #carousel .loryFrame .js_slide,
+        #carousel .loryFrame .js_slide img{
+            min-height: inherit;
+        }
+        #carousel .loryFrame .js_slide img{
+            object-fit: cover;
+        }
+
+        #pluginsContainer{
+            animation: load-in .2s ease-in .75s forwards;
+            transform-origin: top;
+            opacity: 0;
+        }
+        @keyframes load-in {
+            0%{
+                transform: scale(.1);
+            }
+            100%{
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        #pluginsContainer.layout12{
+            animation: load-in-12 .2s ease-in .5s forwards;
+            transform-origin: top;
+            opacity: 0;
+        }
+        @keyframes load-in-12 {
+            0%{
+                transform: scale(.1);
+            }
+            100%{
+                transform: scale(1) translateY(-50%);
+                opacity: 1;
+            }
+        }
 
         #pluginsContainer .pluginItem{
             position: relative;
+            cursor: pointer;
+            transition: background-color ease-in-out .3s;
         }
 
         #pluginsContainer:not(.layout12) .pluginItem .pluginItemDetails {
@@ -58,6 +98,8 @@
         .media-holder.media-holder-icon img.reveal-img {
             left: 0;
             top: 0;
+            height: 100%;
+            object-fit: cover;
         }
 
         #light-folder-body {
@@ -65,7 +107,7 @@
         }
 
         #light-folder-body span, #light-folder-body p {
-            font-size: 2.5vh;
+            font-size: 14px;
         }
 
         .folder-plugin-text {
@@ -813,7 +855,6 @@
     }
 
     #pluginsContainer .pluginItem {
-        width: 100%;
         display: block;
     }
 
@@ -822,9 +863,6 @@
     */
     #pluginsContainer.layout1 .pluginItem {
         display: inline-block;
-        border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
-        min-height: 20vw;
-        max-height: 20vw;
         overflow: hidden;
     }
 
@@ -844,7 +882,7 @@
     }
 
     .layout1 .pluginItem .media-holder.media-holder-icon .main-icon {
-        font-size: 15vw !important;
+        font-size: 32px !important;
         position: relative;
         top: -1px;
     }
@@ -867,22 +905,29 @@
                                                                 Layout-2
     */
     #pluginsContainer.layout2 .pluginItem {
-        display: inline-block;
-        border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
-        min-height: 21vw;
-        max-height: 21vw;
         overflow: hidden;
+        transition: background-color ease-in-out .3s;
+    }
+    #pluginsContainer .pluginItem:hover{
+        background-color: rgba(150,150,150,.05);
+    }
+    #pluginsContainer.layout2 .pluginItemDetails{
+        display: flex;
+        align-items: center;
+        position: relative !important;
+    }
+    #pluginsContainer.layout2 .pluginItemDetails span{
+        margin-top: 0;
+        padding: 32px 16px 32px 0 !important;
     }
 
     .layout2 .pluginItem .media-holder.media-holder-icon {
-        width: 32vw;
-        height: 18vw;
+        width: 100px;
+        height: 56px;
         margin: inherit;
-        margin-right: 10px;
+        margin: 0 16px 0 12px;
         border-radius: 4px;
-        margin: 2vw;
         text-align: center;
-        float: left;
         overflow: hidden;
     }
 
@@ -916,14 +961,16 @@
     }
 
     #pluginsContainer.layout3 .pluginItem {
-        min-height: 70vw;
         overflow: hidden;
+        box-shadow: 0 2px 4px rgba(150,150,150,.01);
+        background-color: rgba(255,255,255,.05);
     }
-
+    #pluginsContainer.layout3 .pluginItem .pluginItemDetails{
+        position: relative;
+    }
     .layout3 .media-holder-text {
         padding: 15px;
     }
-
     .layout3 .media-holder-text span {
         overflow: hidden;
         text-overflow: ellipsis;
@@ -940,6 +987,11 @@
 
     .layout3 .media-holder.media-holder-icon.hasImg {
         max-height: 56vw;
+    }
+    .layout3   .media-holder.media-holder-icon.hasImg img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 
     /*
@@ -990,9 +1042,14 @@
     .layout5 .media-holder-text {
         padding: 10px;
         position: absolute;
+        display: flex;
+        align-items: flex-end;
         width: 100%;
+        height: 100%;
         opacity: .85;
         bottom: 0;
+        background: rgb(0,0,0);
+        background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%) !important;
     }
 
     .layout5 .pluginItem .media-holder.media-holder-icon .main-icon {
@@ -1016,22 +1073,40 @@
     /*
                                                                     Layout-6
         */
+    #pluginsContainer.layout6{
+        padding: 24px 12px !important;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-column-gap: 12px;
+    }
     #pluginsContainer.layout6 .pluginItem {
-        width: 50%;
-        display: inline-block;
         text-align: center;
-        float: left;
-        min-height: 56vw;
         overflow: hidden;
+    }
+    #pluginsContainer.layout6 .pluginItem:hover {
+        background-color: transparent;
     }
 
     #pluginsContainer.layout6 .pluginItem .pluginItemDetails{
-        padding: 0px 15px;
-        position: unset !important;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     .layout6 .pluginItem .media-holder.media-holder-icon {
         overflow: hidden;
+        width: calc(50vw - 24px - 12px);
+        height: calc(50vw - 24px - 12px);
+        border-radius: 4px;
+        min-height: auto !important;
+        max-height: none !important;
+        box-shadow: 0 2px 4px rgba(150,150,150,.5);
+    }
+    .layout6 .pluginItem .media-holder.media-holder-icon img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 
     .layout6 .pluginItem .media-holder.media-holder-icon .main-icon {
@@ -1045,7 +1120,10 @@
     }
 
     .layout6 .media-holder-text {
-        padding: 15px 0px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
     }
 
     .layout6 .media-holder-text span {
@@ -1053,7 +1131,19 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         display: block;
-        line-height: unset !important;
+        padding: 15px 12px;
+        width: 100%;
+        display: block;
+    }
+    @media(min-width: 540px){
+        #pluginsContainer.layout6 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        .layout6 .pluginItem .media-holder.media-holder-icon {
+            overflow: hidden;
+            width: calc(100vw / 3 - 24px);
+            height: calc(100vw / 3 - 24px);
+        }
     }
 
     /*
@@ -1070,8 +1160,12 @@
         padding: 15px;
         position: absolute;
         width: 100%;
-        opacity: .85;
-        bottom: 0px;
+        height: 100%;
+        bottom: 0;
+        background: rgb(0,0,0);
+        background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%) !important;
+        display: flex;
+        align-items: flex-end;
     }
 
     .layout7 .media-holder-text span {
@@ -1091,31 +1185,40 @@
     /*
                                                                     Layout-8
         */
-    #pluginsContainer.layout8 .pluginItem {
+    #pluginsContainer.layout8 .pluginItem,
+    #pluginsContainer.layout1 .pluginItem {
         display: block;
-        border-top: 1px solid rgba(57, 52, 46, 0.25) !important;
-        min-height: 18vw;
-        max-height: 18vw;
         overflow: hidden;
     }
-
+    #pluginsContainer.layout8 .pluginItem .pluginItemDetails,
+    #pluginsContainer.layout1 .pluginItem .pluginItemDetails{
+        display: flex;
+        min-height: 62px;
+        align-items: center;
+        position: relative;
+        font-size: 14px;
+    }
     .layout8 img, .layout8 .placeholder {
         border-radius: 50% !important;
     }
 
-    .layout8 .pluginItem .media-holder.media-holder-icon {
-        width: 15vw;
-        height: 15vw;
+    .layout8 .pluginItem .media-holder.media-holder-icon,
+    .layout1 .pluginItem .media-holder.media-holder-icon {
+        width: 40px;
+        height: 40px;
         margin: inherit;
-        margin-right: 10px;
-        border-radius: 4px;
-        margin: 2vw;
+        margin: 0 16px;
+        border-radius: 50%;
         text-align: center;
-        float: left;
+        flex-shrink: 0;
+    }
+    .layout1 .pluginItem .media-holder.media-holder-icon{
+        border-radius: 4px;
     }
 
-    .layout8 .pluginItem .media-holder.media-holder-icon .main-icon {
-        font-size: 15vw !important;
+    .layout8 .pluginItem .media-holder.media-holder-icon .main-icon,
+    .layout1 .pluginItem .media-holder.media-holder-icon .main-icon {
+        font-size: 32px !important;
         position: relative;
         top: -1px;
     }
@@ -1123,15 +1226,30 @@
     .layout8 .pluginItem .media-holder.media-holder-icon .main-icon:before {
         display: inline-block;
     }
-
-    .layout8 .media-holder-text span {
+    .layout1 .media-holder-text,
+    .layout2 .media-holder-text,
+    .layout8 .media-holder-text {
+        flex: auto;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+    .layout1 .media-holder-text span,
+    .layout2 .media-holder-text span,
+    .layout8 .media-holder-text span {
+        overflow: hidden;
+        font-size: 14px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         position: relative;
+        padding: 23px 0;
+        padding-right: 16px;
         display: block;
         height: 18vw;
         line-height: 18vw !important;
+    }
+    .media-holder.media-holder-icon{
+        flex-shrink: 0;
     }
 
     /*
@@ -1240,9 +1358,8 @@
         display: inline-block;
         text-align: center;
         float: left;
-        padding: 1px;
-        min-height: 50vw;
-        max-height: 50vw;
+        /* padding: 1px; */
+        height: 50vw;
         overflow: hidden;
     }
 
@@ -1292,11 +1409,13 @@
     .layout11 .pluginItem .media-holder.media-holder-icon {
         position: relative;
         overflow: hidden;
+        min-height: auto !important;
+        max-height: none !important;
     }
 
     .layout11 .pluginItem .media-holder.media-holder-icon img {
         display: block;
-        /*position: absolute;*/
+        position: absolute;
         /*top: 50%;*/
         /*left: 50%;*/
         min-height: 100%;
@@ -1321,11 +1440,10 @@
         position: relative;
         top: 50%;
         transform: translateY(-50%);
-        width: 70%;
+        width: 80%;
         margin: 0 auto;
         background: rgba(0, 0, 0, 0.8);
-        padding: 5px 15px;
-        border-radius: 3px;
+        border-radius: 8px;
     }
 
     .layout12 .pluginItemFrame {
@@ -1339,7 +1457,7 @@
     .layout12 .media-holder-text span {
         display: block;
         text-align: center;
-        padding: 10px 0;
+        padding: 16px 12px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
