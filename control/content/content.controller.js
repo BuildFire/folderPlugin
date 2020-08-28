@@ -7,7 +7,7 @@
             function ($scope, Messaging, Utility) {
                 var tmpCarousalData = null;
                 var tmpCarousalSettings=null;
-                var editor = new buildfire.components.carousel.editor("#carousel",5,0);
+                var editor = new buildfire.components.carousel.editor("#carousel",{},5,0);
                 var _buildfire = {
                     plugins: {
                         dataType: "pluginInstance",
