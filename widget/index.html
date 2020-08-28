@@ -674,8 +674,7 @@
         });
     }
 
-
-    function shuffle(a,last) {
+    function shuffle(a,first,last) {
         var j, x, i;
         for (i = a.length - 1; i > 0; i--) {
             j = Math.floor(Math.random() * (i + 1));
@@ -683,19 +682,18 @@
             a[i] = a[j];
             a[j] = x;
         }
-        if(last==a[0]) return shuffle(a,last);
+        if(last==a[0]||first==a[a.length-1]) return shuffle(a,first,last);
         else return a;
     }
 
     function randomizeArray(sent){
         shuffle(sent,null);
         var dup=Array.from(sent);
-        shuffle(dup,sent[sent.length - 1]);
+        shuffle(dup,null,sent[sent.length - 1]);
         sent.push(...dup);
-        shuffle(dup,sent[sent.length - 1]);
+        shuffle(dup,sent[0],sent[sent.length - 1]);
         sent.push(...dup);
     }
-
 
     function renderCarousel(carouselImages, layout,speed,random) {
         if (layout != 12) {
