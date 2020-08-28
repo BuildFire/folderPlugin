@@ -674,6 +674,29 @@
         });
     }
 
+
+    function shuffle(a,last) {
+        var j, x, i;
+        for (i = a.length - 1; i > 0; i--) {
+            j = Math.floor(Math.random() * (i + 1));
+            x = a[i];
+            a[i] = a[j];
+            a[j] = x;
+        }
+        if(last==a[0]) return shuffle(a,last);
+        else return a;
+    }
+
+    function randomizeArray(sent){
+        shuffle(sent,null);
+        var dup=Array.from(sent);
+        shuffle(dup,sent[sent.length - 1]);
+        sent.push(...dup);
+        shuffle(dup,sent[sent.length - 1]);
+        sent.push(...dup);
+    }
+
+
     function renderCarousel(carouselImages, layout,speed,random) {
         if (layout != 12) {
             if (carouselImages && carouselImages.length > 0) {
@@ -683,7 +706,7 @@
                 if(random == 1 && carouselImages.length > 1){
                     carouselImages=[carouselImages[Math.floor(Math.random() * carouselImages.length)]];
                 }else if(random == 2 && carouselImages.length > 1){
-                    carouselImages=carouselImages.sort( () => Math.random() - 0.5);
+                    randomizeArray(carouselImages);
                 }
                 if (carouselImages.length > 1) {
 
@@ -691,6 +714,7 @@
                         selector: carouselContainer,
                         items: carouselImages,
                         loop: (speed!=0),
+                        infinite:false,
                         autoInterval:speed
                     });
 
