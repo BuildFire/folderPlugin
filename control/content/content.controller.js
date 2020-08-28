@@ -6,7 +6,8 @@
         .controller('folderPluginCtrl', ['$scope', 'Messaging', 'Utility',
             function ($scope, Messaging, Utility) {
                 var tmpCarousalData = null;
-                var editor = new buildfire.components.carousel.editor("#carousel");
+                var tmpCarousalSettings=null;
+                var editor = new buildfire.components.carousel.editor("#carousel",5,0);
                 var _buildfire = {
                     plugins: {
                         dataType: "pluginInstance",
@@ -63,6 +64,12 @@
                         $scope.id = result.id;
                         if ($scope.data && $scope.data.content && $scope.data.content.carouselImages) {
                             editor.loadItems($scope.data.content.carouselImages);
+                        }
+                        if ($scope.data && $scope.data.content && $scope.data.content.speed) {
+                            editor.setSpeed($scope.data.content.speed);
+                        }
+                        if ($scope.data && $scope.data.content && $scope.data.content.random) {
+                            editor.setRandom($scope.data.content.random);
                         }
                         if ($scope.data && $scope.data._buildfire && $scope.data._buildfire.plugins && $scope.data._buildfire.plugins.result) {
                             var pluginsData = Utility.getPluginDetails($scope.data._buildfire.plugins.result, $scope.data._buildfire.plugins.data);
@@ -160,6 +167,11 @@
                             editor.loadItems([]);
                         }
 
+                        if(tmpCarousalSettings){
+                            newObj.content.speed= tmpCarousalSettings.speed;
+                            newObj.content.random= tmpCarousalSettings.random;
+                        }
+
                         $scope.data = newObj;
                     }
                     tmrDelay = setTimeout(function () {
@@ -185,6 +197,18 @@
                 editor.onAddItems = function (items) {
                     tmpCarousalData = items;
                     $scope.data.content.carouselImages = editor.items;
+                    Utility.digest($scope);
+                };
+
+                editor.onSpeedChange = function (speed) {
+                    tmpCarousalSettings = {speed:speed,random:0};
+                    $scope.data.content.speed = speed;
+                    Utility.digest($scope);
+                };
+
+                editor.onRandomChange = function (random) {
+                    tmpCarousalSettings = {speed:5000,random:random};
+                    $scope.data.content.random = random;
                     Utility.digest($scope);
                 };
 

@@ -49,7 +49,9 @@
                                 "title": "image"
                             }],
                             "text": "<p>With the Folder plugin you can categorize existing plugins so that you can easily direct your users to the proper content. Check out our tutorial in our knowledge base for more information. HINT: You'll also want to check out our article on the WYSIWYG</p>",
-                            "loadAllPlugins": false
+                            "loadAllPlugins": false,
+                            "speed":5000,
+                            "random":0
                         },
                         "design": {
                             "backgroundImage": null,
@@ -71,7 +73,9 @@
                         "content": {
                             "carouselImages": [],
                             "text": "",
-                            "loadAllPlugins": false
+                            "loadAllPlugins": false,
+                            "speed":5000,
+                            "random":0
                         },
                         "design": {
                             "backgroundImage": null,

@@ -374,7 +374,7 @@
                 pluginItemFrame.appendChild(pluginItemSlidesContainer);
                 pluginsContainer.appendChild(pluginItemFrame);
 
-                renderCarousel(null, layout);
+                renderCarousel(null, layout,0,0);
             }
 
             //load image in first render
@@ -383,7 +383,9 @@
 
         if (layout != 12) {
             //Render Carousel
-            renderCarousel(obj.data.content.carouselImages, layout);
+            var speed=(obj.data.content&&obj.data.content.speed)?obj.data.content.speed:5000;
+            var random=(obj.data.content&&obj.data.content.random)?obj.data.content.random:0;
+            renderCarousel(obj.data.content.carouselImages, layout,speed,random);
         }
     }
 
@@ -672,18 +674,24 @@
         });
     }
 
-    function renderCarousel(carouselImages, layout) {
+    function renderCarousel(carouselImages, layout,speed,random) {
         if (layout != 12) {
             if (carouselImages && carouselImages.length > 0) {
                 /*
                  if more than one image add carousel else add image directly to the carousel container
                  */
+                if(random == 1 && carouselImages.length > 1){
+                    carouselImages=[carouselImages[Math.floor(Math.random() * carouselImages.length)]];
+                }else if(random == 2 && carouselImages.length > 1){
+                    carouselImages=carouselImages.sort( () => Math.random() - 0.5);
+                }
                 if (carouselImages.length > 1) {
 
                     var carousel = new buildfire.components.carousel.view({
                         selector: carouselContainer,
                         items: carouselImages,
-                        speed: 1000
+                        loop: (speed!=0),
+                        autoInterval:speed
                     });
 
                 } else {
