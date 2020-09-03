@@ -339,6 +339,10 @@
 
                 spanTitle.innerText = p.title;
 
+                if ([2].indexOf(layout) !== -1 && p.title && p.title.length > 59) {
+                  spanTitle.innerText = p.title.substring(0, 59) + '...';
+                }
+
                 if (layout == 3 && obj.data.design.hideText) {
                     spanTitle.classList.add('hide');
                 }
@@ -901,14 +905,14 @@
         display: inline-block;
     }
 
+    .layout2 .media-holder-text {
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+
     .layout2 .media-holder-text span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        position: relative;
-        display: block;
-        height: 21vw !important;
-        line-height: 21vw !important;
+      word-break: break-word;
     }
 
     #pluginsContainer.layout3 .pluginItem .pluginItemDetails {
