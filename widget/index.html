@@ -120,6 +120,7 @@
 
     var plugins = [];
     var compressImages = false;
+    var changeTimer;
 
     var lazyLoad = {
         loadImage: function (item) {
@@ -687,21 +688,46 @@
     }
 
     function randomizeArray(sent){
-        shuffle(sent,null);
+        shuffle(sent,null,null);
         var dup=Array.from(sent);
         shuffle(dup,null,sent[sent.length - 1]);
         sent.push(...dup);
         shuffle(dup,sent[0],sent[sent.length - 1]);
         sent.push(...dup);
     }
-
+    function changeImage(carouselImages){
+        carouselImages=[carouselImages[Math.floor(Math.random() * carouselImages.length)]];
+        appendOneImage(carouselImages);
+    }
+    function appendOneImage(carouselImages){
+        carouselContainer.innerHTML = '';
+                    //append image tag
+        var img = document.createElement('img');
+        img.setAttribute("src", buildfire.imageLib.cropImage(carouselImages[0].iconUrl, {
+            width: window.innerWidth,
+            height: Math.ceil(9 * (window.innerWidth) / 16)
+        }));
+        img.alt = "Carousel Image";
+        carouselContainer.appendChild(img);
+        img.addEventListener("click", function () {
+            buildfire.actionItems.execute(carouselImages[0], function (err, result) {
+                if (err) {
+                    console.warn('Error openning slider action: ', err);
+                }
+            });
+        });
+    }
     function renderCarousel(carouselImages, layout,speed,random) {
+        if(changeTimer) clearInterval(changeTimer);
         if (layout != 12) {
             if (carouselImages && carouselImages.length > 0) {
                 /*
                  if more than one image add carousel else add image directly to the carousel container
                  */
                 if(random == 1 && carouselImages.length > 1){
+                    if(speed!=0){
+                        changeTimer=setInterval(changeImage, speed,carouselImages);
+                    }
                     carouselImages=[carouselImages[Math.floor(Math.random() * carouselImages.length)]];
                 }else if(random == 2 && carouselImages.length > 1){
                     randomizeArray(carouselImages);
@@ -717,23 +743,7 @@
                     });
 
                 } else {
-                    //add image directly to carousel container without adding the carousel lib
-                    carouselContainer.innerHTML = '';
-                    //append image tag
-                    var img = document.createElement('img');
-                    img.setAttribute("src", buildfire.imageLib.cropImage(carouselImages[0].iconUrl, {
-                        width: window.innerWidth,
-                        height: Math.ceil(9 * (window.innerWidth) / 16)
-                    }));
-                    img.alt = "Carousel Image";
-                    carouselContainer.appendChild(img);
-                    img.addEventListener("click", function () {
-                        buildfire.actionItems.execute(carouselImages[0], function (err, result) {
-                            if (err) {
-                                console.warn('Error openning slider action: ', err);
-                            }
-                        });
-                    });
+                    appendOneImage(carouselImages);
                 }
 
                 carouselContainer.classList.remove('hide');
