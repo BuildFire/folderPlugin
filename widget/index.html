@@ -573,7 +573,12 @@
         }
     }
 
-    buildfire.datastore.getWithDynamicData(loadData);
+    if(window.innerWidth==0){
+        window.addEventListener("resize", function(event) { 
+                buildfire.datastore.getWithDynamicData(loadData);
+        },false);
+    }
+    else {buildfire.datastore.getWithDynamicData(loadData);}
 
     buildfire.datastore.onUpdate(function (obj) {
         loadData(null, obj)
