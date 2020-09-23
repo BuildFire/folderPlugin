@@ -712,7 +712,9 @@
             if(index==-1||index==carouselImages.length-1)carouselImages=[carouselImages[0]];
             else {carouselImages=[carouselImages[index+1]];sendIndex=index+1;}
             lastImage=carouselImages;
-            buildfire.localStorage.setItem("carouselLastImage",sendIndex, function(e,r){
+            var isHome=(new URLSearchParams(window.location.search).get('fid').split("=")[0]=="launcherPluginv");
+            var storagePlace=(isHome)?"carouselLastImageHome":"carouselLastImage";
+            buildfire.localStorage.setItem(storagePlace,sendIndex, function(e,r){
                 appendOneImage(carouselImages);
             });
         }
@@ -759,24 +761,23 @@
                 /*
                  if more than one image add carousel else add image directly to the carousel container
                  */
+                var isHome=(new URLSearchParams(window.location.search).get('fid').split("=")[0]=="launcherPluginv");
+                var storagePlace=(isHome)?"carouselLastImageHome":"carouselLastImage";
                 if(order == 0 && display== 1 && carouselImages.length > 1){
-                    buildfire.localStorage.getItem("carouselLastImage", function(e,r) {
+                    buildfire.localStorage.getItem(storagePlace, function(e,r) {
                         var images=carouselImages;
+                        var sendIndex=0;
                         if(r==null){
                             carouselImages=[carouselImages[0]];
-                            lastImage=carouselImages;
-                            if(speed!=0)changeTimer=setInterval(changeImage, speed,images,false);
                         }else{
                             var index=Number(r);
-                            var sendIndex=0;
                             if(index==-1||index==carouselImages.length-1)carouselImages=[carouselImages[0]];
                             else {carouselImages=[carouselImages[index+1]];sendIndex=index+1;}
-                            buildfire.localStorage.setItem("carouselLastImage",sendIndex, function(e,r){
-                                console.log("prosledio indeks",sendIndex);
+                        }
+                        buildfire.localStorage.setItem(storagePlace,sendIndex, function(e,r){
                                 lastImage=carouselImages;
                                 if(speed!=0)changeTimer=setInterval(changeImage, speed,images,false);
                             });
-                        }
                     });
                 }
                 else if(order == 1 && display== 1 && carouselImages.length > 1){
@@ -785,11 +786,11 @@
                     }
                     carouselImages=[carouselImages[Math.floor(Math.random() * carouselImages.length)]];
                     lastImage=carouselImages;
-                    buildfire.localStorage.removeItem("carouselLastImage");
+                    buildfire.localStorage.removeItem(storagePlace);
 
                 }else if(order == 1 && display== 0 && carouselImages.length > 1){
                     randomizeArray(carouselImages);
-                    buildfire.localStorage.removeItem("carouselLastImage");
+                    buildfire.localStorage.removeItem(storagePlace);
                 }
                 if (carouselImages.length > 1) {
 
