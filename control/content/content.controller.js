@@ -6,7 +6,8 @@
         .controller('folderPluginCtrl', ['$scope', 'Messaging', 'Utility',
             function ($scope, Messaging, Utility) {
                 var tmpCarousalData = null;
-                var editor = new buildfire.components.carousel.editor("#carousel");
+                var tmpCarousalSettings=null;
+                var editor = new buildfire.components.carousel.editor("#carousel",{},5000,0,0);
                 var _buildfire = {
                     plugins: {
                         dataType: "pluginInstance",
@@ -63,6 +64,15 @@
                         $scope.id = result.id;
                         if ($scope.data && $scope.data.content && $scope.data.content.carouselImages) {
                             editor.loadItems($scope.data.content.carouselImages);
+                        }
+                        if ($scope.data && $scope.data.content && $scope.data.content.speed) {
+                            editor.setOptionSpeed($scope.data.content.speed);
+                        }
+                        if ($scope.data && $scope.data.content && $scope.data.content.order) {
+                            editor.setOptionOrder($scope.data.content.order);
+                        }
+                        if ($scope.data && $scope.data.content && $scope.data.content.display) {
+                            editor.setOptionDisplay($scope.data.content.display);
                         }
                         if ($scope.data && $scope.data._buildfire && $scope.data._buildfire.plugins && $scope.data._buildfire.plugins.result) {
                             var pluginsData = Utility.getPluginDetails($scope.data._buildfire.plugins.result, $scope.data._buildfire.plugins.data);
@@ -160,6 +170,12 @@
                             editor.loadItems([]);
                         }
 
+                        if(tmpCarousalSettings){
+                            newObj.content.speed= tmpCarousalSettings.speed;
+                            newObj.content.order= tmpCarousalSettings.order;
+                            newObj.content.display= tmpCarousalSettings.display;
+                        }
+
                         $scope.data = newObj;
                     }
                     tmrDelay = setTimeout(function () {
@@ -185,6 +201,24 @@
                 editor.onAddItems = function (items) {
                     tmpCarousalData = items;
                     $scope.data.content.carouselImages = editor.items;
+                    Utility.digest($scope);
+                };
+
+                editor.onOptionSpeedChange = function (speed) {
+                    tmpCarousalSettings = {speed:speed,order:0,display:0};
+                    $scope.data.content.speed = speed;
+                    Utility.digest($scope);
+                };
+
+                editor.onOptionOrderChange = function (order) {
+                    tmpCarousalSettings = {speed:5000,order:order,display:0};
+                    $scope.data.content.order = order;
+                    Utility.digest($scope);
+                };
+
+                editor.onOptionDisplayChange = function (display) {
+                    tmpCarousalSettings = {speed:5000,order:0,display:display};
+                    $scope.data.content.display = display;
                     Utility.digest($scope);
                 };
 
