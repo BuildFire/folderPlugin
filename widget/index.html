@@ -507,10 +507,10 @@
         }
 
         if (bgImage) {
-            style.innerHTML += "body { background: no-repeat url('" + buildfire.imageLib.cropImage(bgImage, {
+            style.innerHTML += "#light-folder-body{ background: no-repeat url('" + buildfire.imageLib.cropImage(bgImage, {
                     width: window.innerWidth,
                     height: window.innerHeight
-                }) + "') !Important; background-size: cover !important; } ";
+                }).replace(/'/g,"%27") + "') !Important; background-size: cover !important; } ";
             // enable for imageCache
             // style.innerHTML += "body { background-size: cover !important; } ";
             // buildfire.imageLib.cropImage(bgImage, { width: window.innerWidth, height: window.innerHeight }, document.body);
