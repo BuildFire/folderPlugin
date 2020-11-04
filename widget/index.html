@@ -272,8 +272,10 @@
                     divImg.classList.add("media-holder");
                     divImg.classList.add("media-holder-icon");
                     divImg.setAttribute('index', i);
-                    divImg.onclick = plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable"? onClick : null;
-
+                    //divImg.onclick = plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable"? onClick : null;
+                    divImg.addEventListener('click', plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable"? onClick : null);
+                    divImg.addEventListener('touchstart',plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable"? onClick : null);
+                    
                     if (p.iconUrl || p.iconClassName) {
                         if (p.iconUrl) {
                             divImg.classList.add("hasImg");
@@ -309,14 +311,18 @@
                     var divBlackLayer = document.createElement('div');
                     divBlackLayer.className = "blackLayer";
                     divBlackLayer.setAttribute('index', i);
-                    divBlackLayer.onclick = plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable" ? onClick : null;
+                    //divBlackLayer.onclick = plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable" ? onClick : null;
+                    divBlackLayer.addEventListener('click',plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable" ? onClick : null);
+                    divBlackLayer.addEventListener('touchstart',plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable" ? onClick : null);
                     pluginItemDetails.appendChild(divBlackLayer);
                 }
 
                 var divTitle = document.createElement('div');
                 divTitle.classList.add("media-holder");
                 divTitle.classList.add("media-holder-text");
-                divTitle.onclick = plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable" ? onClick : null;
+               // divTitle.onclick = plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable" ? onClick : null;
+                divTitle.addEventListener('click', plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable" ? onClick : null);
+                divTitle.addEventListener('touchstart', plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable" ? onClick : null);
                 divTitle.setAttribute('index', i);
 
                 if ([4, 5].indexOf(layout) > -1)
