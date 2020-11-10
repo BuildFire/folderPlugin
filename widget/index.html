@@ -122,6 +122,8 @@
     var compressImages = false;
     var changeTimer;
     var lastImage=null;
+    var touchmoved;
+
 
     var lazyLoad = {
         loadImage: function (item) {
@@ -274,8 +276,9 @@
                     divImg.setAttribute('index', i);
                     //divImg.onclick = plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable"? onClick : null;
                     divImg.addEventListener('click', plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable"? onClick : null);
-                    divImg.addEventListener('touchstart',plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable"? onClick : null);
-                    
+                    divImg.addEventListener('touchend',plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable"? onClick : null);
+                    divImg.addEventListener('touchmove',function(){touchmoved=true;});
+                    divImg.addEventListener('touchstart',function(){touchmoved=false;});
                     if (p.iconUrl || p.iconClassName) {
                         if (p.iconUrl) {
                             divImg.classList.add("hasImg");
@@ -313,7 +316,9 @@
                     divBlackLayer.setAttribute('index', i);
                     //divBlackLayer.onclick = plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable" ? onClick : null;
                     divBlackLayer.addEventListener('click',plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable" ? onClick : null);
-                    divBlackLayer.addEventListener('touchstart',plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable" ? onClick : null);
+                    divBlackLayer.addEventListener('touchend',plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable" ? onClick : null);
+                    divBlackLayer.addEventListener('touchmove',function(){touchmoved=true;});
+                    divBlackLayer.addEventListener('touchstart',function(){touchmoved=false;});
                     pluginItemDetails.appendChild(divBlackLayer);
                 }
 
@@ -322,7 +327,9 @@
                 divTitle.classList.add("media-holder-text");
                // divTitle.onclick = plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable" ? onClick : null;
                 divTitle.addEventListener('click', plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable" ? onClick : null);
-                divTitle.addEventListener('touchstart', plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable" ? onClick : null);
+                divTitle.addEventListener('touchend', plugins[i].hasAccess|| obj.data.design.securedFeaturesOption =="Enable" ? onClick : null);
+                divTitle.addEventListener('touchmove',function(){touchmoved=true;});
+                divTitle.addEventListener('touchstart',function(){touchmoved=false;});
                 divTitle.setAttribute('index', i);
 
                 if ([4, 5].indexOf(layout) > -1)
@@ -675,16 +682,17 @@
     }
 
     function onClick(e) {
+        if(touchmoved != true){
+            var i = parseInt(this.getAttribute('index'));
+            var p = plugins[i];
 
-        var i = parseInt(this.getAttribute('index'));
-        var p = plugins[i];
-
-        buildfire.navigation.navigateTo({
-            pluginId: p.pluginTypeId
-            , folderName: p.folderName
-            , instanceId: p.instanceId
-            , title: p.title
-        });
+            buildfire.navigation.navigateTo({
+                pluginId: p.pluginTypeId
+                , folderName: p.folderName
+                , instanceId: p.instanceId
+                , title: p.title
+            });
+        }
     }
 
     function shuffle(a,first,last) {
