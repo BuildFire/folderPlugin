@@ -598,7 +598,7 @@
     });
     
     buildfire.messaging.onReceivedMessage = function (event) {
-        if (event) {
+        if (event && event.message) {
             var plugin = event.message.data;
             switch (event.name) {
                 case 'OPEN_PLUGIN':
