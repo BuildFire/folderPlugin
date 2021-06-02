@@ -123,6 +123,8 @@
     var changeTimer;
     var lastImage=null;
     var touchmoved;
+    var notificationBadges = [];
+    var currentInstanceId = buildfire.getContext().instanceId;
 
 
     var lazyLoad = {
@@ -407,6 +409,51 @@
             var display=(obj.data.content&&obj.data.content.display)?obj.data.content.display:0;
             renderCarousel(obj.data.content.carouselImages, layout,speed,order,display);
         }
+
+        if (obj.data.design.showNotificationBadges && plugins && plugins.length) {
+          getBadges(plugins.map(function (plugin) { return plugin.instanceId }), function (badgesData) {
+            if (!badgesData || !badgesData.length) return;
+            if (layout == 1) {
+              var sections = document.getElementsByClassName('pluginItem');
+              for (var i = 0; i < sections.length; i++) {
+                var pluginIndex = sections[i].children[0].children[1].getAttribute('index');
+                var instanceId = plugins[parseInt(pluginIndex)] ? plugins[parseInt(pluginIndex)].instanceId : null;
+                if (!instanceId) continue;
+                var currentBadgeData = badgesData.find(function(item) { return item.uniqueId === instanceId });
+                var countValue = currentBadgeData && currentBadgeData.count ? currentBadgeData.count : 0;
+                if (!countValue) continue;
+                var notificationBadgeBoxElem = document.createElement('div')
+                notificationBadgeBoxElem.setAttribute('class', 'notificationBadgeBox btn-info');
+                notificationBadgeBoxElem.innerHTML = '<span style="color: #fff">' + countValue + '</span>';
+                sections[i].appendChild(notificationBadgeBoxElem);
+              }
+            }
+          });
+        }
+        
+    }
+
+    function getBadges(uniqueIds = [], callback) {
+      if (!uniqueIds.length) return callback([]);
+      buildfire.appData.search(
+        { filter: { '_buildfire.index.string1': { $in: [...uniqueIds, currentInstanceId] } } },
+        '$$notificationBadges',
+        function (err, result) {
+          if (err || !result || !result.length) return callback([]);
+          var mappedData = result.map(function (data) { return data.data });
+          notificationBadges = notificationBadges.concat(mappedData);
+          callback(mappedData);
+        }
+      );
+    };
+
+    function setBadgesCount(uniqueId, count = 0) {
+      buildfire.appData.searchAndUpdate(
+        { '_buildfire.index.string1': uniqueId },
+        { count },
+        '$$notificationBadges',
+        function () {}
+      );
     }
 
     function getPlugins(obj, callback) {
@@ -685,12 +732,24 @@
         if(touchmoved != true){
             var i = parseInt(this.getAttribute('index'));
             var p = plugins[i];
+            var queryString = new URLSearchParams();
+            queryString.append('parentUniqueId', currentInstanceId);
+            var targetNotificationBadgesData = notificationBadges.filter(function (badge) { return badge.uniqueId ===  p.instanceId });
+            if (targetNotificationBadgesData.count) {
+              var parentNotificationBadgesData = notificationBadges.filter(function (badge) { return badge.uniqueId === currentInstanceId });
+              if (parentNotificationBadgesData && parentNotificationBadgesData.count) {
+                var total = parentNotificationBadgesData.count - targetNotificationBadgesData.count;
+                setBadgesCount(currentInstanceId, total < 1 ? 0 : total);
+              }
+            }
+            setBadgesCount(p.instanceId, 0);
 
             buildfire.navigation.navigateTo({
                 pluginId: p.pluginTypeId
                 , folderName: p.folderName
                 , instanceId: p.instanceId
                 , title: p.title
+                , queryString: queryString.toString()
             });
         }
     }
@@ -979,6 +1038,28 @@
         display: block;
         height: 20vw !important;
         line-height: 20vw !important;
+    }
+
+    .layout1 .pluginItem {
+      position: relative;
+    }
+
+    .layout1 .pluginItem .notificationBadgeBox {
+      position: absolute;
+      top: 50%;
+      right: 4vw;
+      transform: translateY(-50%);
+      width: 25px;
+      height: 25px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+    }
+
+    .layout1 .pluginItem .notificationBadgeBox span {
+      position: relative;
+      right: 1px;
     }
 
     /*
