@@ -734,15 +734,6 @@
             var p = plugins[i];
             var queryString = new URLSearchParams();
             queryString.append('parentUniqueId', currentInstanceId);
-            var targetNotificationBadgesData = notificationBadges.filter(function (badge) { return badge.uniqueId ===  p.instanceId });
-            if (targetNotificationBadgesData.count) {
-              var parentNotificationBadgesData = notificationBadges.filter(function (badge) { return badge.uniqueId === currentInstanceId });
-              if (parentNotificationBadgesData && parentNotificationBadgesData.count) {
-                var total = parentNotificationBadgesData.count - targetNotificationBadgesData.count;
-                setBadgesCount(currentInstanceId, total < 1 ? 0 : total);
-              }
-            }
-            setBadgesCount(p.instanceId, 0);
 
             buildfire.navigation.navigateTo({
                 pluginId: p.pluginTypeId
