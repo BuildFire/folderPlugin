@@ -202,6 +202,26 @@
             </div>
         </div>
 
+        <div>
+          <hr>
+          <div class="item row clearfix">
+              <div class="labels col-md-3 padding-right-zero pull-left">
+                  <span>Show Notification Badges</span>
+              </div>
+              <div class="main col-md-9 pull-right" ng-init="data.design.showNotificationBadges">
+                  <div class="radio radio-primary radio-inline">
+                      <input ng-if="data.design.showNotificationBadges" id="showNotificationBadges" type="radio" name="toggleShowNotificationBadges" ng-model="data.design.showNotificationBadges" ng-value="false">
+                      <input ng-if="!data.design.showNotificationBadges" id="showNotificationBadges" type="radio" name="toggleShowNotificationBadges" checked="checked">
+                      <label for="showNotificationBadges">False</label>
+                  </div>
+                  <div class="radio radio-primary radio-inline">
+                      <input id="showNotificationBadges" type="radio" name="toggleShowNotificationBadges" ng-model="data.design.showNotificationBadges" ng-value="true">
+                      <label for="showNotificationBadges">True</label>
+                  </div>
+              </div>
+          </div>
+        </div>
+
         <hr ng-if="enterpriseApp" >
         <div ng-if="enterpriseApp" class="padded padding-top-ten clearfix" >
             <div class="item clearfix row">

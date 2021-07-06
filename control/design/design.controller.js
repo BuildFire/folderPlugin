@@ -45,7 +45,8 @@
                                 selectedLayout: 1,
                                 backgroundblur: 0,
                                 hideText: false,
-                                securedFeaturesOption:"Enable"
+                                securedFeaturesOption:"Enable",
+                                showNotificationBadges: false
                             };
                         }
                         if(typeof $scope.data.design.showBlackOverlay !== 'boolean') {
