@@ -628,10 +628,11 @@
 
     function setIphonePadding(carouselImages, text, layout) {
         var isLauncher = buildfire.getFrameType() === 'LAUNCHER_PLUGIN';
-        var hasImages = carouselImages && carouselImages.length > 0;
-        var isValidLayout = [1, 2, 6, 8].indexOf(layout) > -1;
+      //var hasImages = carouselImages && carouselImages.length > 0;
+        var isValidLayout = [1, 2, 5, 6, 8].indexOf(layout) > -1;
 
-        if (!isLauncher || hasImages) return;
+        //if (!isLauncher || hasImages) return;
+        if (!isLauncher) return;
 
         if (text || isValidLayout) {
             document.body.classList.add('no-carousel');
