@@ -227,7 +227,7 @@
             txt.classList.remove('hide');
         }
 
-        setIphonePadding(obj.data.content.carouselImages, obj.data.content.text, layout);
+        setIphonePadding(obj.data.content.carouselImages, obj.data.content.text, layout,obj.data.design);
 
         pluginsContainer.className = "layout" + layout;
         pluginsContainer.innerHTML = '';
@@ -626,17 +626,27 @@
 
     }
 
-    function setIphonePadding(carouselImages, text, layout) {
+    function setIphonePadding(carouselImages, text, layout, design) {
+        var safeZoneHeight=parseInt(getComputedStyle(document.documentElement).getPropertyValue("--sat"),10);
+
         var isLauncher = buildfire.getFrameType() === 'LAUNCHER_PLUGIN';
-      //var hasImages = carouselImages && carouselImages.length > 0;
-      //var isValidLayout = [1, 2, 5, 6, 8].indexOf(layout) > -1;
+        if (!isLauncher||design.hideIPhoneNotch||safeZoneHeight==0) {
+            document.body.classList.remove("no-carousel");
+            return;
+        }; 
 
-        //if (!isLauncher || hasImages) return;
-        if (!isLauncher) return;
+        document.body.classList.add('no-carousel');
 
-        //if (text) {
-            document.body.classList.add('no-carousel');
-        //}
+        if(design.blackIPhoneNotch){
+            var blackSafeZone=document.createElement("div");
+            blackSafeZone.id="blackSafeZone";
+            blackSafeZone.classList="black-safe-zone";
+            document.body.appendChild(blackSafeZone);
+        }else{
+            var blackSafeZone=document.getElementById("blackSafeZone");
+            if(blackSafeZone)
+                blackSafeZone.remove();
+        }
     }
 
     buildfire.datastore.getWithDynamicData(loadData);
@@ -894,6 +904,13 @@
         font-family: Helvetica, Sans-Serif, Arial;
     }
 
+    :root {
+    --sat: env(safe-area-inset-top);
+    --sar: env(safe-area-inset-right);
+    --sab: env(safe-area-inset-bottom);
+    --sal: env(safe-area-inset-left);
+    }
+
     /* iFrame */
     /* Plugin iFrame */
     img,
@@ -950,8 +967,17 @@
     }
 
     .no-carousel {
-        padding-top: env(safe-area-inset-top) !important;
-        padding-top: constant(safe-area-inset-top) !important;
+        padding-top: var(--sat) !important;
+    }
+
+    .black-safe-zone{
+        height: var(--sat) !important;
+        width: 100%;
+        background-color: black;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 100;
     }
 
     /* Smaller Mobile Screens */

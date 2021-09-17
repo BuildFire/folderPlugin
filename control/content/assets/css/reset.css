@@ -1,0 +1,121 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
+body {
+	padding: 0 8px !important;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+#collapsible {
+    background-color: #ececec;
+    cursor: pointer;
+    padding: 1rem;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+	border-radius: 0.25rem;
+	display: flex;
+	color: #808080;
+	font-size: 14px;
+	line-height: 1.5;
+  }
+  
+#collapsible span.icon-chevron-down {
+	margin-left: 30px; 
+	margin-right: 10px; 
+	font-size: 18px;
+	transition: transform 0.2s ease-out;
+	-o-transition: -o-transform 0.2s ease-out;
+	-ms-transition: -ms-transform 0.2s ease-out;
+	-moz-transition: -moz-transform 0.2s ease-out;
+	-webkit-transition: -webkit-transform 0.2s ease-out;
+}
+
+#collapsible.active, #collapsible:hover {
+	background-color: #dbdbdb;
+}
+
+#collapsible.active {
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+#collapsible.active span.icon-chevron-down {
+	transform: rotate(180deg);
+}
+
+.collapsible-content {
+	padding: 0 1rem;
+	max-height: 0;
+	overflow: hidden;
+	background-color: #ececec;
+	font-size: 14px;
+    font: inherit;
+	border-bottom-left-radius: 0.25rem;
+	border-bottom-right-radius: 0.25rem;
+}
+
+.collapsible-content span {
+	color: #808080;
+	font-size: 14px;
+	line-height: 1.5;
+	line-height: 1.5;
+}
+
+.collapsible-content span.caption {
+	padding: 1rem 0 1rem 1rem;
+	color: #afafaf;
+}
+
+.transition-third {
+    -moz-transition: all 0.35s !important;
+    -o-transition: all 0.35s !important;
+    -webkit-transition: all 0.35s !important;
+    transition: all 0.35s !important;
+}
+
+.hide-me{
+	display: none;
+}
