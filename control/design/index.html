@@ -93,7 +93,7 @@
                     Text Align
                 </label>
             </div>
-            <div class="layout-selector input-control side-label height-thirty">
+            <div class="layout-selector input-control side-label height-thirty-eight">
                 <label for="" class="pull-left" style="display: inline-block; margin-top: 10px;">
                     Vertical
                 </label>
@@ -116,7 +116,7 @@
                     </ul>
                 </div>
                 </div>
-                    <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty">
+                    <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
                         <label for="" class="pull-left" style="display: inline-block; margin-top: 10px;">
                             Horizontal
                         </label>
@@ -141,7 +141,7 @@
                     </div>
             </div>
         </div>
-        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty" 
+        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight" 
             ng-hide="data.design.selectedLayout < 9 || data.design.selectedLayout > 11">
             <label for="">Image Overlay</label>
             <div class="button-switch">
@@ -151,7 +151,7 @@
                 </label>
             </div>
         </div>
-        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty"
+        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight"
             ng-hide="![1, 2, 8].includes(data.design.selectedLayout)">
             <label for="">Line Separator</label>
             <div class="button-switch">
@@ -162,7 +162,7 @@
             </div>
         </div>
         <h1>Additional settings</h1>
-        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty">
+        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
             <label for="" class="pull-left" style="display: inline-block; margin-top: 10px;">
                 Font Size
             </label>
@@ -204,7 +204,7 @@
             </div>
         </div>
 
-        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty">
+        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
             <label for="">Compress Images
                 <div class="bf-tooltip">
                     <div class="tooltip-icon primary-bg">!</div>
@@ -221,7 +221,7 @@
         </div>
 
 
-        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty">
+        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
             <label for="">Hide Text
                 <div class="bf-tooltip">
                     <div class="tooltip-icon primary-bg">!</div>
@@ -236,7 +236,7 @@
             </div>
         </div>
 
-        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty">
+        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
             <label for="">Show Notification Badges
             </label>
             <div class="button-switch">
@@ -247,7 +247,7 @@
             </div>
         </div>
 
-        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty">
+        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
             <label for="">Show Safe Area
                 <div class="bf-tooltip">
                     <div class="tooltip-icon primary-bg">!</div>
@@ -263,7 +263,7 @@
             </div>
         </div>
 
-        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty"
+        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight"
             ng-hide="data.design.hideIPhoneNotch">
             <label for="">Set Background Color
                 <div class="bf-tooltip">
@@ -289,7 +289,7 @@
             </div>
         </div>
 
-        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty" ng-if="enterpriseApp" >
+        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight" ng-if="enterpriseApp">
             <label for="" class="pull-left" style="display: inline-block; margin-top: 10px;">
                 Secured Feature Visibility
                 <div class="bf-tooltip">
@@ -302,13 +302,13 @@
                     </div>
                 </div>
             </label>
-            <div class="dropdown padding-zero" dropdown="" is-open="status.isOpen5" >
+            <div class="dropdown padding-zero" dropdown="" is-open="status.isOpen5" style="width: 100%;">
                 <button style="width: 200px; height: 40px;" class="btn btn-default text-left dropdown-toggle"
                     dropdown-toggle="" aria-expanded="false" aria-haspopup="true">
                     <span class="pull-left ng-binding">{{getSecuredFeatures()}}</span>
                     <span class="chevron icon-chevron-down pull-right"></span>
                 </button>
-                <ul class="dropdown-menu extended" role="menu" style="margin-top: -50px;">
+                <ul class="dropdown-menu extended" role="menu" style="width: 200px;">
                     <li class="ng-scope" ng-click="setSecuredFeatures('Enable')">
                         <a class="ransition-third ng-binding">Enable</a>
                     </li>
@@ -319,9 +319,9 @@
                         <a class="ransition-third ng-binding">Hide</a>
                     </li>
                 </ul>
-                <p class="info-note" style="margin-top: 3px">This feature will only work in the app, and is disabled in the control panel.</p>
+                <p class="info-note" style="position: absolute; margin-top:2px; width: 100% ;">This feature will only work in the app, and is disabled in the control panel.</p>
             </div>
-
+            
         </div>
     </div>
 </body>
