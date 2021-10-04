@@ -1,261 +1,329 @@
 ﻿<!DOCTYPE html>
 <html ng-app="folderPluginDesign">
+
 <head lang="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>design</title>
     <meta charset="UTF-8">
     <!-- CSS -->
-    <link href="../../../../styles/helper.css" rel="stylesheet">
-    <link href="../../../../styles/siteIcons.css" rel="stylesheet">
+    <!--     <link href="../../../../styles/helper.css" rel="stylesheet">
+    <link href="../../../../styles/siteIcons.css" rel="stylesheet"> -->
 
     <!-- build:bundleCSSFiles  -->
-    <link href="app.css" rel="stylesheet">
     <!-- endbuild -->
 
     <!-- JS -->
     <script src="../../../../scripts/buildfire.min.js"></script>
     <script src="../../../../scripts/angular/angular.min.js"></script>
 
+    <link rel="stylesheet" href="../content/assets/css/reset.css">
+    <link rel="stylesheet" href="../content/assets/css/bf_base.css">
+    <link href="../../../../styles/siteIcons.css" rel="stylesheet">
+
     <script src="../../../../scripts/angular/ui-bootstrap.min.js"></script>
+
+    <!--     <script src="../../../../scripts/angular/ui-bootstrap.min.js"></script> -->
     <!-- build:bundleJSFiles  -->
     <script src="app.services.js"></script>
     <script src="app.js"></script>
     <script src="design.controller.js"></script>
     <!-- endbuild -->
 </head>
-<body ng-controller="folderPluginCtrl" ng-cloak ng-show="datastoreInitialized">
-    <div ng-form="frmMain">
 
-        <div class="item row margin-bottom-twenty clearfix">
-            <div class="labels col-md-3 padding-right-zero pull-left">
-                <span>Layout Style</span>
-            </div>
-            <div class="main col-md-9 pull-right">
-                <div class="screens clearfix">
-                    <div class="screen layouticon pull-left">
-                        <a class="border-radius-three default-background-hover text-center">
-                            <img ng-src="{{ availableLayouts[data.design.selectedLayout - 1] }}">
-                        </a>
+<body ng-controller="folderPluginCtrl" ng-cloak ng-show="datastoreInitialized">
+    <div class="padded-sm" ng-form="frmMain">
+        <h1>Design</h1>
+        <div class="layout-selector input-control side-label">
+            <label for="">Background Image</label>
+            <div class="thumbnails-container">
+                <div class="mobile-thumbnail">
+                    <button class="btn btn-add-img" id="mobileBackground" ng-click="changeBackground('small')"
+                        ng-style="data.design.backgroundImage && {'display':'none'}"></button>
+                    <div class="thumbnail-image hide-me"
+                        ng-style="data.design.backgroundImage && {'background-image':'url('+cropImage(data.design.backgroundImage,104,150)+')','display':'block'}">
+                        <button ng-click="deleteBackground('small')"
+                            class="delete btn-icon btn-delete-icon btn-danger transition-third delete-thumbnail"><span
+                                class="icon">&times;</span></button>
                     </div>
-                    <div class="screen layoutgrid pull-right margin-left-zero border-grey border-radius-three">
-                        <a class="layouticon border-radius-three default-background-hover text-center" ng-repeat="layout in availableLayouts" data-number="{{$index + 1}}"
-                           ng-click="changeLayout($index)">
+                    <div class="recommended-text">Smartphone Recommended: 750 x 1334px</div>
+                </div>
+                <div class="tablet-thumbnail">
+                    <button class="btn btn-add-img" id="tabletBackground" ng-click="changeBackground('large')"
+                        ng-style="data.design.lgBackgroundImage && {'display':'none'}"></button>
+                    <div class="thumbnail-image hide-me"
+                        ng-style="data.design.lgBackgroundImage && {'background-image':'url('+cropImage(data.design.lgBackgroundImage,104,150)+')','display':'block'}">
+                        <button ng-click="deleteBackground('large')"
+                            class="delete btn-icon btn-delete-icon btn-danger transition-third delete-thumbnail"><span
+                                class="icon">&times;</span></button>
+                    </div>
+                    <div class="recommended-text">Tablet Recommended: 1536 x 2048px</div>
+                </div>
+                <div class="background-style-container">
+                    <div class="background-mode">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h1>Layout</h1>
+        <div class="layout-selector input-control flex">
+            <div class="selected-layout">
+                <a class="layout">
+                    <img ng-src="{{ availableLayouts[data.design.selectedLayout - 1] }}">
+                </a>
+            </div>
+            <div class="layoutgrid-container flex-auto">
+                <div class="layout-grid-scroll">
+                    <div class="layoutgrid">
+                        <a class="layouticon border-radius-three default-background-hover text-center"
+                            ng-repeat="layout in availableLayouts" data-number="{{$index + 1}}"
+                            ng-click="changeLayout($index)">
                             <img ng-src="{{ layout }}">
                         </a>
                     </div>
                 </div>
+
+            </div>
+
+        </div>
+    </div>
+        <div ng-hide="data.design.selectedLayout < 9 || data.design.selectedLayout > 11">
+            <div class="layout-selector input-control side-label margin-bottom-thirty">
+                <label for="" style="font-weight: bold; color:black;">
+                    Text Align
+                </label>
+            </div>
+            <div class="layout-selector input-control side-label height-thirty-eight">
+                <label for="" class="pull-left" style="display: inline-block; margin-top: 10px;">
+                    Vertical
+                </label>
+                <div class="dropdown padding-zero" dropdown="" is-open="status.isOpen">
+                    <button style="width: 200px; height: 40px;" class="btn btn-default text-left dropdown-toggle"
+                        dropdown-toggle="" aria-expanded="false" aria-haspopup="true">
+                        <span class="pull-left ng-binding">{{getVerticalAlignment()}}</span>
+                        <span class="chevron icon-chevron-down pull-right"></span>
+                    </button>
+                    <ul class="dropdown-menu extended" role="menu">
+                        <li class="ng-scope" ng-click="setVerticalAlignment('flex-start')">
+                            <a class="transition-third ng-binding">Top</a>
+                        </li>
+                        <li class="ng-scope" ng-click="setVerticalAlignment('center')">
+                            <a class="transition-third ng-binding">Center</a>
+                        </li>
+                        <li class="ng-scope" ng-click="setVerticalAlignment('flex-end')">
+                            <a class="transition-third ng-binding">Bottom</a>
+                        </li>
+                    </ul>
+                </div>
+                </div>
+                    <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
+                        <label for="" class="pull-left" style="display: inline-block; margin-top: 10px;">
+                            Horizontal
+                        </label>
+                        <div class="dropdown padding-zero" dropdown="" is-open="status.isOpen2">
+                            <button style="width: 200px; height: 40px;" class="btn btn-default text-left dropdown-toggle"
+                                dropdown-toggle="" aria-expanded="false" aria-haspopup="true">
+                                <span class="pull-left ng-binding">{{getHorizontalAlignment()}}</span>
+                                <span class="chevron icon-chevron-down pull-right"></span>
+                            </button>
+                            <ul class="dropdown-menu extended" role="menu">
+                                <li class="ng-scope" ng-click="setHorizontalAlignment('flex-start')">
+                                    <a class="ransition-third ng-binding">Top</a>
+                                </li>
+                                <li class="ng-scope" ng-click="setHorizontalAlignment('center')">
+                                    <a class="ransition-third ng-binding">Center</a>
+                                </li>
+                                <li class="ng-scope" ng-click="setHorizontalAlignment('flex-end')">
+                                    <a class="ransition-third ng-binding">Bottom</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
             </div>
         </div>
-        <hr ng-hide="data.design.selectedLayout < 9 || data.design.selectedLayout > 11">
-        <div class="item row margin-bottom-twenty clearfix textAlign"
+        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight" 
             ng-hide="data.design.selectedLayout < 9 || data.design.selectedLayout > 11">
-            <div class="labels col-md-3 padding-right-zero pull-left">
-                <span>Text Align</span>
-            </div>
-            <div class="main col-md-9 pull-right">
-                <div class="screens clearfix margin-bottom-twenty">
-                    <div class="screen layouticon pull-left">
-                        Vertical
-                    </div>
-                    <div class="screen margin-left-zero">
-                        <select class="form-control dropdown" ng-model="data.design.textAlignVertical">
-                            <option value="flex-start">Top</option>
-                            <option value="center" ng-selected="true">Center</option>
-                            <option value="flex-end">Bottom</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="screens clearfix">
-                    <div class="screen layouticon pull-left">
-                        Horizontal
-                    </div>
-                    <div class="screen margin-left-zero">
-                        <select class="form-control dropdown" ng-model="data.design.textAlignHorizontal">
-                            <option value="flex-start">Left</option>
-                            <option value="center" ng-selected="true">Center</option>
-                            <option value="flex-end">Right</option>
-                        </select>
-                    </div>
-                </div>
+            <label for="">Image Overlay</label>
+            <div class="button-switch">
+                <input id="imageOverlay" type="checkbox" ng-model="data.design.showBlackOverlay"
+                    ng-value="data.design.showBlackOverlay">
+                <label for="imageOverlay" class="label-success">
+                </label>
             </div>
         </div>
-        <hr ng-hide="data.design.selectedLayout < 9 || data.design.selectedLayout > 11">
-        <div class="item row clearfix" ng-hide="data.design.selectedLayout < 9 || data.design.selectedLayout > 11">
-            <div class="labels col-md-3 padding-right-zero pull-left">
-                <span>Image Overlay</span>
-            </div>
-            <div class="main col-md-9 pull-right">
-                <div class="radio radio-primary radio-inline">
-                    <input id="showBlackOverlayOff" type="radio" name="showBlackOverlayOff" ng-model="data.design.showBlackOverlay" ng-value="false">
-                    <label for="showBlackOverlayOff">Hide</label>
-                </div>
-                <div class="radio radio-primary radio-inline">
-                    <input id="showBlackOverlay" type="radio" name="showBlackOverlay" ng-model="data.design.showBlackOverlay" ng-value="true">
-                    <label for="showBlackOverlay">Show</label>
-                </div>
+        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight"
+            ng-hide="![1, 2, 8].includes(data.design.selectedLayout)">
+            <label for="">Line Separator</label>
+            <div class="button-switch">
+                <input id="showLineSeparator" type="checkbox" ng-model="data.design.showLineSeparator"
+                    ng-value="data.design.showLineSeparator">
+                <label for="showLineSeparator" class="label-success">
+                </label>
             </div>
         </div>
-        <hr ng-hide="![1, 2, 8].includes(data.design.selectedLayout)">
-        <div class="item row clearfix" ng-hide="![1, 2, 8].includes(data.design.selectedLayout)">
-            <div class="labels col-md-3 padding-right-zero pull-left">
-                <span>Line Separator</span>
-            </div>
-            <div class="main col-md-9 pull-right">
-                <div class="radio radio-primary radio-inline">
-                    <input id="showLineSeparatorOff" type="radio" name="showLineSeparatorOff" ng-model="data.design.showLineSeparator" ng-value="false">
-                    <label for="showLineSeparatorOff">Hide</label>
-                </div>
-                <div class="radio radio-primary radio-inline">
-                    <input id="showLineSeparator" type="radio" name="showLineSeparator" ng-model="data.design.showLineSeparator" ng-value="true">
-                    <label for="showLineSeparator">Show</label>
-                </div>
-            </div>
-        </div>
-        <hr>
-        <div class="item row margin-bottom-twenty clearfix textAlign">
-            <div class="labels col-md-3 padding-right-zero pull-left">
-                <span>Font Size</span>
-            </div>
-            <div class="main col-md-9 pull-right">
-                <div class="screens clearfix">
-                    <div class="screen layouticon pull-left">
-                        <select class="form-control dropdown margin-left-zero" ng-model="data.design.textFontSize">
-                            <option value="12">12px</option>
-                            <option value="14">14px</option>
-                            <option value="16" ng-selected="true">16px</option>
-                            <option value="18">18px</option>
-                            <option value="20">20px</option>
-                            <option value="24">24px</option>
-                            <option value="28">28px</option>
-                            <option value="32">32px</option>
-                            <option value="36">36px</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <hr>
-        <div class="item clearfix row padding-bottom-twenty">
-            <div class="labels col-md-3 padding-right-zero pull-left">
-                <span>Background Image</span>
-            </div>
-            <div class="main col-md-9 pull-right">
-                <div class="screens clearfix">
-                    <div class="devices-screen mobile-device text-center pull-left">
-                        <a class="" ng-click="changeBackground('small')">
-                            <span class="add-icon" ng-hide="data.design.backgroundImage">+</span>
-                            <img ng-src="{{ cropImage(data.design.backgroundImage,66,116) }}" alt="Background Image" ng-show="data.design.backgroundImage" />
-                        </a>
-                        <label class="secondary">750x1334</label>
-                        <span class="icon btn-icon btn-delete-bg btn-delete-icon btn-danger transition-third" ng-click="deleteBackground('small')" ng-show="data.design.backgroundImage"></span>
-                    </div>
-                    <div class="devices-screen ipad-device pull-left text-center">
-                        <a class="" ng-click="changeBackground('large')">
-                            <span ng-hide="data.design.lgBackgroundImage" class="add-icon" ng-hide="data.design.lgBackgroundImage">+</span>
-                            <img ng-src="{{ cropImage(data.design.lgBackgroundImage,113,150) }}"  alt="Background Image" ng-show="data.design.lgBackgroundImage" />
-                        </a>
-                        <label class="secondary">1536x2048</label>
-                        <span class="icon btn-icon btn-delete-bg btn-delete-icon btn-danger transition-third" ng-click="deleteBackground('large')" ng-show="data.design.lgBackgroundImage"></span>
-                    </div>
-                </div>
+        <h1>Additional settings</h1>
+        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
+            <label for="" class="pull-left" style="display: inline-block; margin-top: 10px;">
+                Font Size
+            </label>
+            <div class="dropdown padding-zero" dropdown="" is-open="status.isOpen3">
+                <button style="width: 200px; height: 40px;" class="btn btn-default text-left dropdown-toggle"
+                    dropdown-toggle="" aria-expanded="false" aria-haspopup="true">
+                    <span class="pull-left ng-binding">{{getFontSize()}}</span>
+                    <span class="chevron icon-chevron-down pull-right"></span>
+                </button>
+                <ul class="dropdown-menu extended" role="menu">
+                    <li class="ng-scope" ng-click="setFontSize(12)">
+                        <a class="ransition-third ng-binding">12px</a>
+                    </li>
+                    <li class="ng-scope" ng-click="setFontSize(14)">
+                        <a class="ransition-third ng-binding">14px</a>
+                    </li>
+                    <li class="ng-scope" ng-click="setFontSize(16)">
+                        <a class="ransition-third ng-binding">16px</a>
+                    </li>
+                    <li class="ng-scope" ng-click="setFontSize(18)">
+                        <a class="ransition-third ng-binding">18px</a>
+                    </li>
+                    <li class="ng-scope" ng-click="setFontSize(20)">
+                        <a class="ransition-third ng-binding">20px</a>
+                    </li>
+                    <li class="ng-scope" ng-click="setFontSize(24)">
+                        <a class="ransition-third ng-binding">24px</a>
+                    </li>
+                    <li class="ng-scope" ng-click="setFontSize(28)">
+                        <a class="ransition-third ng-binding">28px</a>
+                    </li>
+                    <li class="ng-scope" ng-click="setFontSize(32)">
+                        <a class="ransition-third ng-binding">32px</a>
+                    </li>
+                    <li class="ng-scope" ng-click="setFontSize(36)">
+                        <a class="ransition-third ng-binding">36px</a>
+                    </li>
+                </ul>
             </div>
         </div>
 
-        <div>
-            <hr>
-            <div class="item row clearfix">
-                <div class="labels col-md-3 padding-right-zero pull-left">
-                    <span>Compress Images</span>
-                </div>
-                <div class="main col-md-9 pull-right" ng-init="data.design.compressImages">
-                    <div class="radio radio-primary radio-inline">
-                        <input ng-if="data.design.compressImages" id="compressImagesOff" type="radio" name="toggleCompression" ng-model="data.design.compressImages" ng-value="false">
-                        <input ng-if="!data.design.compressImages" id="compressImagesOff" type="radio" name="toggleCompression" checked="checked">
-                        <label for="compressImagesOff">False</label>
+        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
+            <label for="">Compress Images
+                <div class="bf-tooltip">
+                    <div class="tooltip-icon primary-bg">!</div>
+                    <div class="tooltip-content">
+                        Compression can increase performance, but may effect image transparency.
                     </div>
-                    <div class="radio radio-primary radio-inline">
-                        <input id="compressImagesOn" type="radio" name="compressImages" ng-model="data.design.compressImages" ng-value="true">
-                        <label for="compressImages">True</label>
-                    </div>
-                    <p class="info margin-top-fifteen">Note: Compression can increase performance, but may effect image transparency.</p>
-                </div>
+                </div></label>
+            <div class="button-switch">
+                <input id="compressImages" type="checkbox" ng-model="data.design.compressImages"
+                    ng-value="data.design.compressImages">
+                <label for="compressImages" class="label-success">
+                </label>
             </div>
         </div>
 
-        <div>
-            <hr>
-            <div class="item row clearfix">
-                <div class="labels col-md-3 padding-right-zero pull-left">
-                    <span>Hide Text</span>
-                </div>
-                <div class="main col-md-9 pull-right" ng-init="data.design.hideText">
-                    <div class="radio radio-primary radio-inline">
-                        <input ng-if="data.design.hideText" id="showText" type="radio" name="toggleText" ng-model="data.design.hideText" ng-value="false">
-                        <input ng-if="!data.design.hideText" id="showText" type="radio" name="toggleText" checked="checked">
-                        <label for="showText">False</label>
+
+        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
+            <label for="">Hide Text
+                <div class="bf-tooltip">
+                    <div class="tooltip-icon primary-bg">!</div>
+                    <div class="tooltip-content">
+                        This will allow you to hide the text on specific layouts.
                     </div>
-                    <div class="radio radio-primary radio-inline">
-                        <input id="hideText" type="radio" name="toggleText" ng-model="data.design.hideText" ng-value="true">
-                        <label for="hideText">True</label>
-                    </div>
-                    <p class="info margin-top-fifteen">Note: This will allow you to hide the text on specific layouts.</p>
-                </div>
+                </div></label>
+            <div class="button-switch">
+                <input id="hideText" type="checkbox" ng-model="data.design.hideText" ng-value="data.design.hideText">
+                <label for="hideText" class="label-success">
+                </label>
             </div>
         </div>
 
-        <div>
-          <hr>
-          <div class="item row clearfix">
-              <div class="labels col-md-3 padding-right-zero pull-left">
-                  <span>Show Notification Badges</span>
-              </div>
-              <div class="main col-md-9 pull-right" ng-init="data.design.showNotificationBadges">
-                  <div class="radio radio-primary radio-inline">
-                      <input ng-if="data.design.showNotificationBadges" id="showNotificationBadges" type="radio" name="toggleShowNotificationBadges" ng-model="data.design.showNotificationBadges" ng-value="false">
-                      <input ng-if="!data.design.showNotificationBadges" id="showNotificationBadges" type="radio" name="toggleShowNotificationBadges" checked="checked">
-                      <label for="showNotificationBadges">False</label>
-                  </div>
-                  <div class="radio radio-primary radio-inline">
-                      <input id="showNotificationBadges" type="radio" name="toggleShowNotificationBadges" ng-model="data.design.showNotificationBadges" ng-value="true">
-                      <label for="showNotificationBadges">True</label>
-                  </div>
-              </div>
-          </div>
+        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
+            <label for="">Show Notification Badges
+            </label>
+            <div class="button-switch">
+                <input id="showNotificationBadges" type="checkbox" ng-model="data.design.showNotificationBadges"
+                    ng-value="data.design.showNotificationBadges">
+                <label for="showNotificationBadges" class="label-success">
+                </label>
+            </div>
         </div>
 
-        <hr ng-if="enterpriseApp" >
-        <div ng-if="enterpriseApp" class="padded padding-top-ten clearfix" >
-            <div class="item clearfix row">
-                <div class="labels col-md-3 padding-right-zero pull-left">
-                    <span>Secured Feature Visibility</span>
-                </div>
-                <div class="main pull-left col-md-7">
-                    <div class="dropdown" dropdown>
-                        <button class="btn btn-default text-left dropdown-toggle"
-                                data-toggle="dropdown" dropdown-toggle aria-expanded="true">
-                            <span class="pull-left text-capitalize">{{data.design.securedFeaturesOption}}</span>
-                            <span class="chevron icon-chevron-down pull-right"></span>
-                        </button>
-                        <ul class="dropdown-menu extended" role="menu">
-                            <li class="text-capitalize">
-                                <a ng-click="data.design.securedFeaturesOption='Enable';">Enable</a>
-                            </li>
-                            <li class="text-capitalize">
-                                <a ng-click="data.design.securedFeaturesOption='Disable';">Disable</a>
-                            </li>
-                            <li class="text-capitalize">
-                                <a ng-click="data.design.securedFeaturesOption='Hide';">Hide</a>
-                            </li>
-                        </ul>
+        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
+            <label for="">Show Safe Area
+                <div class="bf-tooltip">
+                    <div class="tooltip-icon primary-bg">!</div>
+                    <div class="tooltip-content">
+                        Show safe area above carousel to make room for iPhone notch
                     </div>
-                    <p class="info margin-top-fifteen">Note: This allows you to control how features are displayed based
+                </div></label>
+            <div class="button-switch">
+                <input id="hideIPhoneNotch" type="checkbox" ng-model="data.design.hideIPhoneNotch"
+                    ng-value="data.design.hideIPhoneNotch">
+                <label for="hideIPhoneNotch" class="label-success">
+                </label>
+            </div>
+        </div>
+
+        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight"
+            ng-hide="data.design.hideIPhoneNotch">
+            <label for="">Set Background Color
+                <div class="bf-tooltip">
+                    <div class="tooltip-icon primary-bg">!</div>
+                    <div class="tooltip-content">
+                        Compression can increase performance, but may effect image transparency.
+                    </div>
+                </div></label>
+            <div class="dropdown padding-zero" dropdown="" is-open="status.isOpen4">
+                <button style="width: 200px; height: 40px;" class="btn btn-default text-left dropdown-toggle"
+                    dropdown-toggle="" aria-expanded="false" aria-haspopup="true">
+                    <span class="pull-left ng-binding">{{getIphoneNotch()}}</span>
+                    <span class="chevron icon-chevron-down pull-right"></span>
+                </button>
+                <ul class="dropdown-menu extended" role="menu">
+                    <li class="ng-scope" ng-click="setIphoneNotch(false)">
+                        <a class="ransition-third ng-binding">Transparent</a>
+                    </li>
+                    <li class="ng-scope" ng-click="setIphoneNotch(true)">
+                        <a class="ransition-third ng-binding">Black</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight" ng-if="enterpriseApp">
+            <label for="" class="pull-left" style="display: inline-block; margin-top: 10px;">
+                Secured Feature Visibility
+                <div class="bf-tooltip">
+                    <div class="tooltip-icon primary-bg">!</div>
+                    <div class="tooltip-content">
+                        This allows you to control how features are displayed based
                         on their Security Settings. If you require login or set up required tags, you can keep
-                        the feature "Enable" to all users, show them in the list but make them read-only with "Disable", or hide them entirely with "Hide".</p>
-                    <p class="info margin-top-fifteen">Note: This feature will only work in the app, and is disabled in the control panel.</p>
+                        the feature "Enable" to all users, show them in the list but make them read-only with "Disable",
+                        or hide them entirely with "Hide".
+                    </div>
                 </div>
-
+            </label>
+            <div class="dropdown padding-zero" dropdown="" is-open="status.isOpen5" style="width: 100%;">
+                <button style="width: 200px; height: 40px;" class="btn btn-default text-left dropdown-toggle"
+                    dropdown-toggle="" aria-expanded="false" aria-haspopup="true">
+                    <span class="pull-left ng-binding">{{getSecuredFeatures()}}</span>
+                    <span class="chevron icon-chevron-down pull-right"></span>
+                </button>
+                <ul class="dropdown-menu extended" role="menu" style="width: 200px;">
+                    <li class="ng-scope" ng-click="setSecuredFeatures('Enable')">
+                        <a class="ransition-third ng-binding">Enable</a>
+                    </li>
+                    <li class="ng-scope" ng-click="setSecuredFeatures('Disable')">
+                        <a class="ransition-third ng-binding">Disable</a>
+                    </li>
+                    <li class="ng-scope" ng-click="setSecuredFeatures('Hide')">
+                        <a class="ransition-third ng-binding">Hide</a>
+                    </li>
+                </ul>
+                <p class="info-note" style="position: absolute; margin-top:2px; width: 100% ;">This feature will only work in the app, and is disabled in the control panel.</p>
             </div>
+            
         </div>
-
     </div>
 </body>
+
 </html>

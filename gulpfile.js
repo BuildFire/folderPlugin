@@ -25,7 +25,7 @@ console.log(">> Building to " , destinationFolder);
 
 const cssTasks=[
     {name:"widgetCSS",src:"widget/**/*.css",dest:"/widget"}
-    ,{name:"controlContentCSS",src:"control/content/**/*.css",dest:"/control/content"}
+    ,{name:"controlContentCSS",src:"control/content/*.css",dest:"/control/content"}
     ,{name:"controlDesignCSS",src:"control/design/**/*.css",dest:"/control/design"}
     ,{name:"controlSettingsCSS",src:"control/settings/**/*.css",dest:"/control/settings"}
 ];
@@ -157,8 +157,13 @@ gulp.task('images', function(){
         .pipe(gulp.dest(destinationFolder ));
 });
 
+gulp.task('assets', () => {
+    gulp.src(['control/content/assets/css/fonts/*','control/content/assets/css/linearicons/**/*'],{base: '.'}).pipe(gulp.dest(destinationFolder));
+    gulp.src(['control/content/assets/css/**/*.css'],{base: '.'}).pipe(minifyCSS()).pipe(gulp.dest(destinationFolder));
 
-var buildTasksToRun=['html','resources','images'];
+});
+
+var buildTasksToRun=['html','resources','assets','images'];
 
 cssTasks.forEach(function(task){  buildTasksToRun.push(task.name)});
 jsTasks.forEach(function(task){  buildTasksToRun.push(task.name)});

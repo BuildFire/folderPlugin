@@ -46,7 +46,9 @@
                                 backgroundblur: 0,
                                 hideText: false,
                                 securedFeaturesOption:"Enable",
-                                showNotificationBadges: false
+                                showNotificationBadges: false,
+                                hideIPhoneNotch: false,
+                                blackIPhoneNotch: false,
                             };
                         }
                         if(typeof $scope.data.design.showBlackOverlay !== 'boolean') {
@@ -94,6 +96,51 @@
                 /*
                  * Open a dailog to change the background image
                  * */
+                $scope.getVerticalAlignment = function(){
+                    if($scope.data.design.textAlignVertical=='flex-start')
+                        return "Top";
+                    else if(!$scope.data.design.textAlignVertical || $scope.data.design.textAlignVertical=='center')
+                        return "Center";
+                    else return "Bottom";
+                };
+                $scope.setVerticalAlignment = function(aligment){
+                    $scope.data.design.textAlignVertical=aligment;
+                };
+                $scope.getHorizontalAlignment = function(){
+                    if($scope.data.design.textAlignHorizontal=='flex-start')
+                        return "Top";
+                    else if(!$scope.data.design.textAlignHorizontal || $scope.data.design.textAlignHorizontal=='center')
+                        return "Center";
+                    else return "Bottom";
+                };
+                $scope.setHorizontalAlignment = function(aligment){
+                    $scope.data.design.textAlignHorizontal=aligment;
+                };
+                $scope.getFontSize = function(){
+                    if($scope.data.design.textFontSize)
+                        return $scope.data.design.textFontSize+"px";
+                    else return "16px";
+                };
+                $scope.setFontSize = function(fontSize){
+                    $scope.data.design.textFontSize=fontSize;
+                };
+
+                $scope.getIphoneNotch = function(){
+                    if(!$scope.data.design.blackIPhoneNotch)
+                        return "Transparent";
+                    else return "Black";
+                };
+                $scope.setIphoneNotch = function(option){
+                    $scope.data.design.blackIPhoneNotch=option;
+                };
+
+                $scope.getSecuredFeatures = function(){
+                    return $scope.data.design.securedFeaturesOption;
+                };
+                $scope.setSecuredFeatures = function(option){
+                    $scope.data.design.securedFeaturesOption=option;
+                };
+
                 $scope.changeBackground = function (bgType) {
                     buildfire.imageLib.showDialog({ showIcons: false, multiSelection: false }, function (error, result) {
                         if (result && result.selectedFiles && result.selectedFiles.length > 0) {
