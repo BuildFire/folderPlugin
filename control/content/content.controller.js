@@ -45,12 +45,17 @@
 
                 //Go pull any previously saved data
                 buildfire.datastore.getWithDynamicData(function (err, result) {
-                    if (!err) {
-                        $scope.datastoreInitialized = true;
-                    } else {
-                        console.error("Error: ", err);
-                        return;
+                    if (err || !result) {
+                      console.error(err, 'Error while getting datastore.');
+                      buildfire.dialog.toast({
+                        message: "Error while loading data. Retrying again in 2 seconds...",
+                        duration: 1999
+                      });
+                      setTimeout(() => location.reload(), 2000);
+                      return;
                     }
+
+                    $scope.datastoreInitialized = true;
 
                     var firstTimeVisit = false;
                     if (!result.id) {
