@@ -51,7 +51,9 @@
                         message: "Error while loading data. Retrying again in 2 seconds...",
                         duration: 1999
                       });
-                      setTimeout(() => location.reload(), 2000);
+                      setTimeout(function() {
+                        location.reload();
+                      }, 2000);
                       return;
                     }
 
