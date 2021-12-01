@@ -8,7 +8,7 @@
     "postinstall": "./node_modules/.bin/bower install",
     "test": "./node_modules/.bin/karma start karma.conf.js",
     "build": "gulp build && cd .. && rm -rf folderPlugin_release.zip && zip -r folderPlugin_release.zip folderPlugin_release/",
-    "preinstall": "npx npm-force-resolutions"
+    "preinstall": "npx install npm-force-resolutions"
   },
   "resolutions": {
     "graceful-fs": "4.2.3"

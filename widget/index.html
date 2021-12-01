@@ -103,7 +103,7 @@
         #txt h4 span,
         #txt h5 span,
         #txt h6 span {
-            font-size: inherit !important;
+            font-size: inherit;
         }
 
     </style>
@@ -218,8 +218,10 @@
 
         txt.innerHTML = '';
         if (layout != 12) {
-            if (obj.data.content.text)
+            if (obj.data.content.text){
+                console.log(obj.data.content);
                 txt.innerHTML = obj.data.content.text.trim();
+            }
         }
         if (txt.innerHTML == '') {
             txt.classList.add('hide');
@@ -298,7 +300,7 @@
                             var iIcon = document.createElement('i');
                             iIcon.className += " main-icon " + p.iconClassName;
                             if ([3, 4, 5, 6, 7, 9, 10, 11].indexOf(layout) > -1) {
-                                iIcon.style.fontSize = calcFontSize(options, layout) + "px";
+                                iIcon.style.fontSize = calcFontSize(options, layout) + "px !important";
                             }
                             span.append(iIcon);
                             divImg.appendChild(span);
@@ -590,7 +592,7 @@
         let postitioning = document.createElement("style");
         let justifyContent = "center";
         let alignItems = "center";
-        let fontSize = textFontSize ? textFontSize + "px" : "2.5vh";
+        let fontSize = textFontSize ? textFontSize + "px !important" : "2.5vh";
         if(textAlignHorizontal) justifyContent = textAlignHorizontal;
         if(textAlignVertical) alignItems = textAlignVertical;
         let css = `{
@@ -598,7 +600,7 @@
                     align-items: ${alignItems} !important;
                 }`;
         let cssFontSize = `{
-            font-size: ${fontSize} !important;
+            font-size: ${fontSize};
         }`
         postitioning.innerHTML += `span ${cssFontSize}`
         switch (layout) {
@@ -1039,7 +1041,7 @@
     }
 
     .layout1 .pluginItem .media-holder.media-holder-icon .main-icon {
-        font-size: 15vw !important;
+        font-size: 15vw;
         position: relative;
         top: -1px;
     }
@@ -1109,7 +1111,7 @@
     }
 
     .layout2 .pluginItem .media-holder.media-holder-icon .main-icon {
-        font-size: 18vw !important;
+        font-size: 18vw;
         position: relative;
         top: -1px;
     }
@@ -1213,7 +1215,7 @@
     }
 
     .layout5 .pluginItem .media-holder.media-holder-icon .main-icon {
-        font-size: 48.8vw !important;
+        font-size: 48.8vw;
         position: relative;
         top: -1px;
     }
@@ -1252,7 +1254,7 @@
     }
 
     .layout6 .pluginItem .media-holder.media-holder-icon .main-icon {
-        font-size: 42.4vw !important;
+        font-size: 42.4vw ;
         position: relative;
         top: -1px;
     }
@@ -1332,7 +1334,7 @@
     }
 
     .layout8 .pluginItem .media-holder.media-holder-icon .main-icon {
-        font-size: 15vw !important;
+        font-size: 15vw ;
         position: relative;
         top: -1px;
     }
@@ -1525,7 +1527,7 @@
     }
 
     .layout11 .pluginItem .media-holder.media-holder-icon .main-icon {
-        font-size: 48vw !important;
+        font-size: 48vw;
         position: relative;
         top: -1px;
     }
