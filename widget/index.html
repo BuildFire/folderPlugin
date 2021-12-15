@@ -3,6 +3,7 @@
 <head lang="en">
     <meta name="buildfire" content="disableBootstrap,disableAppStyles"/>
     <script src="../../../scripts/_bundles/buildfire_lightcarousel.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--this css is important to be loaded first for the first paint-->
     <style>
         .item-disabled {
@@ -173,7 +174,7 @@
                 _elementHeight = element.parentElement.parentElement.clientHeight;
             }
 
-            var wT = window.pageYOffset, wB = wT + window.innerHeight + (_elementHeight * 3), cRect, pT, pB, p = 0;
+            var wT = window.pageYOffset, wB = wT + document.documentElement.clientHeight + (_elementHeight * 3), cRect, pT, pB, p = 0;
             cRect = element.getBoundingClientRect();
             pT = wT + cRect.top;
             pB = pT + cRect.height;
@@ -569,10 +570,12 @@
         }
 
         if (bgImage) {
-            style.innerHTML += "#light-folder-body{ background: no-repeat url('" + buildfire.imageLib.cropImage(bgImage, {
+            let url = buildfire.imageLib.cropImage(bgImage, {
                     width: window.innerWidth,
-                    height: window.innerHeight
-                }).replace(/'/g,"%27") + "') !Important; background-size: cover !important; } ";
+                    height: document.documentElement.clientHeight
+                });
+            url = url.replace(/'/g,"%27");
+            style.innerHTML += "#light-folder-body{ background: no-repeat url('" + url + "') !Important; background-size: cover !important; } ";
             // enable for imageCache
             // style.innerHTML += "body { background-size: cover !important; } ";
             // buildfire.imageLib.cropImage(bgImage, { width: window.innerWidth, height: window.innerHeight }, document.body);
