@@ -793,7 +793,7 @@ var buildfire = {
                 throw ("options not an object");
 
             if (options.width == 'full') options.width = window.innerWidth;
-            if (options.height == 'full') options.height = window.innerHeight;
+            if (options.height == 'full') options.height = document.documentElement.clientHeight;
 
             if (options.width && !options.height)
                 return root + "width/" + (options.width * ratio) + "/" + url;
