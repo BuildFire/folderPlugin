@@ -571,8 +571,8 @@
 
         if (bgImage) {
             let url = buildfire.imageLib.cropImage(bgImage, {
-                    width: window.innerWidth,
-                    height: document.documentElement.clientHeight
+                    width: buildfire.getContext().initialWidth || window.innerWidth,
+                    height: buildfire.getContext().initialHeight || document.documentElement.clientHeight
                 });
             url = url.replace(/'/g,"%27");
             style.innerHTML += "#light-folder-body{ background: no-repeat url('" + url + "') !Important; background-size: cover !important; } ";
