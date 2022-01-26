@@ -8,15 +8,14 @@
     "postinstall": "./node_modules/.bin/bower install",
     "test": "./node_modules/.bin/karma start karma.conf.js",
     "build": "gulp build && cd .. && rm -rf folderPlugin_release.zip && zip -r folderPlugin_release.zip folderPlugin_release/",
-    "preinstall": "npm install --package-lock-only --ignore-scripts && npx npm-force-resolutions"
+    "preinstall": "npx install npm-force-resolutions"
   },
   "resolutions": {
     "graceful-fs": "4.2.3"
   },
   "dependencies": {
     "bower": "^1.5.3",
-    "karma-cli": "^0.1.0",
-    "npm-force-resolutions": "0.0.10"
+    "karma-cli": "^0.1.0"
   },
   "repository": {
     "type": "git",
