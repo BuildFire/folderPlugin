@@ -5,6 +5,7 @@
     <script src="../../../scripts/_bundles/buildfire_lightcarousel.min.js"></script>
     <!--this css is important to be loaded first for the first paint-->
     <style>
+       
         .item-disabled {
             cursor: not-allowed;
             opacity: 0.4;
@@ -109,10 +110,12 @@
     </style>
 </head>
 <body id="light-folder-body">
+    <section id="widgetContainer">
 <div id="carousel" class="sliderCarousel hide">
 </div>
 <div id="txt" class="text-left folder-plugin-text clearfix hide-empty"></div>
 <div id="pluginsContainer"></div>
+</section>
 <script>
     var carouselContainer = document.getElementById("carousel");
     var txt = document.getElementById("txt");
@@ -1540,9 +1543,9 @@
                                                                         Layout-12
             */
     #pluginsContainer.layout12 {
-        position: relative;
+        position: absolute;
         top: 50%;
-        transform: translateY(-50%);
+        transform: translateY(-50%) translateX(21.5%);
         width: 70%;
         margin: 0 auto;
         background: rgba(0, 0, 0, 0.8);
