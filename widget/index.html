@@ -139,7 +139,7 @@
             
             function _initImg(item) {
                 var src = item.getAttribute('data-src');
-                var alt = item.getAttribute('data-alt')
+                var imageTextAlternative = item.getAttribute('data-alt')
                 var options = {};
                 options.size = item.getAttribute('data-crop-size');
                 options.aspect = item.getAttribute('data-crop-aspect');
@@ -150,7 +150,7 @@
                 // enable for cache
                 // buildfire.imageLib.cropImage(src, options, img);
                 img.src = buildfire.imageLib.cropImage(src, options);
-                img.alt = alt;
+                img.alt = imageTextAlternative;
                 img.className = 'reveal-img';
 
                 if (img.complete) _addImg();
