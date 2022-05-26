@@ -139,7 +139,7 @@
             
             function _initImg(item) {
                 var src = item.getAttribute('data-src');
-
+                var alt = item.getAttribute('data-alt')
                 var options = {};
                 options.size = item.getAttribute('data-crop-size');
                 options.aspect = item.getAttribute('data-crop-aspect');
@@ -150,7 +150,7 @@
                 // enable for cache
                 // buildfire.imageLib.cropImage(src, options, img);
                 img.src = buildfire.imageLib.cropImage(src, options);
-
+                img.alt = alt;
                 img.className = 'reveal-img';
 
                 if (img.complete) _addImg();
@@ -292,6 +292,7 @@
                             divImg.setAttribute("data-crop-aspect", options.aspect);
                             divImg.setAttribute("data-crop-width", options.width);
                             divImg.setAttribute("data-crop-height", options.height);
+                            divImg.setAttribute("data-alt", p.title);
                             divImg.classList.add('lazy-img');
                         }
                         else {
