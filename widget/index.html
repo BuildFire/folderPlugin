@@ -813,7 +813,6 @@
                 width: window.innerWidth,
                 height: Math.ceil(9 * (window.innerWidth) / 16)
             }));
-            img.alt = "Carousel Image";
             carouselContainer.appendChild(img);
             img.addEventListener("click", function () {
                 buildfire.actionItems.execute(carouselImages[0], function (err, result) {
@@ -884,7 +883,9 @@
                         infinite:false,
                         autoInterval:speed
                     });
-
+                    // document.querySelectorAll(".js_slide").forEach(x => {
+                    //     x.childNodes[0].title = x.childNodes[0].alt;
+                    // })
                 } else {
                     appendOneImage(carouselImages);
                 }
