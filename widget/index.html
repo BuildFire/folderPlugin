@@ -139,7 +139,7 @@
             
             function _initImg(item) {
                 var src = item.getAttribute('data-src');
-
+                var imageTextAlternative = item.getAttribute('data-alt')
                 var options = {};
                 options.size = item.getAttribute('data-crop-size');
                 options.aspect = item.getAttribute('data-crop-aspect');
@@ -150,7 +150,8 @@
                 // enable for cache
                 // buildfire.imageLib.cropImage(src, options, img);
                 img.src = buildfire.imageLib.cropImage(src, options);
-
+                img.alt = imageTextAlternative;
+                img.title = imageTextAlternative;
                 img.className = 'reveal-img';
 
                 if (img.complete) _addImg();
@@ -292,6 +293,7 @@
                             divImg.setAttribute("data-crop-aspect", options.aspect);
                             divImg.setAttribute("data-crop-width", options.width);
                             divImg.setAttribute("data-crop-height", options.height);
+                            divImg.setAttribute("data-alt", p.title);
                             divImg.classList.add('lazy-img');
                         }
                         else {
@@ -811,7 +813,6 @@
                 width: window.innerWidth,
                 height: Math.ceil(9 * (window.innerWidth) / 16)
             }));
-            img.alt = "Carousel Image";
             carouselContainer.appendChild(img);
             img.addEventListener("click", function () {
                 buildfire.actionItems.execute(carouselImages[0], function (err, result) {
@@ -882,7 +883,6 @@
                         infinite:false,
                         autoInterval:speed
                     });
-
                 } else {
                     appendOneImage(carouselImages);
                 }
