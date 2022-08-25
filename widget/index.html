@@ -858,14 +858,14 @@
                         }
                         buildfire.localStorage.setItem(storagePlace,sendIndex, function(e,r){
                                 lastImage=carouselImages;
-                                if(speed!=0)changeTimer=setInterval(changeImage, speed,images,false);
+                                //if(speed!=0)changeTimer=setInterval(changeImage, speed,images,false);
                             });
                     });
                 }
                 else if(order == 1 && display== 1 && carouselImages.length > 1){
-                    if(speed!=0){
-                        changeTimer=setInterval(changeImage, speed,carouselImages,true);
-                    }
+                    // if(speed!=0){
+                    //     changeTimer=setInterval(changeImage, speed,carouselImages,true);
+                    // }
                     carouselImages=[carouselImages[Math.floor(Math.random() * carouselImages.length)]];
                     lastImage=carouselImages;
                     buildfire.localStorage.removeItem(storagePlace);

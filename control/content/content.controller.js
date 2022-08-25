@@ -79,6 +79,9 @@
                             editor.setOptionOrder($scope.data.content.order);
                         }
                         if ($scope.data && $scope.data.content && $scope.data.content.display) {
+                            if($scope.data.content.display == 1){
+                                document.querySelector(".change-speed").setAttribute("disabled","")
+                            }
                             editor.setOptionDisplay($scope.data.content.display);
                         }
                         if ($scope.data && $scope.data._buildfire && $scope.data._buildfire.plugins && $scope.data._buildfire.plugins.result) {
@@ -226,6 +229,13 @@
                 editor.onOptionDisplayChange = function (display) {
                     tmpCarousalSettings = {speed:5000,order:0,display:display};
                     $scope.data.content.display = display;
+                    if($scope.data.content.display == 1){
+                        document.querySelector(".change-speed").setAttribute("disabled","")
+                    } else {
+                        document.querySelector(".change-speed").removeAttribute("disabled")
+                    }
+
+
                     Utility.digest($scope);
                 };
 
