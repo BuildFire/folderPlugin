@@ -1,7 +1,8 @@
 ﻿<!DOCTYPE html>
 <html>
 <head lang="en">
-    <meta name="buildfire" content="disableBootstrap,disableAppStyles"/>
+	<meta charset="UTF-8">
+	<meta name="buildfire" content="disableBootstrap,disableAppStyles"/>
     <script src="../../../scripts/_bundles/buildfire_lightcarousel.min.js"></script>
     <!--this css is important to be loaded first for the first paint-->
     <style>
@@ -136,7 +137,7 @@
                 item.classList.remove("lazy-img");
                 _initImg(item);
             }
-            
+
             function _initImg(item) {
                 var src = item.getAttribute('data-src');
                 var imageTextAlternative = item.getAttribute('data-alt')
@@ -434,7 +435,7 @@
             }
           });
         }
-        
+
     }
 
     function getBadges(uniqueIds = [], callback) {
@@ -621,7 +622,7 @@
                 postitioning.innerHTML += `.layout${layout} .media-holder ${css}`
                 postitioning.innerHTML += `.layout${layout} .media-holder-text span { justify-content: ${justifyContent} !important; }`
                 break;
-        
+
             default:
                 break;
         }
@@ -637,7 +638,7 @@
         if (!isLauncher||design.hideIPhoneNotch||safeZoneHeight==0) {
             document.body.classList.remove("no-carousel");
             return;
-        }; 
+        };
 
         document.body.classList.add('no-carousel');
 
@@ -658,7 +659,7 @@
     buildfire.datastore.onUpdate(function (obj) {
         loadData(null, obj)
     });
-    
+
     buildfire.messaging.onReceivedMessage = function (event) {
         if (event && event.message) {
             var plugin = event.message.data;
