@@ -152,7 +152,7 @@ gulp.task('resources', function(){
 
 
 gulp.task('images', function(){
-    return gulp.src(['**/.images/**','control/design/icons/**','control/design/layouts/**'],{base: '.'})
+    return gulp.src(['**/.images/**','control/design/icons/**','control/design/layouts/**','widget/assets/**'],{base: '.'})
         .pipe(imagemin())
         .pipe(gulp.dest(destinationFolder ));
 });
