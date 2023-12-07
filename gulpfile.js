@@ -146,7 +146,7 @@ gulp.task('html', function(){
 
 
 gulp.task('resources', function(){
-    return gulp.src(['resources/*','widget/fonticons/**','plugin.json'],{base: '.'})
+    return gulp.src(['resources/*','plugin.json'],{base: '.'})
         .pipe(gulp.dest(destinationFolder ));
 });
 
