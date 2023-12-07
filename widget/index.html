@@ -304,7 +304,8 @@
 
 
         initStyle(obj, layout);
-        getPlugins(obj, function (plugins) {
+        getPlugins(obj, function (result) {
+            plugins = result;
             if (plugins.length) {
                 document.body.classList.remove('empty-page');
             }
