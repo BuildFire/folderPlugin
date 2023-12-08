@@ -10,12 +10,16 @@
     <style>
         #skeletonContainer {
             position: absolute;
+            top: 0;
             height: 100%;
             width: 100%;
             z-index: 1000;
             background-color: var(--bf-theme-background);
         }
         .empty-page {
+            width: 100%;
+            height: 100%;
+            z-index: 10;
             background-image: url("./assets/empty_page.svg") !important;
             background-position: center !important;
             background-repeat: no-repeat !important;
@@ -136,6 +140,7 @@
     </style>
 </head>
 <body id="light-folder-body">
+    <div class="empty-page" id="emptyPage"></div>
     <div id="skeletonContainer">
         <div class="skeleton-wrapper skeleton-carousel"></div>
         <div class="skeleton-wrapper skeleton-small-image"></div>
@@ -153,9 +158,10 @@
     var txt = document.getElementById("txt");
     var pluginsContainer = document.getElementById("pluginsContainer");
     const skeletonContainer = document.getElementById("skeletonContainer");
+    const emptyPage = document.getElementById("emptyPage");
     
     const listSkeleton = new buildfire.components.skeleton('.skeleton-wrapper', { type: 'image' });
-    let skeletonActive = false;
+    let isActiveSkeleton = false;
 
     var plugins = [];
     var compressImages = false;
@@ -221,7 +227,6 @@
             var lazyImgs = document.querySelectorAll('.lazy-img');
             for (var i = 0; i < lazyImgs.length; i++) {
                 if (lazyLoad.isInViewport(lazyImgs[i])) {
-                    console.log('lazy img loaded');
                     lazyLoad.loadImage(lazyImgs[i]);
                 }
             }
@@ -229,11 +234,10 @@
     };
 
     function startSkeleton() {
-        skeletonActive = true;
+        isActiveSkeleton = true;
         carouselContainer.innerHTML = "";
         txt.innerHTML = "";
         pluginsContainer.innerHTML = "";
-        document.body.classList.remove('empty-page');
         skeletonContainer.classList.remove('hide');
          
         listSkeleton.start();
@@ -241,18 +245,17 @@
     startSkeleton();
     
     function stopSkeleton() {
-        if (skeletonActive) {
-            // hide the skeleton after 300ms of getting response to avoid flasher skeleton when network is fast
+        if (isActiveSkeleton) {
+            // hide the skeleton after 500ms of getting response to avoid flasher skeleton when network is fast
             setTimeout(() => {
-                skeletonActive = false;
+                isActiveSkeleton = false;
                 skeletonContainer.classList.add('hide');
                 listSkeleton.stop();
-            }, 300);
+            }, 500);
         }
     }
     
     buildfire.auth.onLogin(function (user) {
-        console.log('New user loggedIN reload data to apply security', user);
         if (user && user._id) {
             startSkeleton();
             buildfire.datastore.getWithDynamicData(loadData);
@@ -260,15 +263,14 @@
     });
     // On Logout
     buildfire.auth.onLogout(function () {
-        console.log('User loggedOut reload data to apply security');
         startSkeleton();
         buildfire.datastore.getWithDynamicData(loadData);
     });
 
     function loadData(err, obj) {
-        stopSkeleton();
-        document.body.classList.add('empty-page');
+        emptyPage.classList.remove('hide');
         if (err || !obj || !obj.data || !obj.data.design) {
+            stopSkeleton();
             return;
         }
 
@@ -280,14 +282,13 @@
 
         if(obj.data.content && obj.data.content.carouselImages && obj.data.content.carouselImages.length > 0){
             carouselContainer.classList.remove('hide');
-            document.body.classList.remove('empty-page');
+            emptyPage.classList.add('hide');
         }
 
         txt.innerHTML = '';
         if (layout != 12) {
             if (obj.data.content.text){
-                console.log(obj.data.content);
-                document.body.classList.remove('empty-page');
+                emptyPage.classList.add('hide');
                 txt.innerHTML = obj.data.content.text.trim();
             }
         }
@@ -307,7 +308,7 @@
         getPlugins(obj, function (result) {
             plugins = result;
             if (plugins.length) {
-                document.body.classList.remove('empty-page');
+                emptyPage.classList.add('hide');
             }
             pluginsContainer.innerHTML = '';
 
@@ -473,6 +474,7 @@
             }
 
             //load image in first render
+            stopSkeleton();
             lazyLoad.processLazyImages();
         });
 
