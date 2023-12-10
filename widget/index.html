@@ -160,8 +160,8 @@
     const skeletonContainer = document.getElementById("skeletonContainer");
     const emptyPage = document.getElementById("emptyPage");
     
-    const listSkeleton = new buildfire.components.skeleton('.skeleton-wrapper', { type: 'image' });
-    let isActiveSkeleton = false;
+    const listSkeleton = new buildfire.components.skeleton('.skeleton-wrapper', { type: 'image' }).start();
+    let isActiveSkeleton = true;
 
     var plugins = [];
     var compressImages = false;
@@ -242,7 +242,6 @@
          
         listSkeleton.start();
     }
-    startSkeleton();
     
     function stopSkeleton() {
         if (isActiveSkeleton) {
