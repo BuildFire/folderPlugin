@@ -3,8 +3,39 @@
 <head lang="en">
     <meta name="buildfire" content="disableBootstrap,disableAppStyles"/>
     <script src="../../../scripts/_bundles/buildfire_lightcarousel.min.js"></script>
+    <script src="../../../scripts/buildfire/components/skeleton/skeleton.js"></script>
+
+    <link href="../../../styles/components/skeleton.css" rel="stylesheet" />
     <!--this css is important to be loaded first for the first paint-->
     <style>
+        #skeletonContainer {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            z-index: 1000;
+            background-color: var(--bf-theme-background);
+        }
+        .empty-page {
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            background-image: url("./assets/empty_page.svg") !important;
+            background-position: center !important;
+            background-repeat: no-repeat !important;
+            background-size: auto !important;
+        }
+        .skeleton-carousel {
+            margin-bottom: 24px;
+        }
+        .skeleton-small-image {
+            width: 90%;
+            margin: auto;
+            margin-bottom: 16px;
+            height: 100px;
+            overflow: hidden;
+            border-radius: 4px;
+        }
         .item-disabled {
             cursor: not-allowed;
             opacity: 0.4;
@@ -109,14 +140,28 @@
     </style>
 </head>
 <body id="light-folder-body">
-<div id="carousel" class="sliderCarousel hide">
-</div>
-<div id="txt" class="text-left folder-plugin-text clearfix hide-empty"></div>
-<div id="pluginsContainer"></div>
+    <div class="empty-page" id="emptyPage"></div>
+    <div id="skeletonContainer">
+        <div class="skeleton-wrapper skeleton-carousel"></div>
+        <div class="skeleton-wrapper skeleton-small-image"></div>
+        <div class="skeleton-wrapper skeleton-small-image"></div>
+        <div class="skeleton-wrapper skeleton-small-image"></div>
+        <div class="skeleton-wrapper skeleton-small-image"></div>
+        <div class="skeleton-wrapper skeleton-small-image"></div>
+        <div class="skeleton-wrapper skeleton-small-image"></div>
+    </div>
+    <div id="carousel" class="sliderCarousel hide"></div>
+    <div id="txt" class="text-left folder-plugin-text clearfix hide-empty"></div>
+    <div id="pluginsContainer"></div>
 <script>
     var carouselContainer = document.getElementById("carousel");
     var txt = document.getElementById("txt");
     var pluginsContainer = document.getElementById("pluginsContainer");
+    const skeletonContainer = document.getElementById("skeletonContainer");
+    const emptyPage = document.getElementById("emptyPage");
+    
+    const listSkeleton = new buildfire.components.skeleton('.skeleton-wrapper', { type: 'image' }).start();
+    let isActiveSkeleton = true;
 
     var plugins = [];
     var compressImages = false;
@@ -182,28 +227,51 @@
             var lazyImgs = document.querySelectorAll('.lazy-img');
             for (var i = 0; i < lazyImgs.length; i++) {
                 if (lazyLoad.isInViewport(lazyImgs[i])) {
-                    console.log('lazy img loaded');
                     lazyLoad.loadImage(lazyImgs[i]);
                 }
             }
         }
     };
 
+    function startSkeleton() {
+        isActiveSkeleton = true;
+        carouselContainer.innerHTML = "";
+        txt.innerHTML = "";
+        pluginsContainer.innerHTML = "";
+        skeletonContainer.classList.remove('hide');
+         
+        listSkeleton.start();
+    }
+    
+    function stopSkeleton() {
+        if (isActiveSkeleton) {
+            // hide the skeleton after 500ms of getting response to avoid flasher skeleton when network is fast
+            setTimeout(() => {
+                isActiveSkeleton = false;
+                skeletonContainer.classList.add('hide');
+                listSkeleton.stop();
+            }, 500);
+        }
+    }
+    
     buildfire.auth.onLogin(function (user) {
-        console.log('New user loggedIN reload data to apply security', user);
         if (user && user._id) {
+            startSkeleton();
             buildfire.datastore.getWithDynamicData(loadData);
         }
     });
     // On Logout
     buildfire.auth.onLogout(function () {
-        console.log('User loggedOut reload data to apply security');
+        startSkeleton();
         buildfire.datastore.getWithDynamicData(loadData);
     });
 
     function loadData(err, obj) {
-        if (err || !obj || !obj.data) return;
-        if (!obj.data.design) return;
+        emptyPage.classList.remove('hide');
+        if (err || !obj || !obj.data || !obj.data.design) {
+            stopSkeleton();
+            return;
+        }
 
         layout = obj.data.design.selectedLayout;
         compressImages = obj.data.design.compressImages;
@@ -213,12 +281,13 @@
 
         if(obj.data.content && obj.data.content.carouselImages && obj.data.content.carouselImages.length > 0){
             carouselContainer.classList.remove('hide');
+            emptyPage.classList.add('hide');
         }
 
         txt.innerHTML = '';
         if (layout != 12) {
             if (obj.data.content.text){
-                console.log(obj.data.content);
+                emptyPage.classList.add('hide');
                 txt.innerHTML = obj.data.content.text.trim();
             }
         }
@@ -237,6 +306,9 @@
         initStyle(obj, layout);
         getPlugins(obj, function (result) {
             plugins = result;
+            if (plugins.length) {
+                emptyPage.classList.add('hide');
+            }
             pluginsContainer.innerHTML = '';
 
             var options = calcImgOptions(layout);
@@ -401,6 +473,7 @@
             }
 
             //load image in first render
+            stopSkeleton();
             lazyLoad.processLazyImages();
         });
 
@@ -1463,8 +1536,5 @@
         vertical-align: top;
     }
 </style>
-<!-- build:bundleCSSFiles  -->
-<link href="glyphicons.css" rel="stylesheet"/>
-<!-- endbuild -->
 </body>
 </html>
