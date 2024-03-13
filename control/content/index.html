@@ -45,4 +45,21 @@
         <div id="plugins"></div>
     </div>
 </body>
+<script>
+    /**
+     * We are overriding "buildfire.datastore.save" to avoid affects on multi instances and home screen, 
+     * which is happening when update something then navigate back to home screen before getting db callback
+     */
+    function overrideDatastoreSave() {
+        var instanceId = buildfire.getContext().instanceId;
+        var datastoreSave = buildfire.datastore.save;
+        buildfire.datastore.save = function (...args) {
+            var currentInstanceId = buildfire.getContext().instanceId;
+            if (currentInstanceId === instanceId) {
+                datastoreSave(...args);
+            }
+        };
+    }
+    overrideDatastoreSave();
+</script>
 </html>
