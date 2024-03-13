@@ -545,9 +545,6 @@
                         if (currentPlugin.data && currentPlugin.data._buildfire) {
                             tempObj = {};
 
-                            if (!currentPlugin.data._buildfire.pluginType.result[0]) {
-                                currentPlugin.data._buildfire.pluginType.result[0] = {};
-                            }
                             tempObj.folderName = currentPlugin.data._buildfire.pluginType.result[0].folderName;
                             tempObj.instanceId = currentPlugin.data.instanceId;
                             tempObj.iconUrl = currentPlugin.data.iconUrl;
