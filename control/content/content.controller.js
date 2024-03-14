@@ -114,7 +114,7 @@
                         if(firstTimeVisit){
                             setTimeout(function () {
                                 saveData($scope.data);
-                            }, 500);
+                            }, 300);
                         }
 
                         if (tmrDelay) clearTimeout(tmrDelay);
@@ -187,7 +187,7 @@
                     }
                     tmrDelay = setTimeout(function () {
                         saveData(newObj);
-                    }, 500);
+                    }, 300);
                 };
 
                 var getPluginsIds = function (plugins) {
