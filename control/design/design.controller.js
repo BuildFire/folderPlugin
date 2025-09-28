@@ -210,7 +210,39 @@
                         Utility.digest($scope);
                     }
                 };
+                
+                $scope.getBackgroundIndicatorStyle = function() {
+                    if ($scope.data.design.bgTextColor && $scope.data.design.bgTextColor.colorType) {
+                        var colorType = $scope.data.design.bgTextColor.colorType;
+                        var bgCSS = $scope.data.design.bgTextColor[colorType].backgroundCSS;
+                        if (bgCSS) return bgCSS;
+                    }
+                    return "background: linear-gradient(to top left, #fff calc(50% - 2px), var(--c-danger), #fff calc(50% + 2px))";
+                };
+                
+                $scope.openColorPicker = function() {
+                    var preselectedBackgroundColor = $scope.data.design.bgTextColor || {};
+                    buildfire.colorLib.showDialog(
+                      preselectedBackgroundColor,
+                      {hideGradient: true},
+                      function() {},
+                      function(err, result) {
+                          if(result) {
+                              $scope.data.design.bgTextColor = result;
+                              if(!$scope.$$phase) $scope.$apply();
+                              saveData($scope.data);
+                          }
+                      }
+                    );
+                };
 
+                $scope.resetTextColor = function($event) {
+                    $event.stopPropagation();
+                    $scope.data.design.bgTextColor = null;
+                    if(!$scope.$$phase) $scope.$apply();
+                    saveData($scope.data);
+                };
+                
                 var digest = function () {
                     if (!$scope.$$phase && !$scope.$root.$$phase) {
                         $scope.$apply();

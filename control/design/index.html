@@ -205,6 +205,18 @@
         </div>
 
         <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
+            <label class="pull-left" style="display: inline-block; margin-top: 10px;">Text Color</label>
+            <div class="background-color-indicator-container" ng-click="openColorPicker()" >
+                <div class="background-color-indicator" ng-style="{'cssText': getBackgroundIndicatorStyle()}">
+                    <button  ng-style="{'display': data.design.bgTextColor ? 'flex' : 'none'}" class="delete btn-icon btn-delete-icon btn-danger transition-third delete-thumbnail reset-backgroundColor"
+                        ng-click="resetTextColor($event)">
+                        <span class="icon">&times;</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
             <label for="">Compress Images
                 <div class="bf-tooltip">
                     <div class="tooltip-icon primary-bg">!</div>

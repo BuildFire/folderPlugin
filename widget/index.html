@@ -279,6 +279,10 @@
 
         layout = obj.data.design.selectedLayout;
         compressImages = obj.data.design.compressImages;
+        let textColor = '';
+        if (obj.data.design.bgTextColor) {
+            textColor = obj.data.design.bgTextColor.solid.color;
+        }
 
         if(!obj.data.design.securedFeaturesOption)
             obj.data.design.securedFeaturesOption="Enable";
@@ -433,6 +437,12 @@
                 }
 
                 spanTitle.innerText = p.title;
+                if (textColor) {
+                  spanTitle.style.color = textColor;
+                  spanTitle.classList.remove('text-primary');
+                  spanTitle.classList.remove('whiteTheme');
+                  spanTitle.classList.remove('titleBarTextAndIcons');
+                }
 
                 if ([2].indexOf(layout) !== -1 && p.title && p.title.length > 55) {
                   spanTitle.innerText = p.title.substring(0, 55) + '...';
