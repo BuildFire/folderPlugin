@@ -230,7 +230,6 @@
                           if(result) {
                               $scope.data.design.bgTextColor = result;
                               if(!$scope.$$phase) $scope.$apply();
-                              saveData($scope.data);
                           }
                       }
                     );
