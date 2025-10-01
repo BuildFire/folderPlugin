@@ -254,6 +254,12 @@
 
        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
            <label for="">Show Notification Badges
+               <div class="bf-tooltip">
+                   <div class="tooltip-icon primary-bg">i</div>
+                   <div class="tooltip-content">
+                       Show notifications for new items to review from the Reviewer feature.
+                   </div>
+               </div>
            </label>
            <div class="button-switch">
                <input id="showNotificationBadges" type="checkbox" ng-model="data.design.showNotificationBadges"
@@ -283,9 +289,9 @@
             ng-hide="data.design.hideIPhoneNotch">
            <label for="">Set Background Color
                <div class="bf-tooltip">
-                   <div class="tooltip-icon primary-bg">!</div>
+                   <div class="tooltip-icon primary-bg">i</div>
                    <div class="tooltip-content">
-                       Compression can increase performance, but may effect image transparency.
+                       Choose the status bar background color to best match your app.
                    </div>
                </div></label>
            <div class="dropdown padding-zero" dropdown="" is-open="status.isOpen4">
