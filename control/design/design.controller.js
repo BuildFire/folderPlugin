@@ -227,7 +227,7 @@
                       {hideGradient: true},
                       function() {},
                       function(err, result) {
-                          if(result) {
+                          if(result && result.colorType) {
                               $scope.data.design.bgTextColor = result;
                               if(!$scope.$$phase) $scope.$apply();
                           }
