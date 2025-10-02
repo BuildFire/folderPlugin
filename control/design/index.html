@@ -213,13 +213,25 @@
                </div></label>
            <div class="background-color-indicator-container" ng-click="openColorPicker()" >
                <div class="background-color-indicator" ng-style="{'cssText': getBackgroundIndicatorStyle()}">
-                   <button  ng-style="{'display': data.design.bgTextColor ? 'flex' : 'none'}" class="delete btn-icon btn-delete-icon btn-danger transition-third delete-thumbnail reset-backgroundColor"
+                   <button  ng-style="{'display': data.design.textColor ? 'flex' : 'none'}" class="delete btn-icon btn-delete-icon btn-danger transition-third delete-thumbnail reset-backgroundColor"
                             ng-click="resetTextColor($event)">
                        <span class="icon">&times;</span>
                    </button>
                </div>
            </div>
        </div>
+       <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
+           <label for="">Hide Text
+               <div class="bf-tooltip">
+                   <div class="tooltip-icon primary-bg">i</div>
+                   <div class="tooltip-content">This will allow you to hide the text on specific layouts.</div>
+                </div>
+           </label>
+            <div class="button-switch">
+                <input id="hideText" type="checkbox" ng-model="data.design.hideText" ng-value="data.design.hideText">
+                <label for="hideText" class="label-success"></label>
+            </div>
+        </div>
 
        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
            <label for="">Compress Images
@@ -233,21 +245,6 @@
                <input id="compressImages" type="checkbox" ng-model="data.design.compressImages"
                       ng-value="data.design.compressImages">
                <label for="compressImages" class="label-success">
-               </label>
-           </div>
-       </div>
-
-       <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
-           <label for="">Hide Text
-               <div class="bf-tooltip">
-                   <div class="tooltip-icon primary-bg">i</div>
-                   <div class="tooltip-content">
-                       This will allow you to hide the text on specific layouts.
-                   </div>
-               </div></label>
-           <div class="button-switch">
-               <input id="hideText" type="checkbox" ng-model="data.design.hideText" ng-value="data.design.hideText">
-               <label for="hideText" class="label-success">
                </label>
            </div>
        </div>
