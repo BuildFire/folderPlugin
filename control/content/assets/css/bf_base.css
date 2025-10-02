@@ -961,6 +961,7 @@ color: var(--c-info);
   -o-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
   cursor: pointer;
+  margin-left: 14px;
 }
 
 .background-color-indicator {

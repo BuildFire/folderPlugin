@@ -87,242 +87,260 @@
 
         </div>
     </div>
-        <div ng-hide="data.design.selectedLayout < 9 || data.design.selectedLayout > 11">
-            <div class="layout-selector input-control side-label margin-bottom-thirty">
-                <label for="" style="font-weight: bold; color:black;">
-                    Text Align
-                </label>
-            </div>
-            <div class="layout-selector input-control side-label height-thirty-eight">
-                <label for="" class="pull-left" style="display: inline-block; margin-top: 10px;">
-                    Vertical
-                </label>
-                <div class="dropdown padding-zero" dropdown="" is-open="status.isOpen">
-                    <button style="width: 200px; height: 40px;" class="btn btn-default text-left dropdown-toggle"
-                        dropdown-toggle="" aria-expanded="false" aria-haspopup="true">
-                        <span class="pull-left ng-binding">{{getVerticalAlignment()}}</span>
-                        <span class="chevron icon-chevron-down pull-right"></span>
-                    </button>
-                    <ul class="dropdown-menu extended" role="menu">
-                        <li class="ng-scope" ng-click="setVerticalAlignment('flex-start')">
-                            <a class="transition-third ng-binding">Top</a>
-                        </li>
-                        <li class="ng-scope" ng-click="setVerticalAlignment('center')">
-                            <a class="transition-third ng-binding">Center</a>
-                        </li>
-                        <li class="ng-scope" ng-click="setVerticalAlignment('flex-end')">
-                            <a class="transition-third ng-binding">Bottom</a>
-                        </li>
-                    </ul>
-                </div>
-                </div>
-                    <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
-                        <label for="" class="pull-left" style="display: inline-block; margin-top: 10px;">
-                            Horizontal
-                        </label>
-                        <div class="dropdown padding-zero" dropdown="" is-open="status.isOpen2">
-                            <button style="width: 200px; height: 40px;" class="btn btn-default text-left dropdown-toggle"
-                                dropdown-toggle="" aria-expanded="false" aria-haspopup="true">
-                                <span class="pull-left ng-binding">{{getHorizontalAlignment()}}</span>
-                                <span class="chevron icon-chevron-down pull-right"></span>
-                            </button>
-                            <ul class="dropdown-menu extended" role="menu">
-                                <li class="ng-scope" ng-click="setHorizontalAlignment('flex-start')">
-                                    <a class="ransition-third ng-binding">Top</a>
-                                </li>
-                                <li class="ng-scope" ng-click="setHorizontalAlignment('center')">
-                                    <a class="ransition-third ng-binding">Center</a>
-                                </li>
-                                <li class="ng-scope" ng-click="setHorizontalAlignment('flex-end')">
-                                    <a class="ransition-third ng-binding">Bottom</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-            </div>
-        </div>
-        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight"
+    <div class="padded-sm">
+       <div ng-hide="data.design.selectedLayout < 9 || data.design.selectedLayout > 11">
+           <div class="layout-selector input-control side-label margin-bottom-thirty">
+               <label for="" style="font-weight: bold; color:black;">
+                   Text Align
+               </label>
+           </div>
+           <div class="layout-selector input-control side-label height-thirty-eight">
+               <label for="" class="pull-left" style="display: inline-block; margin-top: 10px;">
+                   Vertical
+               </label>
+               <div class="dropdown padding-zero" dropdown="" is-open="status.isOpen">
+                   <button style="width: 200px; height: 40px;" class="btn btn-default text-left dropdown-toggle"
+                           dropdown-toggle="" aria-expanded="false" aria-haspopup="true">
+                       <span class="pull-left ng-binding">{{getVerticalAlignment()}}</span>
+                       <span class="chevron icon-chevron-down pull-right"></span>
+                   </button>
+                   <ul class="dropdown-menu extended" role="menu">
+                       <li class="ng-scope" ng-click="setVerticalAlignment('flex-start')">
+                           <a class="transition-third ng-binding">Top</a>
+                       </li>
+                       <li class="ng-scope" ng-click="setVerticalAlignment('center')">
+                           <a class="transition-third ng-binding">Center</a>
+                       </li>
+                       <li class="ng-scope" ng-click="setVerticalAlignment('flex-end')">
+                           <a class="transition-third ng-binding">Bottom</a>
+                       </li>
+                   </ul>
+               </div>
+           </div>
+           <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
+               <label for="" class="pull-left" style="display: inline-block; margin-top: 10px;">
+                   Horizontal
+               </label>
+               <div class="dropdown padding-zero" dropdown="" is-open="status.isOpen2">
+                   <button style="width: 200px; height: 40px;" class="btn btn-default text-left dropdown-toggle"
+                           dropdown-toggle="" aria-expanded="false" aria-haspopup="true">
+                       <span class="pull-left ng-binding">{{getHorizontalAlignment()}}</span>
+                       <span class="chevron icon-chevron-down pull-right"></span>
+                   </button>
+                   <ul class="dropdown-menu extended" role="menu">
+                       <li class="ng-scope" ng-click="setHorizontalAlignment('flex-start')">
+                           <a class="ransition-third ng-binding">Top</a>
+                       </li>
+                       <li class="ng-scope" ng-click="setHorizontalAlignment('center')">
+                           <a class="ransition-third ng-binding">Center</a>
+                       </li>
+                       <li class="ng-scope" ng-click="setHorizontalAlignment('flex-end')">
+                           <a class="ransition-third ng-binding">Bottom</a>
+                       </li>
+                   </ul>
+               </div>
+           </div>
+       </div>
+       <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight"
             ng-hide="data.design.selectedLayout < 9 || data.design.selectedLayout > 11">
-            <label for="">Image Overlay</label>
-            <div class="button-switch">
-                <input id="imageOverlay" type="checkbox" ng-model="data.design.showBlackOverlay"
-                    ng-value="data.design.showBlackOverlay">
-                <label for="imageOverlay" class="label-success">
-                </label>
-            </div>
-        </div>
-        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight"
+           <label for="">Image Overlay</label>
+           <div class="button-switch">
+               <input id="imageOverlay" type="checkbox" ng-model="data.design.showBlackOverlay"
+                      ng-value="data.design.showBlackOverlay">
+               <label for="imageOverlay" class="label-success">
+               </label>
+           </div>
+       </div>
+       <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight"
             ng-hide="![1, 2, 8].includes(data.design.selectedLayout)">
-            <label for="">Line Separator</label>
-            <div class="button-switch">
-                <input id="showLineSeparator" type="checkbox" ng-model="data.design.showLineSeparator"
-                    ng-value="data.design.showLineSeparator">
-                <label for="showLineSeparator" class="label-success">
-                </label>
-            </div>
-        </div>
-        <h1>Additional settings</h1>
-        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
-            <label for="" class="pull-left" style="display: inline-block; margin-top: 10px;">
-                Font Size
-            </label>
-            <div class="dropdown padding-zero" dropdown="" is-open="status.isOpen3">
-                <button style="width: 200px; height: 40px;" class="btn btn-default text-left dropdown-toggle"
-                    dropdown-toggle="" aria-expanded="false" aria-haspopup="true">
-                    <span class="pull-left ng-binding">{{getFontSize()}}</span>
-                    <span class="chevron icon-chevron-down pull-right"></span>
-                </button>
-                <ul class="dropdown-menu extended" role="menu">
-                    <li class="ng-scope" ng-click="setFontSize(12)">
-                        <a class="ransition-third ng-binding">12px</a>
-                    </li>
-                    <li class="ng-scope" ng-click="setFontSize(14)">
-                        <a class="ransition-third ng-binding">14px</a>
-                    </li>
-                    <li class="ng-scope" ng-click="setFontSize(16)">
-                        <a class="ransition-third ng-binding">16px</a>
-                    </li>
-                    <li class="ng-scope" ng-click="setFontSize(18)">
-                        <a class="ransition-third ng-binding">18px</a>
-                    </li>
-                    <li class="ng-scope" ng-click="setFontSize(20)">
-                        <a class="ransition-third ng-binding">20px</a>
-                    </li>
-                    <li class="ng-scope" ng-click="setFontSize(24)">
-                        <a class="ransition-third ng-binding">24px</a>
-                    </li>
-                    <li class="ng-scope" ng-click="setFontSize(28)">
-                        <a class="ransition-third ng-binding">28px</a>
-                    </li>
-                    <li class="ng-scope" ng-click="setFontSize(32)">
-                        <a class="ransition-third ng-binding">32px</a>
-                    </li>
-                    <li class="ng-scope" ng-click="setFontSize(36)">
-                        <a class="ransition-third ng-binding">36px</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+           <label for="">Line Separator</label>
+           <div class="button-switch">
+               <input id="showLineSeparator" type="checkbox" ng-model="data.design.showLineSeparator"
+                      ng-value="data.design.showLineSeparator">
+               <label for="showLineSeparator" class="label-success">
+               </label>
+           </div>
+       </div>
+       <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
+           <label for="" class="pull-left" style="display: inline-block; margin-top: 10px;">
+               Text Size
+           </label>
+           <div class="dropdown padding-zero" dropdown="" is-open="status.isOpen3">
+               <button style="width: 200px; height: 40px;" class="btn btn-default text-left dropdown-toggle"
+                       dropdown-toggle="" aria-expanded="false" aria-haspopup="true">
+                   <span class="pull-left ng-binding">{{getFontSize()}}</span>
+                   <span class="chevron icon-chevron-down pull-right"></span>
+               </button>
+               <ul class="dropdown-menu extended" role="menu">
+                   <li class="ng-scope" ng-click="setFontSize(12)">
+                       <a class="ransition-third ng-binding">12px</a>
+                   </li>
+                   <li class="ng-scope" ng-click="setFontSize(14)">
+                       <a class="ransition-third ng-binding">14px</a>
+                   </li>
+                   <li class="ng-scope" ng-click="setFontSize(16)">
+                       <a class="ransition-third ng-binding">16px</a>
+                   </li>
+                   <li class="ng-scope" ng-click="setFontSize(18)">
+                       <a class="ransition-third ng-binding">18px</a>
+                   </li>
+                   <li class="ng-scope" ng-click="setFontSize(20)">
+                       <a class="ransition-third ng-binding">20px</a>
+                   </li>
+                   <li class="ng-scope" ng-click="setFontSize(24)">
+                       <a class="ransition-third ng-binding">24px</a>
+                   </li>
+                   <li class="ng-scope" ng-click="setFontSize(28)">
+                       <a class="ransition-third ng-binding">28px</a>
+                   </li>
+                   <li class="ng-scope" ng-click="setFontSize(32)">
+                       <a class="ransition-third ng-binding">32px</a>
+                   </li>
+                   <li class="ng-scope" ng-click="setFontSize(36)">
+                       <a class="ransition-third ng-binding">36px</a>
+                   </li>
+               </ul>
+           </div>
+       </div>
 
-        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
-            <label for="">Compress Images
-                <div class="bf-tooltip">
-                    <div class="tooltip-icon primary-bg">!</div>
-                    <div class="tooltip-content">
-                        Compression can increase performance, but may effect image transparency.
-                    </div>
-                </div></label>
-            <div class="button-switch">
-                <input id="compressImages" type="checkbox" ng-model="data.design.compressImages"
-                    ng-value="data.design.compressImages">
-                <label for="compressImages" class="label-success">
-                </label>
-            </div>
-        </div>
-
-
-        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
-            <label for="">Hide Text
-                <div class="bf-tooltip">
-                    <div class="tooltip-icon primary-bg">!</div>
-                    <div class="tooltip-content">
-                        This will allow you to hide the text on specific layouts.
-                    </div>
-                </div></label>
+       <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
+           <label for="">Text color
+               <div class="bf-tooltip">
+                   <div class="tooltip-icon primary-bg">i</div>
+                   <div class="tooltip-content">
+                       Override the default text color defined in the branding palette.
+                   </div>
+               </div></label>
+           <div class="background-color-indicator-container" ng-click="openColorPicker()" >
+               <div class="background-color-indicator" ng-style="{'cssText': getBackgroundIndicatorStyle()}">
+                   <button  ng-style="{'display': data.design.textColor ? 'flex' : 'none'}" class="delete btn-icon btn-delete-icon btn-danger transition-third delete-thumbnail reset-backgroundColor"
+                            ng-click="resetTextColor($event)">
+                       <span class="icon">&times;</span>
+                   </button>
+               </div>
+           </div>
+       </div>
+       <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
+           <label for="">Hide Text
+               <div class="bf-tooltip">
+                   <div class="tooltip-icon primary-bg">i</div>
+                   <div class="tooltip-content">This will allow you to hide the text on specific layouts.</div>
+                </div>
+           </label>
             <div class="button-switch">
                 <input id="hideText" type="checkbox" ng-model="data.design.hideText" ng-value="data.design.hideText">
-                <label for="hideText" class="label-success">
-                </label>
+                <label for="hideText" class="label-success"></label>
             </div>
         </div>
 
-        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
-            <label for="">Show Notification Badges
-            </label>
-            <div class="button-switch">
-                <input id="showNotificationBadges" type="checkbox" ng-model="data.design.showNotificationBadges"
-                    ng-value="data.design.showNotificationBadges">
-                <label for="showNotificationBadges" class="label-success">
-                </label>
-            </div>
-        </div>
+       <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
+           <label for="">Compress Images
+               <div class="bf-tooltip">
+                   <div class="tooltip-icon primary-bg">i</div>
+                   <div class="tooltip-content">
+                       Compression may speed up plugin loading, but could affect image transparency.
+                   </div>
+               </div></label>
+           <div class="button-switch">
+               <input id="compressImages" type="checkbox" ng-model="data.design.compressImages"
+                      ng-value="data.design.compressImages">
+               <label for="compressImages" class="label-success">
+               </label>
+           </div>
+       </div>
 
-        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
-            <label for="">Show Safe Area
-                <div class="bf-tooltip">
-                    <div class="tooltip-icon primary-bg">!</div>
-                    <div class="tooltip-content">
-                        Show safe area above carousel to make room for iPhone notch
-                    </div>
-                </div></label>
-            <div class="button-switch">
-                <input id="hideIPhoneNotch" type="checkbox" ng-model="data.design.hideIPhoneNotch"
-                    ng-value="data.design.hideIPhoneNotch">
-                <label for="hideIPhoneNotch" class="label-success">
-                </label>
-            </div>
-        </div>
+       <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
+           <label for="">Show Notification Badges
+               <div class="bf-tooltip">
+                   <div class="tooltip-icon primary-bg">i</div>
+                   <div class="tooltip-content">
+                       Show notifications for new items to review from the Reviewer feature.
+                   </div>
+               </div>
+           </label>
+           <div class="button-switch">
+               <input id="showNotificationBadges" type="checkbox" ng-model="data.design.showNotificationBadges"
+                      ng-value="data.design.showNotificationBadges">
+               <label for="showNotificationBadges" class="label-success">
+               </label>
+           </div>
+       </div>
 
-        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight"
+       <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight">
+           <label for="">Show Safe Area
+               <div class="bf-tooltip">
+                   <div class="tooltip-icon primary-bg">i</div>
+                   <div class="tooltip-content">
+                       Show safe area above the carousel to leave space for the iPhone notch.
+                   </div>
+               </div></label>
+           <div class="button-switch">
+               <input id="hideIPhoneNotch" type="checkbox" ng-model="data.design.hideIPhoneNotch"
+                      ng-value="data.design.hideIPhoneNotch">
+               <label for="hideIPhoneNotch" class="label-success">
+               </label>
+           </div>
+       </div>
+
+       <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight"
             ng-hide="data.design.hideIPhoneNotch">
-            <label for="">Set Background Color
-                <div class="bf-tooltip">
-                    <div class="tooltip-icon primary-bg">!</div>
-                    <div class="tooltip-content">
-                        Compression can increase performance, but may effect image transparency.
-                    </div>
-                </div></label>
-            <div class="dropdown padding-zero" dropdown="" is-open="status.isOpen4">
-                <button style="width: 200px; height: 40px;" class="btn btn-default text-left dropdown-toggle"
-                    dropdown-toggle="" aria-expanded="false" aria-haspopup="true">
-                    <span class="pull-left ng-binding">{{getIphoneNotch()}}</span>
-                    <span class="chevron icon-chevron-down pull-right"></span>
-                </button>
-                <ul class="dropdown-menu extended" role="menu">
-                    <li class="ng-scope" ng-click="setIphoneNotch(false)">
-                        <a class="ransition-third ng-binding">Transparent</a>
-                    </li>
-                    <li class="ng-scope" ng-click="setIphoneNotch(true)">
-                        <a class="ransition-third ng-binding">Black</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+           <label for="">Set Background Color
+               <div class="bf-tooltip">
+                   <div class="tooltip-icon primary-bg">i</div>
+                   <div class="tooltip-content">
+                       Choose the status bar background color to best match your app.
+                   </div>
+               </div></label>
+           <div class="dropdown padding-zero" dropdown="" is-open="status.isOpen4">
+               <button style="width: 200px; height: 40px;" class="btn btn-default text-left dropdown-toggle"
+                       dropdown-toggle="" aria-expanded="false" aria-haspopup="true">
+                   <span class="pull-left ng-binding">{{getIphoneNotch()}}</span>
+                   <span class="chevron icon-chevron-down pull-right"></span>
+               </button>
+               <ul class="dropdown-menu extended" role="menu">
+                   <li class="ng-scope" ng-click="setIphoneNotch(false)">
+                       <a class="ransition-third ng-binding">Transparent</a>
+                   </li>
+                   <li class="ng-scope" ng-click="setIphoneNotch(true)">
+                       <a class="ransition-third ng-binding">Black</a>
+                   </li>
+               </ul>
+           </div>
+       </div>
 
-        <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight" ng-if="enterpriseApp">
-            <label for="" class="pull-left" style="display: inline-block; margin-top: 10px;">
-                Secured Feature Visibility
-                <div class="bf-tooltip">
-                    <div class="tooltip-icon primary-bg">!</div>
-                    <div class="tooltip-content">
-                        This allows you to control how features are displayed based
-                        on their Security Settings. If you require login or set up required tags, you can keep
-                        the feature "Enable" to all users, show them in the list but make them read-only with "Disable",
-                        or hide them entirely with "Hide".
-                    </div>
-                </div>
-            </label>
-            <div class="dropdown padding-zero" dropdown="" is-open="status.isOpen5" style="width: 100%;">
-                <button style="width: 200px; height: 40px;" class="btn btn-default text-left dropdown-toggle"
-                    dropdown-toggle="" aria-expanded="false" aria-haspopup="true">
-                    <span class="pull-left ng-binding">{{getSecuredFeatures()}}</span>
-                    <span class="chevron icon-chevron-down pull-right"></span>
-                </button>
-                <ul class="dropdown-menu extended" role="menu" style="width: 200px;">
-                    <li class="ng-scope" ng-click="setSecuredFeatures('Enable')">
-                        <a class="ransition-third ng-binding">Enable</a>
-                    </li>
-                    <li class="ng-scope" ng-click="setSecuredFeatures('Disable')">
-                        <a class="ransition-third ng-binding">Disable</a>
-                    </li>
-                    <li class="ng-scope" ng-click="setSecuredFeatures('Hide')">
-                        <a class="ransition-third ng-binding">Hide</a>
-                    </li>
-                </ul>
-                <p class="info-note" style="position: absolute; margin-top:10px; width: 100% ;">This feature will only work in the app, and is disabled in the control panel.</p>
-            </div>
-            
-        </div>
+       <div class="layout-selector input-control side-label margin-bottom-thirty height-thirty-eight" ng-if="enterpriseApp">
+           <label for="" class="pull-left" style="display: inline-block; margin-top: 10px;">
+               Secured Feature Visibility
+               <div class="bf-tooltip">
+                   <div class="tooltip-icon primary-bg">i</div>
+                   <div class="tooltip-content">
+                       Control how features appear based on their Security Settings. If a feature requires login or has tag restrictions,
+                       you can: keep it visible and usable for everyone with “Enable”, keep it visible but read-only with “Disable”,
+                       or hide it completely with “Hide”.
+                   </div>
+               </div>
+           </label>
+           <div class="dropdown padding-zero" dropdown="" is-open="status.isOpen5" style="width: 100%;">
+               <button style="width: 200px; height: 40px;" class="btn btn-default text-left dropdown-toggle"
+                       dropdown-toggle="" aria-expanded="false" aria-haspopup="true">
+                   <span class="pull-left ng-binding">{{getSecuredFeatures()}}</span>
+                   <span class="chevron icon-chevron-down pull-right"></span>
+               </button>
+               <ul class="dropdown-menu extended" role="menu" style="width: 200px;">
+                   <li class="ng-scope" ng-click="setSecuredFeatures('Enable')">
+                       <a class="ransition-third ng-binding">Enable</a>
+                   </li>
+                   <li class="ng-scope" ng-click="setSecuredFeatures('Disable')">
+                       <a class="ransition-third ng-binding">Disable</a>
+                   </li>
+                   <li class="ng-scope" ng-click="setSecuredFeatures('Hide')">
+                       <a class="ransition-third ng-binding">Hide</a>
+                   </li>
+               </ul>
+               <p class="info-note" style="position: absolute; margin-top:10px; width: 100% ;">This feature will only work in the app, and is disabled in the control panel.</p>
+           </div>
+
+       </div>
     </div>
 </body>
 
