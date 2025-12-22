@@ -9,10 +9,9 @@
     <!--this css is important to be loaded first for the first paint-->
     <style>
 
-        html {
+        body {
             padding-top: var(--bf-safe-area-inset-top);
             padding-bottom: var(--bf-safe-area-inset-bottom);
-
         }
 
         .blurred-background-image{
@@ -857,10 +856,6 @@
         font-family: Helvetica, Sans-Serif, Arial;
     }
 
-    :root {
-    --sat: env(safe-area-inset-top);
-    }
-
     /* iFrame */
     /* Plugin iFrame */
     img,
@@ -915,11 +910,6 @@
         height: 100% !important;
         width: 100% !important;
     }
-
-    .no-carousel {
-        padding-top: var(--sat) !important;
-    }
-
     /* Smaller Mobile Screens */
     @media (max-height: 540px) {
         .login-holder .moreoptions {
