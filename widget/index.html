@@ -8,7 +8,12 @@
     <link href="../../../styles/components/skeleton.css" rel="stylesheet" />
     <!--this css is important to be loaded first for the first paint-->
     <style>
-        
+
+        body {
+            padding-top: var(--bf-safe-area-inset-top);
+            padding-bottom: var(--bf-safe-area-inset-bottom);
+        }
+
         .blurred-background-image{
             position: absolute;
         }
@@ -163,7 +168,7 @@
     var pluginsContainer = document.getElementById("pluginsContainer");
     const skeletonContainer = document.getElementById("skeletonContainer");
     const emptyPage = document.getElementById("emptyPage");
-    
+
     const listSkeleton = new buildfire.components.skeleton('.skeleton-wrapper', { type: 'image' }).start();
     let isActiveSkeleton = true;
 
@@ -183,7 +188,7 @@
                 item.classList.remove("lazy-img");
                 _initImg(item);
             }
-            
+
             function _initImg(item) {
                 var src = item.getAttribute('data-src');
                 var imageTextAlternative = item.getAttribute('data-alt')
@@ -243,10 +248,10 @@
         txt.innerHTML = "";
         pluginsContainer.innerHTML = "";
         skeletonContainer.classList.remove('hide');
-        
+
         listSkeleton.start();
     }
-    
+
     function stopSkeleton() {
         if (isActiveSkeleton) {
             // hide the skeleton after 500ms of getting response to avoid flasher skeleton when network is fast
@@ -257,7 +262,7 @@
             }, 500);
         }
     }
-    
+
     buildfire.auth.onLogin(function (user) {
         if (user && user._id) {
             startSkeleton();
@@ -304,8 +309,6 @@
         } else {
             txt.classList.remove('hide');
         }
-
-        setIphonePadding(obj.data.content.carouselImages, obj.data.content.text, layout,obj.data.design);
 
         pluginsContainer.className = "layout" + layout;
         pluginsContainer.innerHTML = '';
@@ -519,7 +522,7 @@
             }
           });
         }
-        
+
     }
 
     function getBadges(uniqueIds = [], callback) {
@@ -706,7 +709,7 @@
                 postitioning.innerHTML += `.layout${layout} .media-holder ${css}`
                 postitioning.innerHTML += `.layout${layout} .media-holder-text span { justify-content: ${justifyContent} !important; }`
                 break;
-        
+
             default:
                 break;
         }
@@ -715,35 +718,12 @@
 
     }
 
-    function setIphonePadding(carouselImages, text, layout, design) {
-        var safeZoneHeight=parseInt(getComputedStyle(document.documentElement).getPropertyValue("--sat"),10);
-
-        var isLauncher = buildfire.getFrameType() === 'LAUNCHER_PLUGIN';
-        if (!isLauncher||design.hideIPhoneNotch||safeZoneHeight==0) {
-            document.body.classList.remove("no-carousel");
-            return;
-        };
-
-        document.body.classList.add('no-carousel');
-
-        if(design.blackIPhoneNotch){
-            var blackSafeZone=document.createElement("div");
-            blackSafeZone.id="blackSafeZone";
-            blackSafeZone.classList="black-safe-zone";
-            document.body.appendChild(blackSafeZone);
-        }else{
-            var blackSafeZone=document.getElementById("blackSafeZone");
-            if(blackSafeZone)
-                blackSafeZone.remove();
-        }
-    }
-
     buildfire.datastore.getWithDynamicData(loadData);
 
     buildfire.datastore.onUpdate(function (obj) {
         loadData(null, obj)
     });
-    
+
     buildfire.messaging.onReceivedMessage = function (event) {
         if (event && event.message) {
             var plugin = event.message.data;
@@ -876,13 +856,6 @@
         font-family: Helvetica, Sans-Serif, Arial;
     }
 
-    :root {
-    --sat: env(safe-area-inset-top);
-    --sar: env(safe-area-inset-right);
-    --sab: env(safe-area-inset-bottom);
-    --sal: env(safe-area-inset-left);
-    }
-
     /* iFrame */
     /* Plugin iFrame */
     img,
@@ -937,21 +910,6 @@
         height: 100% !important;
         width: 100% !important;
     }
-
-    .no-carousel {
-        padding-top: var(--sat) !important;
-    }
-
-    .black-safe-zone{
-        height: var(--sat) !important;
-        width: 100%;
-        background-color: black;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 100;
-    }
-
     /* Smaller Mobile Screens */
     @media (max-height: 540px) {
         .login-holder .moreoptions {
